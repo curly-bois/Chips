@@ -8,9 +8,9 @@ heuristics course at University of Amsterdam
 
 # Usage:
 
-## First:
+### First:
 pip install -r requirements.txt
 
-## Second
+### Second
 python run.py 'your txt file'
 

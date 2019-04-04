@@ -65,7 +65,7 @@ def main(txt):
             pos = good_pos
 
             distance = [abs(i[0]-end[0])+abs(i[1]-end[1]) for i in pos]
-            c_p = pos[distance.index(min(distance))]
+
             try:
                 c_p = pos[distance.index(min(distance))]
             except:

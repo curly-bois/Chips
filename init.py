@@ -3,7 +3,7 @@ import re
 
 def get_grid():
     # read the .txt file
-    with open("grids.txt", "r") as f:
+    with open("list_1.txt", "r") as f:
         # filter only things inbetween brackets
         text = re.findall('\(.*?\)',f.read())
 
@@ -41,8 +41,6 @@ def make_grid(grid, sizex, sizey):
     plt.xlim([-1,sizex])
     plt.ylim([-1,sizey])
     plt.grid(True)
-    # scatter points
-    plt.figure(figsize=(16,16))
     plt.scatter(x, y, linewidths=8, color='red')
 
     plt.show()

@@ -1,9 +1,9 @@
 import connect
 import grid
 import load
+import sys
 
-
-txt = r"list_1.txt"
+txt = sys.argv[1]
 
 line_list = connect.main(txt)
 grid_points, size = load.get_grid(txt)

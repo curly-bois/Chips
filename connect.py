@@ -67,7 +67,15 @@ def main(txt):
             distance = [abs(i[0]-end[0])+abs(i[1]-end[1]) for i in pos]
 
             try:
-                c_p = pos[distance.index(min(distance))]
+                indexen = [i for i,n in enumerate(distance) if n == min(distance)]
+                if len(indexen) == 1:
+                    c_p = pos[indexen[0]]
+                elif len(indexen) > 1:
+                    l = len(indexen)-1
+                    index = random.randint(0, l)
+                    c_p = pos[indexen[index]]
+                else:
+                    print("error")
             except:
                 print(f"no combinations at line: {line.points()}")
                 break

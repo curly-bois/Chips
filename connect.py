@@ -1,5 +1,6 @@
 import datastruct
 import load
+import random
 
 def main(txt):
     # Make grid
@@ -77,7 +78,7 @@ def main(txt):
                 else:
                     print("error")
             except:
-                print(f"no combinations at line: {line.points()}")
+                print(f"no combination found")
                 break
 
             grid.mark_taken(c_p)

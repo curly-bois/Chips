@@ -3,6 +3,10 @@ from init import get_grid
 from init import matrix
 from init import amount_of_gates
 
+from mpl_toolkits import mplot3d
+import numpy as np
+import matplotlib.pyplot as plt
+
 cube, amount_of_unconnected_gates = matrix(get_grid())
 
 print(cube)
@@ -75,9 +79,22 @@ while True:
 
 
 print("all gates connected")
-
+wires = []
+taken = []
 for three_dimensions in cube:
     for two_dimensions in three_dimensions:
         for point in two_dimensions:
             if point.get_attribute() == "wire":
+                wires.append(point.location)
                 print(point.location)
+            if point.get_attribute() == "taken":
+                taken.append(point.location)
+
+
+
+fig = plt.figure()
+ax = plt.axes(projection='3d')
+ax.set_zlim(0, 2)
+ax.scatter3D(*zip(*wires))
+ax.scatter3D(*zip(*taken))
+plt.show()

@@ -11,11 +11,8 @@ def get_grid():
         # filter only things inbetween brackets
         text = re.findall('\(.*?\)',f.read())
 
-    highX = 0
-    highY = 0
     grid = []
-    dict = {}
-    num = 1
+
     for number in text:
         number = number.replace(")", "")
         number = number.replace("(", "")

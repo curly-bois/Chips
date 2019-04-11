@@ -4,6 +4,9 @@ import os
 import itertools
 from point import Point
 
+def amount_of_gates():
+    return len(tuplist)
+
 def get_grid():
     # read the .txt file
     txt = os.path.join("list_1.txt")
@@ -91,7 +94,7 @@ def matrix(grid):
 
     print(gates)
 
-    return matrix
+    return matrix, len(tuplist)
 
 
     # for i in range(z):

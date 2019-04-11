@@ -1,4 +1,4 @@
-class Point(Object):
+class Point(object):
 
     def __init__(self, location, attribute, neighbours, value):
         self.location = location
@@ -6,11 +6,17 @@ class Point(Object):
         self.neighbours = neighbours
         self.value = value
 
+    def set_neighbours(self, neighbours):
+        self.neighbours = neighbours
+
     def get_neighbours(self):
         return self.neighbours
 
+    def set_attribute(self, attribute):
+        self.attribute = attribute
+
     def get_attribute(self):
-        return self.atrribute
+        return self.attribute
 
     def __str__(self):
         return(f"This point is at location {self.location} and is " +

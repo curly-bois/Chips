@@ -2,7 +2,7 @@ from operator import itemgetter
 import re
 import os
 import itertools
-
+from point import Point
 
 def get_grid():
     # read the .txt file
@@ -44,16 +44,59 @@ def matrix(grid):
     for i in range(z):
         for j in range(y):
             for k in range(x):
-                if tuple([k,j]) in tuplist:
-                    matrix[1][j][k] = 1
 
+                # Point in 3d matrix is a gate
+                if tuple([k,j]) in tuplist and i == 1:
+                    matrix[i][j][k] = Point((k, j, i), "gate", [], 0)
+                # Point is empty
+                else:
+                    matrix[i][j][k] = Point((k, j, i), "empty", [], 0)
+
+    gates = []
+
+    # Initialize neighbours
     for i in range(z):
-        print()
         for j in range(y):
-            print(matrix[i][j])
+            for k in range(x):
+
+                neighbours = []
+
+                # Northern neighbour
+                if j + 1 < y:
+                    neighbours.append(matrix[i][j+1][k])
+
+                # Eastern neighbour
+                if k + 1 < x:
+                    neighbours.append(matrix[i][j][k+1])
+
+                # Southern neighbour
+                if j - 1 >= 0:
+                    neighbours.append(matrix[i][j-1][k])
+
+                # Western neighbour
+                if k - 1 >= 0:
+                    neighbours.append(matrix[i][j][k-1])
+
+                # Upper neighbour
+                if i + 1 < z:
+                    neighbours.append(matrix[i+1][j][k])
+
+                # Down neighbour
+                if i - 1 >= 0:
+                    neighbours.append(matrix[i-1][j][k])
+
+                matrix[i][j][k].set_neighbours(neighbours)
+                if matrix[i][j][k].attribute == "gate":
+                    gates.append(matrix[i][j][k].location)
+
+    print(gates)
+
+    return matrix
 
 
+    # for i in range(z):
+    #     print()
+    #     for j in range(y):
+    #         print(matrix[i][j])
 
-if __name__ == '__main__':
-
-    matrix(get_grid())
+matrix(get_grid())

@@ -81,15 +81,16 @@ while True:
 print("all gates connected")
 wires = []
 taken = []
+wire_pieces = 0
 for three_dimensions in cube:
     for two_dimensions in three_dimensions:
         for point in two_dimensions:
             if point.get_attribute() == "wire":
                 wires.append(point.location)
                 print(point.location)
+                wire_pieces += 1
             if point.get_attribute() == "taken":
                 taken.append(point.location)
-
 
 
 fig = plt.figure()
@@ -98,3 +99,22 @@ ax.set_zlim(0, 2)
 ax.scatter3D(*zip(*wires))
 ax.scatter3D(*zip(*taken))
 plt.show()
+
+midlayer = []
+
+
+for point in wires:
+    if point[2] == 1:
+        midlayer.append((point[0], point[1]))
+
+print(midlayer)
+
+x,y = zip(*midlayer)
+plt.scatter(x, y, linewidths=2, color='red')
+plt.show()
+
+linex,liney = zip(*midlayer)
+plt.plot(linex, liney, linewidth=5, color='blue')
+plt.show()
+
+print(f"{wire_pieces} pieces of wire used")

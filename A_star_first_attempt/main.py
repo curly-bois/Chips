@@ -12,6 +12,8 @@ connections = get_connections()
 matrix = matrix(get_grid())
 to_be_connected = make_conlist(connections,matrix)
 
+print("***")
+
 
 print("\n\n\n ***********************************************************")
 
@@ -19,20 +21,18 @@ print("\n\n\n ***********************************************************")
 # Gets neighbours, checks if gate, if not gate -> go on
 # If gate: retrace steps
 
-# to_be_connected = [(cube[0][0][3], cube[0][6][11]), (cube[0][12][6], cube[0][15][6]),
-#                     (cube[0][10][8], cube[0][7][1]), (cube[0][13][5], cube[0][4][8]),
-#                     (cube[0][19][12], cube[0][8][13]), (cube[0][14][4], cube[0][19][18]),
-#                     (cube[0][2][20], cube[0][9][14]), (cube[0][15][2], cube[0][3][10]),
-#                     (cube[0][11][5], cube[0][6][16]), (cube[0][16][16], cube[0][12][2])]
+to_be_connected = [(cube[0][0][3], cube[0][6][2]), (cube[0][10][10], cube[0][10][12]),
+                   (cube[0][1][5], cube[0][4][3]), (cube[1][1][5], cube[2][4][3])]
 
 
-wirelines = []
 
 # While
 while to_be_connected:
     print(f"Amount of sets to be connected: {len(to_be_connected)}")
     start = to_be_connected[0][0]
     end = to_be_connected[0][1]
+    print(start.location)
+    print(end.location)
 
     found = False
 
@@ -67,7 +67,6 @@ while to_be_connected:
         print(f"This is openlist {openlist}")
 
         if current == end:
-            wire.append(end.get_location())
             end.attribute = "taken"
             start.attribute = "taken"
             print("End has been found")
@@ -75,13 +74,10 @@ while to_be_connected:
             going_back = parent[current]
 
             while going_back is not start:
-                wire.append(going_back.get_location())
                 going_back.set_attribute("wire")
                 print(f"Retracing steps: {going_back.location}")
                 going_back = parent[going_back]
 
-            wire.append(start.get_location())
-            wirelines.append(wire)
             found = True
             break
 

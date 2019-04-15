@@ -31,7 +31,7 @@ class Point(object):
             manhattan_to_end += abs(dimensional_difference)
 
         return manhattan_to_end
-        
+
     def calculate_f(self, start_location, end_location):
         manhattan_from_start = 0
         manhattan_to_end = 0
@@ -55,7 +55,7 @@ class Point(object):
         f = manhattan_from_start + manhattan_to_end
         return f
 
-    def __str__(self):
-        return(f"This point is at location {self.location} and is " +
-               f"{self.attribute} with {self.neighbours} as neighbours " +
-               f"and has value {self.value}")
+    # def __str__(self):
+    #     return(f"This point is at location {self.location} and is " +
+    #            f"{self.attribute} with {self.neighbours} as neighbours " +
+    #            f"and has value {self.value}")

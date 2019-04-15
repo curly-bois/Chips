@@ -72,7 +72,7 @@ def matrix(grid):
         for j in range(y):
             for k in range(x):
                 # Point in 3d matrix is a gate
-                if tuple([k,j]) in tuplist and i == 1:
+                if tuple([k,j]) in tuplist and i == 0:
                     matrix[i][j][k] = Point((k, j, i), "gate", [], 0, grid[k,j])
                 # Point is empty
                 else:
@@ -130,12 +130,7 @@ def make_conlist(connections,matrix):
     for connection in connections:
         connection[0] += 1
         connection[1] += 1
-        locations.append([coordinates[connection[0]],coordinates[connection[1]]])
-
+        locations.append((coordinates[connection[0]],coordinates[connection[1]]))
+    print("in de init")
+    print(matrix[0][8][2])
     return locations
-
-if __name__ == '__main__':
-
-    connections = get_connections()
-    matrix = matrix(get_grid())
-    conlist = make_conlist(connections,matrix)

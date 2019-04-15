@@ -52,7 +52,7 @@ def get_connections():
 
 def matrix(grid):
 
-    z = 3
+    z = 7
     tuplist = []
 
     for tup in grid:
@@ -132,7 +132,7 @@ def make_conlist(connections,matrix):
         connection[1] += 1
         locations.append([coordinates[connection[0]],coordinates[connection[1]]])
 
-    return connections
+    return locations
 
 if __name__ == '__main__':
 

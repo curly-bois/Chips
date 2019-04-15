@@ -1,14 +1,17 @@
 from point import Point
-from init import get_grid
-from init import matrix
-from init import amount_of_gates
+from init_2 import *
 
 from mpl_toolkits import mplot3d
 import numpy as np
 import matplotlib.pyplot as plt
 import sys
 
-cube, amount_of_unconnected_gates, tuplist = matrix(get_grid())
+cube = matrix(get_grid())
+
+connections = get_connections()
+matrix = matrix(get_grid())
+to_be_connected = make_conlist(connections,matrix)
+
 
 print("\n\n\n ***********************************************************")
 
@@ -16,11 +19,12 @@ print("\n\n\n ***********************************************************")
 # Gets neighbours, checks if gate, if not gate -> go on
 # If gate: retrace steps
 
-to_be_connected = [(cube[0][0][3], cube[0][6][11]), (cube[0][12][6], cube[0][15][6]),
-                    (cube[0][10][8], cube[0][7][1]), (cube[0][13][5], cube[0][4][8]),
-                    (cube[0][19][12], cube[0][8][13]), (cube[0][14][4], cube[0][19][18]),
-                    (cube[0][2][20], cube[0][9][14]), (cube[0][15][2], cube[0][3][10]),
-                    (cube[0][11][5], cube[0][6][16]), (cube[0][16][16], cube[0][12][2])]
+# to_be_connected = [(cube[0][0][3], cube[0][6][11]), (cube[0][12][6], cube[0][15][6]),
+#                     (cube[0][10][8], cube[0][7][1]), (cube[0][13][5], cube[0][4][8]),
+#                     (cube[0][19][12], cube[0][8][13]), (cube[0][14][4], cube[0][19][18]),
+#                     (cube[0][2][20], cube[0][9][14]), (cube[0][15][2], cube[0][3][10]),
+#                     (cube[0][11][5], cube[0][6][16]), (cube[0][16][16], cube[0][12][2])]
+
 
 wirelines = []
 
@@ -51,7 +55,7 @@ while to_be_connected:
     tries = 0
     while not found:
         tries += 1
-        if tries == 500:
+        if tries == 1000:
             print("Tried 500 times")
             sys.exit()
 

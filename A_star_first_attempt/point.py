@@ -2,11 +2,12 @@ import numpy
 
 class Point(object):
 
-    def __init__(self, location, attribute, neighbours, value):
+    def __init__(self, location, attribute, neighbours, value,id = 0):
         self.location = location
         self.attribute = attribute
         self.neighbours = neighbours
         self.value = value
+        self.id = id
 
     def set_neighbours(self, neighbours):
         self.neighbours = neighbours

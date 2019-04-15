@@ -9,7 +9,7 @@ def amount_of_gates():
 
 def get_grid():
     # read the .txt file
-    txt = os.path.join("list_1.txt")
+    txt = os.path.join("list_2.txt")
     with open(txt, "r") as f:
         # filter only things inbetween brackets
         text = re.findall('\(.*?\)',f.read())

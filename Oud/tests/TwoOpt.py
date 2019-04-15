@@ -7,7 +7,7 @@ import itertools
 
 def get_grid():
     # read the .txt file
-    txt = os.path.join("options", "list_small.txt")
+    txt = os.path.join("options", "list_1.txt")
     with open(txt, "r") as f:
         # filter only things inbetween brackets
         text = re.findall('\(.*?\)',f.read())

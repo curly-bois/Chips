@@ -50,6 +50,7 @@ def get_connections():
 
 def matrix(grid):
 
+
     tuplist = []
 
     for tup in grid:
@@ -60,76 +61,55 @@ def matrix(grid):
     matrix = [[0 for x in range(x)]
               for y in range(y)]
 
-    print(x,y)
-
     for j in range(y):
         for k in range(x):
             if (k,j) in tuplist:
                 matrix[j][k] = grid[k,j]
 
-    for j in range(y):
-        print(matrix[j])
+
+    # '''
+    # Visualize points on the grid
+    # '''
+    # x +=1
+    # x +=1
+    #
+    # # Convert data to useful data
+    # plt.figure(figsize=(16,16))
+    # plt.xticks(range(x))
+    # plt.yticks(range(y))
+    # plt.xlim([-1,x])
+    # plt.ylim([-1,y])
+    # plt.grid(True)
+    # for j in range(y):
+    #     for k in range(x):
+    #         if (k,j) in tuplist:
+    #             plt.text(k,j,matrix[j][k])
+    #             plt.scatter(k,j,color='red')
+    # plt.show()
+
+    return matrix
 
 
-    fig, ax = plt.subplots()
-    cmap = mcolors.ListedColormap(['w','r'])
-    bounds = [0,0.5,0.5]
-    norm = mcolors.BoundaryNorm(bounds, cmap.N)
-    im = ax.imshow(matrix,cmap=cmap, norm=norm)
+def make_conlist(connections,matrix):
 
-    # We want to show all ticks...
-    ax.set_xticks(np.arange(x))
-    ax.set_yticks(np.arange(y))
-    # ... and label them with the respective list entries
-    ax.set_xticklabels(range(x))
-    ax.set_yticklabels(range(y))
+    locations = []
+    coordinates = {}
 
-    '''
-    Visualize points on the grid
-    '''
-    # Convert data to useful data
-    x += 1
-    y += 1
-    px,py = zip(*grid)
+    for j in range(len(matrix)):
+        for k in range(len(matrix[j])):
+            if matrix[j][k] > 0:
+                coordinates[matrix[j][k]] = (0,j,k)
 
-    # Setup
-    plt.figure(figsize=(16,16))
-    plt.xticks(range(x))
-    plt.yticks(range(y))
-    plt.xlim([-1,x])
-    plt.ylim([-1,y])
-    plt.grid(True)
-    plt.scatter(px, py, linewidths=8, color='red')
-
-    plt.show()
-
-    # Rotate the tick labels and set their alignment.
-    plt.setp(ax.get_xticklabels(), rotation=45, ha="right",
-             rotation_mode="anchor")
-
-    # Loop over data dimensions and create text annotations.
-    for i in range(y):
-        for j in range(x):
-             if (j,i) in tuplist:
-                 text = ax.text(j, i, matrix[i][j],
-                               ha="right", va="top", color="black")
+    for connection in connections:
+        connection[0] += 1
+        connection[1] += 1
+        locations.append([coordinates[connection[0]],coordinates[connection[1]]])
 
 
-    ax.set_title("Print #1")
-    fig.tight_layout()
-
-    # turn off the axis labels
-    ax.axis('off')
-    plt.show()
-
-
-
-
-
-
-
+    print(locations)
 
 if __name__ == '__main__':
 
-    get_connections()
-    matrix(get_grid())
+    connections = get_connections()
+    matrix = matrix(get_grid())
+    make_conlist(connections,matrix)

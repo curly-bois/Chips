@@ -1,13 +1,17 @@
+'''
+Point
+'''
+
 class Point(object):
 
-    def __init__(self, location, attribute, neighbours, value):
+    def __init__(self, location):
         self.location = location
-        self.attribute = attribute #'free'
-        self.neighbours = neighbours #
-        self.value = value
+        self.attribute = 'free'
+        self.neighbours = []
+        self.value = None
 
-    def set_neighbours(self, neighbours):
-        self.neighbours = neighbours
+    def set_neighbour(self, neighbour):
+        self.neighbours.append(neighbour)
 
     def get_neighbours(self):
         return self.neighbours
@@ -17,6 +21,9 @@ class Point(object):
 
     def get_attribute(self):
         return self.attribute
+
+    def set_value(self, value):
+        self.value = value
 
     def __str__(self):
         return(f"This point is at location {self.location} and is " +

@@ -14,8 +14,8 @@ def sort_points(starts, ends):
     A way of sorting the points, very easy and not thought out.
     '''
     # Make two indentical list, sort one and use the other for indexing
-    distance = [dis(s,e,5) for s,e in zip(starts,ends)]
-    index = [dis(s,e,5) for s,e in zip(starts,ends)]
+    distance = [abs(s[0]-e[0])+abs(s[1]-e[1]) for s,e in zip(starts,ends)]
+    index = [abs(s[0]-e[0])+abs(s[1]-e[1]) for s,e in zip(starts,ends)]
     distance.sort()
     points_unsorted = list(zip(starts,ends))
 
@@ -42,8 +42,16 @@ def first_value(size):
                             for y in range(size[1])]
                             for x in range(size[0])]
 
+    super_grid = [[[round(1+y*0.1, 2)
+                            for z in range(size[2])]
+                            for y in range(size[1])]
+                            for x in range(size[0])]
+
     # Return a Numpy array (faster)
     super_matrix = np.array(super_grid)
+
+    # layer bonus
+    super_matrix *= np.array([0.9,0.5,1,1.2,1.2,1.2,1.2])
     return super_matrix
 ############################################################### end Clever
 
@@ -112,7 +120,7 @@ def check_duplicates(points, count):
     print("No duplicates =", end='')
     print(len(points) == count )
 
-def length_score(wires):
+def length_score(wires, percentile):
     '''
     Nice start of how we can "SCORE" our result
     (Store in CSV????)
@@ -142,6 +150,7 @@ def length_score(wires):
     print('Longest: %.3f' % longest)
     print('Shortest: %.3f' % shortest)
     print('Mean: %.3f' % mean)
+    print('percentile connected: %.3f' % percentile)
     print('-------------------')
     print('Summary of the Boundaries')
     print('Minimal Length: %.3f' % min_len)
@@ -151,3 +160,9 @@ def length_score(wires):
     print('-------------------')
 
     return true_len
+
+def make_imported_points(points, netlist):
+    start_index, end_index = zip(*netlist)
+    starts = [(points[i][0],points[i][1],0) for i in start_index]
+    ends = [(points[i][0],points[i][1],0) for i in end_index]
+    return ends, starts

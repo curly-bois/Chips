@@ -10,7 +10,6 @@ from point import Point
 from wire import Wire
 from extra import *
 
-MAX_TRIES = 40000
 
 class Grid(object):
     '''
@@ -24,6 +23,7 @@ class Grid(object):
         self.size = size
         self.points = points
         self.grid = self.make_grid()
+        self.MAX_TRIES = size[0]*size[1]*size[2]
 
         # Some deeper charataristics of the grid
         self.make_neighbours()
@@ -114,7 +114,7 @@ class Grid(object):
                 # when end is there: "You found the line"
                 if N.attribute == 'end':
                     parent[N.location] = current_point.location
-                    print("Found")
+                    print("Found in:", tries, f'start:{start}, end:{end}')
                     found = True
 
                 # When open is there: "Possible next move"
@@ -143,19 +143,19 @@ class Grid(object):
             # Some visual "Loading" and make it not endless
             tries += 1
             print(tries,end='\r')
-            if tries > MAX_TRIES:
+            if tries > self.MAX_TRIES:
                 found = True
                 parent = {}
-                # Not found mostly means that it is not found yet!
+                # It's looping further then nessecary
                 print("Notfound")
 
         # Reset the 'open' and 'closed' attributes to free. (clear memory)
         for P in self.grid.values():
-            if P.attribute == 'open' or P.attribute == 'closed':
+            if P.attribute == 'open' or P.attribute == 'closed' or P.attribute == 'end':
                 P.set_attribute('free')
 
         # The parent contains the backtrace, which is needed to create the wire
-        return parent
+        return parent, tries
 
 
     def make_wire(self, start, end, parent):
@@ -166,20 +166,17 @@ class Grid(object):
         cur = self.grid[end].location
         wire = []
 
-        # if 'cur is not in in parent', the wire is not complete!
-        try:
-            while parent[cur] != start:
-                # Add the coordinates to the wire list and set attribute to wire
-                wire.append(cur)
-                self.grid[cur].set_attribute('wire')
-                cur = parent[cur]
+        while parent[cur] != start:
+            # Add the coordinates to the wire list and set attribute to wire
+            wire.append(cur)
+            self.grid[cur].set_attribute('wire')
+            cur = parent[cur]
 
-            # If end is found, add the end (here: 'start' -> reversed).
-            wire.append(start)
-            self.grid[start].set_attribute('wire')
-        except:
-            print("Could not make wire")
-            wire = [start,start]
+        # If end is found, add the end (here: 'start' -> reversed).
+        wire.append(cur)
+        wire.append(start)
+        self.grid[start].set_attribute('wire')
+
 
         # Return the wire
         return wire
@@ -263,7 +260,7 @@ class Grid(object):
                 # for every neighbour
                 for N in p.neighbours:
                     x,y,z = N.location
-                    self.value_grid[x][y][z] -= 0.2
+                    self.value_grid[x][y][z] -= 0.4
 
                 # for every X points above the point
                 x,y,z = p.location

@@ -9,6 +9,7 @@ from mpl_toolkits.mplot3d import Axes3D
 from point import Point
 from wire import Wire
 from extra import *
+from settings import *
 
 
 class Grid(object):
@@ -114,7 +115,7 @@ class Grid(object):
                 # when end is there: "You found the line"
                 if N.attribute == 'end':
                     parent[N.location] = current_point.location
-                    print("Found in:", tries, f'start:{start}, end:{end}')
+                    # print("Found in:", tries, f'start:{start}, end:{end}')
                     found = True
 
                 # When open is there: "Possible next move"
@@ -138,16 +139,16 @@ class Grid(object):
             except:
                 found = True
                 parent = {}
-                print("Error")
+                # print("Error")
 
             # Some visual "Loading" and make it not endless
             tries += 1
-            print(tries,end='\r')
+            # print(tries,end='\r')
             if tries > self.MAX_TRIES:
                 found = True
                 parent = {}
                 # It's looping further then nessecary
-                print("Notfound")
+                # print("Notfound")
 
         # Reset the 'open' and 'closed' attributes to free. (clear memory)
         for P in self.grid.values():
@@ -230,58 +231,27 @@ class Grid(object):
                 count_dict[point.location[-1]] = {point.attribute:1}
         return count_dict
 
+
     ################################################## CLever ################
     def update_layer(self):
         '''
         Update layers based on the info it got from the layer info
         '''
-        # retrive the count dict
-        cd = self.layer_info()
-        empty = np.zeros(len(cd))
-
-        # Calculate the occupiance of the layer
-        for key in cd:
-            layer_coverage = cd[key]['free']/255
-            empty[key] = 1 - (0.1   -(layer_coverage*0.1))
-
-        # Matrix multiplication
-        self.value_grid *= empty
+        self.value_grid = update_layer(self.layer_info(), self.value_grid)
 
     def edit_grid(self):
         '''
         Edit the value grid based on the points
         edits the values around the points and above
         '''
-        # For every point
-        for p in self.grid:
-            p = self.grid[p]
-            if p.location in self.points:
-
-                # for every neighbour
-                for N in p.neighbours:
-                    x,y,z = N.location
-                    self.value_grid[x][y][z] -= 0.4
-
-                # for every X points above the point
-                x,y,z = p.location
-                for i in range(2):
-                    self.value_grid[x][y][i] -= 0.1*(3-(i+1))
+        self.value_grid = edit_grid(self.grid, self.points, self.value_grid)
 
     def wire_NN_edit(self):
         '''
         Edit the values of the neighbours of the wires
         '''
-        # for every point
-        for p in self.grid:
-            p = self.grid[p]
+        self.value_grid = wire_NN_edit(self.gird, self.value_grid)
 
-            # If it's a wire
-            if p.attribute == 'wire':
-
-                # Set all neighbours to 0.1
-                for N in p.neighbours:
-                    x,y,z = N.location
-                    self.value_grid[x][y][z] -= 0.1
     ################################################## end CLever #############
     ''' Re-write the value updaters as a fucntion of a point, so that just a
     single loop is nessecarry for the edditing of the point_values (faster) '''

@@ -1,60 +1,6 @@
 import random
 import numpy as np
 
-def dis(s,e,m):
-    '''
-    Calculate the distance from the center
-    (can be used for sorting or value_grid)
-    '''
-    return abs(s[0]-5)+abs(s[1]-5)+abs(e[0]-5)+abs(e[1]-5)
-
-############################################################ Clever
-def sort_points(starts, ends):
-    '''
-    A way of sorting the points, very easy and not thought out.
-    '''
-    # Make two indentical list, sort one and use the other for indexing
-    distance = [abs(s[0]-e[0])+abs(s[1]-e[1]) for s,e in zip(starts,ends)]
-    index = [abs(s[0]-e[0])+abs(s[1]-e[1]) for s,e in zip(starts,ends)]
-    distance.sort()
-    points_unsorted = list(zip(starts,ends))
-
-    # Sort the starts and ends the same way as the distance, using the indexlist
-    points = []
-    for item in distance:
-        i = index.index(item)
-        points.append(points_unsorted[i])
-        index[i] = -1
-
-    # return the sorted points
-    return points
-
-def first_value(size):
-    '''
-    Very influencial defenition, creates the first instance of the value grid
-    At the moment the values are set to 0, testing should result in best values
-    '''
-    # triple list comperhansion
-    super_grid = [[[round((z)*0.00 + 0.5+
-                            abs(x - 4.5) * 0.00 +
-                            abs(y - 4.5) * 0.00, 2)
-                            for z in range(size[2])]
-                            for y in range(size[1])]
-                            for x in range(size[0])]
-
-    super_grid = [[[round(1+y*0.1, 2)
-                            for z in range(size[2])]
-                            for y in range(size[1])]
-                            for x in range(size[0])]
-
-    # Return a Numpy array (faster)
-    super_matrix = np.array(super_grid)
-
-    # layer bonus
-    super_matrix *= np.array([0.9,0.5,1,1.2,1.2,1.2,1.2])
-    return super_matrix
-############################################################### end Clever
-
 def cal_val(value_grid, tup_cur, tup_end, tup_start):
     '''
     Calculate the values for the Astar Algo
@@ -159,7 +105,7 @@ def length_score(wires, percentile):
     print('Minimal mean: %.3f' % Mmean)
     print('-------------------')
 
-    return true_len
+    return percentile
 
 def make_imported_points(points, netlist):
     start_index, end_index = zip(*netlist)

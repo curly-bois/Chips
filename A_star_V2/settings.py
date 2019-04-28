@@ -6,6 +6,7 @@ layer_coef = 0.1
 z_bonus = 0.1
 NN_penalty = 0.2
 wire_penalty = 0.1
+upper_penalty = False
 
 def sort_points(starts, ends):
     '''
@@ -84,10 +85,11 @@ def edit_grid(grid, points, value_grid):
                 x,y,z = N.location
                 value_grid[x][y][z] -= NN_penalty
 
-            # for every X points above the point
-            # x,y,z = p.location
-            # for i in range(2):
-            #     value_grid[x][y][i] -= 0.1*(3-(i+1))
+            if upper_penalty:
+                # for every X points above the point
+                x,y,z = p.location
+                for i in range(2): # This hard coded!!!!!!!!!
+                    value_grid[x][y][i] -= 0.1*(3-(i+1))
     return value_grid
 
 def wire_NN_edit(grid, value_grid):

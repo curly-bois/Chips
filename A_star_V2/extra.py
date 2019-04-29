@@ -67,7 +67,7 @@ def check_duplicates(points, count):
     print("No duplicates =", end='')
     print(len(points) == count )
 
-def length_score(wires, percentile, not_connected):
+def length_score(wires, percentile, not_connected, cal_time, net_number):
     '''
     Nice start of how we can "SCORE" our result
     (Store in CSV????)
@@ -79,7 +79,7 @@ def length_score(wires, percentile, not_connected):
                    for i in wires]
 
     # Stats
-    data = {'netlist':4}
+    data = {'netlist':net_number}
     data['total_connected'] = percentile
     data['true_len'] = sum(len_list)
     data['longest'] = max(len_list)
@@ -87,6 +87,8 @@ def length_score(wires, percentile, not_connected):
     data['mean'] = data['true_len'] / len(len_list)
     data['q25'] = len_list[int(len(len_list)/4)]
     data['q75'] = len_list[-int(len(len_list)/4)]
+    data['cal_time'] = cal_time
+    data['len_percentile'] = sum(len_list)/sum(minlen_list)
 
     output('Book1.xlsx', data)
     return percentile

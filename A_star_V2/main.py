@@ -17,12 +17,14 @@ def get_wires(mainGrid, points_to_connect):
     wires = []
     connected = 0
     wire_num = -1
+    not_connected = []
 
     for start,end in points_to_connect:
         wire_num += 1
         # find line, else return empty dict
         parent, tries = mainGrid.find_line(start, end)
         if parent == {}:
+            not_connected.append((start, end))
             pass
         else:
             # Retrace the line and laydown the wire
@@ -34,7 +36,7 @@ def get_wires(mainGrid, points_to_connect):
             # mainGrid.wire_NN_edit()
             connected += 1
 
-    return wires, connected
+    return wires, connected, not_connected
 
 if __name__ == '__main__':
     start = time.time()
@@ -52,11 +54,11 @@ if __name__ == '__main__':
     mainGrid = Grid(SIZE, points)
 
     # The hard work
-    wires, connected = get_wires(mainGrid, points_to_connect)
+    wires, connected, not_connected = get_wires(mainGrid, points_to_connect)
 
     # Print lenght + minimal lenght
     total_points = len(points_to_connect)
-    score = length_score(wires, connected/total_points)
+    score = length_score(wires, connected/total_points, not_connected)
 
     # Time!
     print('We found it in: ',time.time()-start)

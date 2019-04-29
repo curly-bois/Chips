@@ -1,5 +1,6 @@
 import random
 import numpy as np
+import pandas as pd
 
 def cal_val(value_grid, tup_cur, tup_end, tup_start):
     '''
@@ -66,7 +67,7 @@ def check_duplicates(points, count):
     print("No duplicates =", end='')
     print(len(points) == count )
 
-def length_score(wires, percentile):
+def length_score(wires, percentile, not_connected):
     '''
     Nice start of how we can "SCORE" our result
     (Store in CSV????)
@@ -78,33 +79,15 @@ def length_score(wires, percentile):
                    for i in wires]
 
     # Stats
-    true_len = sum(len_list)
-    longest = max(len_list)
-    shortest = min(len_list)
-    mean = true_len / len(len_list)
+    data = {'netlist':4}
+    data['true_len'] = sum(len_list)
+    data['longest'] = max(len_list)
+    data['shortest'] = min(len_list)
+    data['mean'] = data['true_len'] / len(len_list)
+    data['q25'] = len_list[int(len(len_list)/4)]
+    data['q75'] = len_list[-int(len(len_list)/4)]
 
-    # Boundaries
-    min_len = sum(minlen_list)
-    Mlongest = max(minlen_list)
-    Mshortest = min(minlen_list)
-    Mmean = min_len / len(minlen_list)
-
-    # Print all
-    print('-------------------')
-    print('Summary of the Routes')
-    print('Total lenght: %.3f' % true_len)
-    print('Longest: %.3f' % longest)
-    print('Shortest: %.3f' % shortest)
-    print('Mean: %.3f' % mean)
-    print('percentile connected: %.3f' % percentile)
-    print('-------------------')
-    print('Summary of the Boundaries')
-    print('Minimal Length: %.3f' % min_len)
-    print('Minimal Longest: %.3f' % Mlongest)
-    print('Minimal shortest: %.3f' % Mshortest)
-    print('Minimal mean: %.3f' % Mmean)
-    print('-------------------')
-
+    output('Book1.xlsx', data)
     return percentile
 
 def make_imported_points(points, netlist):
@@ -112,3 +95,10 @@ def make_imported_points(points, netlist):
     starts = [(points[i][0],points[i][1],0) for i in start_index]
     ends = [(points[i][0],points[i][1],0) for i in end_index]
     return ends, starts
+
+def output(filename, data):
+    df = pd.DataFrame(data, index = 1)
+    # df = pd.read_excel(filename, sheetname=0)
+    # df.append(df_new, ignore_index=True)
+    print(df)
+    df.to_excel(filename)

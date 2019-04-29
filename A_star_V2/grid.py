@@ -231,6 +231,15 @@ class Grid(object):
                 count_dict[point.location[-1]] = {point.attribute:1}
         return count_dict
 
+    def remove_wire(self, wire):
+        '''
+
+        '''
+        start, end = wire.start, wire.end
+        for pos in wire.route:
+            self.grid[pos].set_attribute('free')
+        number = wire.number
+        return start, end, number
 
     ################################################## CLever ################
     def update_layer(self):

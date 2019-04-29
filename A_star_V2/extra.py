@@ -80,6 +80,7 @@ def length_score(wires, percentile, not_connected):
 
     # Stats
     data = {'netlist':4}
+    data['total_connected'] = percentile
     data['true_len'] = sum(len_list)
     data['longest'] = max(len_list)
     data['shortest'] = min(len_list)

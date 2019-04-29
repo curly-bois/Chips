@@ -5,6 +5,8 @@ from wire import Wire
 from extra import *
 from settings import *
 
+import random
+
 import time
 
 
@@ -39,7 +41,7 @@ def get_wires(mainGrid, points_to_connect):
     return wires, connected, not_connected
 
 if __name__ == '__main__':
-    start = time.time()
+    start_time = time.time()
     # Import data
     # starts, ends = extra.make_random_points(SIZE, resolution=2, number=NUMBER)
     from data import ends, starts
@@ -55,13 +57,30 @@ if __name__ == '__main__':
 
     # The hard work
     wires, connected, not_connected = get_wires(mainGrid, points_to_connect)
+    old_wires = [i for i in wires]
+    num_not_con = len(not_connected)
 
+    # swap wires
+    for wire in old_wires:
+        not_con_len = len(not_connected)
+
+        start, end, number = mainGrid.remove_wire(wire)
+        wires2, connected2, not_connected2 = get_wires(mainGrid, not_connected)
+
+        if not_con_len - 1 >= len(not_connected2):
+            not_connected.append((start,end))
+            wires += wires2
+            not_connected = not_connected2
+        else:
+            mainGrid.add_wire(wire)
+
+    connected = 50 - len(not_connected)
     # Print lenght + minimal lenght
     total_points = len(points_to_connect)
     score = length_score(wires, connected/total_points, not_connected)
 
     # Time!
-    print('We found it in: ',time.time()-start)
+    print('We found it in: ',time.time() - start_time)
 
     # Plots result
     mainGrid.plot_wire(wires)

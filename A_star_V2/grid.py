@@ -241,6 +241,10 @@ class Grid(object):
         number = wire.number
         return start, end, number
 
+    def add_wire(self, wire):
+        for pos in wire.route:
+            self.grid[pos].set_attribute('wire')
+    
     ################################################## CLever ################
     def update_layer(self):
         '''

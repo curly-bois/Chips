@@ -97,8 +97,8 @@ def make_imported_points(points, netlist):
     return ends, starts
 
 def output(filename, data):
-    df = pd.DataFrame(data, index = 1)
-    # df = pd.read_excel(filename, sheetname=0)
-    # df.append(df_new, ignore_index=True)
-    print(df)
-    df.to_excel(filename)
+    df = pd.read_excel(filename, sheetname=0)
+    df_new = pd.DataFrame(data, index = [1])
+    df_file = df.append(df_new, ignore_index=True)
+    print(df_file)
+    df_file.to_excel(filename)

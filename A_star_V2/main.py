@@ -12,6 +12,7 @@ import time
 SIZE = (17,17,7)
 NUMBER = 50
 LOOPS = 10
+OUTER_LOOPS = 10
 
 def get_wires(mainGrid, points_to_connect):
     # Start the loop for all the wires
@@ -61,44 +62,46 @@ def swap_wires(wires, not_connected, mainGrid):
     return mainGrid, wires, not_connected
 
 if __name__ == '__main__':
-    start_time = time.time()
-    # Import data
-    # starts, ends = extra.make_random_points(SIZE, resolution=2, number=NUMBER)
-    from data import ends, starts, total_poits_number, net_number
+    for loop in range(OUTER_LOOPS):
+        start_time = time.time()
+        # Import data
+        # starts, ends = extra.make_random_points(SIZE, resolution=2, number=NUMBER)
+        from data import ends, starts, total_poits_number, net_number
 
-    # Normal order, or custom order
-    # points_to_connect = list(zip(starts,ends))
-    points_to_connect = sort_points(starts, ends)
-    # points_to_connect = sort_points2(starts, ends)
+        # Normal order, or custom order
+        # points_to_connect = list(zip(starts,ends)) #
+        # points_to_connect = sort_points(starts, ends) #
+        points_to_connect = sort_points_random(starts, ends)
 
-    # Initialize the grid
-    points = starts+ends
-    mainGrid = Grid(SIZE, points)
+        # Initialize the grid
+        points = starts+ends
+        mainGrid = Grid(SIZE, points)
 
-    # The hard work
-    wires, connected, not_connected = get_wires(mainGrid, points_to_connect)
+        # The hard work
+        wires, connected, not_connected = get_wires(mainGrid, points_to_connect)
 
-    # # swap wires
-    for i in range(LOOPS):
-        print('Swap #', i)
-        mainGrid, wires, not_connected = swap_wires(wires,
-                                                    not_connected,
-                                                    mainGrid)
-        if len(not_connected) == 0:
-            break
+        # # swap wires
+        for i in range(LOOPS):
+            print('Swap #', i)
+            mainGrid, wires, not_connected = swap_wires(wires,
+                                                        not_connected,
+                                                        mainGrid)
+            if len(not_connected) == 0:
+                break
 
-    connected = total_poits_number - len(not_connected)
+        connected = total_poits_number - len(not_connected)
 
-    # Print lenght + minimal lenght
-    cal_time = time.time() - start_time
-    score = length_score(wires,
-                         connected / total_poits_number,
-                         not_connected,
-                         cal_time,
-                         net_number)
+        # Print lenght + minimal lenght
+        cal_time = time.time() - start_time
+        score = length_score(wires,
+                             connected / total_poits_number,
+                             not_connected,
+                             cal_time,
+                             net_number,
+                             points_to_connect)
 
-    # Time!
-    print('We found it in: ',cal_time)
+        # Time!
+        print('We found it in: ',cal_time)
 
     # Plots result
     mainGrid.plot_wire(wires)

@@ -1,4 +1,5 @@
 import numpy as np
+import random
 
 layer_multiplier = [0.5,0.5,1,1.2,1.2,1.2,1.2]
 # layer_multiplier = [0.4,0.7,1,1.2,1.2,1.2,1.2]
@@ -27,6 +28,11 @@ def sort_points(starts, ends):
 
     # return the sorted points
     return points
+
+def sort_points_random(starts, ends):
+    points_unsorted = list(zip(starts,ends))
+    random.shuffle(points_unsorted)
+    return points_unsorted
 
 def first_value(size):
     '''

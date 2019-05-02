@@ -26,7 +26,9 @@ print("\n\n\n ***********************************************************")
 
 
 # While
+upcheck = 0
 while to_be_connected:
+    upcheck += 1
     print("***********************************************************")
     print("***********************************************************")
     print("***********************************************************")
@@ -61,11 +63,13 @@ while to_be_connected:
     #print(f"This is openlist {openlist}")
 
     tries = 0
+
+    up_check = 0
     while not found:
         tries += 1
-        if tries == 2000:
+        if tries == 500:
             print("Tried 500 times")
-            print(len(to_be_connected))
+            print(f"AMOUNT OF SETS LEFT: {len(to_be_connected)}")
             sys.exit()
 
         current = min(openlist, key=openlist.get)
@@ -90,6 +94,8 @@ while to_be_connected:
             current = min(h_vals, key=h_vals.get)
             print(f"There is a lower h: {current.get_location()}")
 
+        if tries < 2 and upcheck < 5:
+            current = matrix[parent[current].location[2] + 1][parent[current].location[1]][parent[current].location[0]]
 
         print(f"lowest in openlist is now: {current.get_location()} with an f of {current.calculate_f(start.get_location(), end.get_location())}")
 
@@ -207,11 +213,10 @@ for three_dimensions in matrix:
             if point.get_attribute() == "taken" or point.get_attribute() == "gate":
                 taken.append(point.location)
 
-
+print(f"AMOUNT OF SETS LEFT: {len(to_be_connected)}")
 fig = plt.figure()
 ax = plt.axes(projection='3d')
 ax.set_zlim(0, 6)
-print(wires)
 ax.scatter3D(*zip(*wires))
 ax.scatter3D(*zip(*taken))
 plt.show()

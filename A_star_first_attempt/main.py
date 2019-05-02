@@ -35,6 +35,7 @@ while to_be_connected:
     print("***********************************************************")
     print("***********************************************************")
     start = to_be_connected[0][0]
+    start.h = 0
     end = to_be_connected[0][1]
     end.attribute = "empty"
     print(f"Start location is: {start.location}")
@@ -53,7 +54,7 @@ while to_be_connected:
 
     for neighbour in start.get_neighbours():
         parent[neighbour] = start
-        
+        neighbour.h = start.h + 1
         openlist[neighbour] = neighbour.calculate_f(start.get_location(),
                                                     end.get_location())
     closedlist.append(start)
@@ -62,7 +63,7 @@ while to_be_connected:
     tries = 0
     while not found:
         tries += 1
-        if tries == 1000:
+        if tries == 2000:
             print("Tried 500 times")
             print(len(to_be_connected))
             sys.exit()
@@ -81,7 +82,7 @@ while to_be_connected:
         if len(lowest_fs) > 1:
             h_vals = {}
             for point in lowest_fs:
-                h_vals[point] = point.calculate_h(end.get_location())
+                h_vals[point] = point.get_h()
 
             print("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
             print("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
@@ -125,6 +126,7 @@ while to_be_connected:
 
             if neighbour not in openlist:
                 parent[neighbour] = current
+                neighbour.h = current.h + 1
                 openlist[neighbour] = neighbour.calculate_f(start.get_location(),
                                                             end.get_location())
 
@@ -202,7 +204,7 @@ for three_dimensions in matrix:
                 wires.append(point.location)
                 print(point.location)
                 wire_pieces += 1
-            if point.get_attribute() == "taken":
+            if point.get_attribute() == "taken" or point.get_attribute() == "gate":
                 taken.append(point.location)
 
 

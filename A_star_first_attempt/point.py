@@ -25,6 +25,9 @@ class Point(object):
     def get_attribute(self):
         return self.attribute
 
+    def get_h(self):
+        return self.h
+
     def calculate_h(self, end_location):
         manhattan_to_end = 0
         difference_from_end = numpy.subtract(self.location, end_location)
@@ -53,7 +56,7 @@ class Point(object):
 
         #print(f"The manhattan distance until the end is {manhattan_to_end}")
 
-        f = manhattan_from_start + manhattan_to_end
+        f = self.h + manhattan_to_end
         print(f"{self.location} distance from start: {manhattan_from_start} To end: {manhattan_to_end} Total f:{f} \n")
         return f
 

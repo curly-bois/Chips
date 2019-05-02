@@ -99,6 +99,9 @@ class Grid(object):
 
 
     def find_line(self, start, end):
+        '''
+        Astar
+        '''
         # Set key attributes and start point
         self.grid[start].set_attribute('closed')
         self.grid[end].set_attribute('end')

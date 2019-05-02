@@ -21,7 +21,7 @@ def cal_val(matrix, points, value_grid, tup_cur, tup_end, tup_start):
     x,y,z = tup_cur[0],tup_cur[1],tup_cur[2]
 
     # Adjust for value_grid
-    value = ( dis2end - dis2start)*float(value_grid[x][y][z])
+    value = (dis2end - dis2start)*float(value_grid[x][y][z])
     return value
 
 def threedimdistance( i, j):

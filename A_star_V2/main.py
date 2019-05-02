@@ -45,7 +45,6 @@ def get_wires(mainGrid, points_to_connect):
 def swap_wires(wires, not_connected, mainGrid):
 
     old_wires = [i for i in wires]
-    num_not_con = len(not_connected)
 
     for wire in old_wires:
         not_con_len = len(not_connected)
@@ -77,7 +76,7 @@ if __name__ == '__main__':
         points = starts+ends
         mainGrid = Grid(SIZE, points)
 
-        # The hard work
+        # A star algo
         wires, connected, not_connected = get_wires(mainGrid, points_to_connect)
 
         # # swap wires

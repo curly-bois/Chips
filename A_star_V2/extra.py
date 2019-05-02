@@ -2,19 +2,26 @@ import random
 import numpy as np
 import pandas as pd
 
-def cal_val(value_grid, tup_cur, tup_end, tup_start):
+def get_distance(matrix, points, p1, p2):
+    ver = points.index(p1)
+    hor = points.index(p2)
+    return matrix[ver][hor]
+
+def cal_val(matrix, points, value_grid, tup_cur, tup_end, tup_start):
     '''
     Calculate the values for the Astar Algo
     '''
     # Get distance values
-    dis2end = threedimdistance(tup_cur, tup_end)
-    dis2start = threedimdistance(tup_start, tup_cur)
+    # dis2end = threedimdistance(tup_cur, tup_end)
+    dis2end = get_distance(matrix, points, tup_cur, tup_end)
+    # dis2start = threedimdistance(tup_start, tup_cur)
+    dis2start = get_distance(matrix, points, tup_start, tup_cur)
 
     # Get coordinates
     x,y,z = tup_cur[0],tup_cur[1],tup_cur[2]
 
     # Adjust for value_grid
-    value = ( dis2end - dis2start)*float(value_grid[x][y][z])
+    value = (dis2end - dis2start)*float(value_grid[x][y][z])
     return value
 
 def threedimdistance( i, j):
@@ -67,7 +74,7 @@ def check_duplicates(points, count):
     print("No duplicates =", end='')
     print(len(points) == count )
 
-def length_score(wires, percentile, not_connected):
+def length_score(wires, percentile, not_connected, cal_time, net_number, points_to_connect):
     '''
     Nice start of how we can "SCORE" our result
     (Store in CSV????)
@@ -79,13 +86,17 @@ def length_score(wires, percentile, not_connected):
                    for i in wires]
 
     # Stats
-    data = {'netlist':4}
+    data = {'netlist':net_number}
+    data['total_connected'] = percentile
     data['true_len'] = sum(len_list)
     data['longest'] = max(len_list)
     data['shortest'] = min(len_list)
     data['mean'] = data['true_len'] / len(len_list)
     data['q25'] = len_list[int(len(len_list)/4)]
     data['q75'] = len_list[-int(len(len_list)/4)]
+    data['cal_time'] = cal_time
+    data['len_percentile'] = sum(len_list)/sum(minlen_list)
+    data['starting order'] = str(points_to_connect)
 
     output('Book1.xlsx', data)
     return percentile
@@ -97,8 +108,8 @@ def make_imported_points(points, netlist):
     return ends, starts
 
 def output(filename, data):
-    df = pd.read_excel(filename, sheetname=0)
+    df = pd.read_excel(filename, sheet_name=0)
     df_new = pd.DataFrame(data, index = [1])
     df_file = df.append(df_new, ignore_index=True)
-    print(df_file)
+    print(df_file.tail())
     df_file.to_excel(filename)

@@ -29,6 +29,7 @@ class Grid(object):
         # Some deeper charataristics of the grid
         self.make_neighbours()
         self.set_points()
+        self.matrix = self.distance_matrix()
 
         # Add some logic to the grid
         self.value_grid = first_value(size)
@@ -98,6 +99,9 @@ class Grid(object):
 
 
     def find_line(self, start, end):
+        '''
+        Astar
+        '''
         # Set key attributes and start point
         self.grid[start].set_attribute('closed')
         self.grid[end].set_attribute('end')
@@ -120,7 +124,9 @@ class Grid(object):
 
                 # When open is there: "Possible next move"
                 elif N.attribute == "free":
-                    N.set_value(cal_val(self.value_grid, N.location, end, start))
+                    N.set_value(cal_val(self.matrix, self.plane_points,
+                                        self.value_grid, N.location,
+                                        end, start))
                     N.set_attribute('open')
                     parent[N.location] = current_point.location
 
@@ -231,6 +237,35 @@ class Grid(object):
                 count_dict[point.location[-1]] = {point.attribute:1}
         return count_dict
 
+    def remove_wire(self, wire):
+        '''
+
+        '''
+        start, end = wire.start, wire.end
+        for pos in wire.route:
+            self.grid[pos].set_attribute('free')
+        number = wire.number
+        return start, end, number
+
+    def add_wire(self, wire):
+        for pos in wire.route:
+            self.grid[pos].set_attribute('wire')
+
+    def distance_matrix(self):
+        points = []
+        for i in range(self.size[0]):
+            for j in range(self.size[1]):
+                for k in range(self.size[2]):
+                    points.append((i,j,k))
+
+        self.plane_points = points
+        matrix = []
+        for vertical in points:
+            line = []
+            for horizontal in points:
+                line.append(round(threedimdistance(vertical, horizontal),1))
+            matrix.append(line)
+        return matrix
 
     ################################################## CLever ################
     def update_layer(self):

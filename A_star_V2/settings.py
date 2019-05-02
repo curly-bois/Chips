@@ -1,5 +1,7 @@
 import numpy as np
+import random
 
+# Current best
 layer_multiplier = [0.5,0.5,1,1.2,1.2,1.2,1.2]
 # layer_multiplier = [0.4,0.7,1,1.2,1.2,1.2,1.2]
 layer_coef = 0.1
@@ -7,6 +9,7 @@ z_bonus = 0.1
 NN_penalty = 0.2
 wire_penalty = 0.1
 upper_penalty = False
+
 
 def sort_points(starts, ends):
     '''
@@ -27,6 +30,11 @@ def sort_points(starts, ends):
 
     # return the sorted points
     return points
+
+def sort_points_random(starts, ends):
+    points_unsorted = list(zip(starts,ends))
+    random.shuffle(points_unsorted)
+    return points_unsorted
 
 def first_value(size):
     '''
@@ -83,7 +91,7 @@ def edit_grid(grid, points, value_grid):
             # for every neighbour
             for N in p.neighbours:
                 x,y,z = N.location
-                value_grid[x][y][z] -= NN_penalty
+                value_grid[x][y][z] -= NN_penalty ## changes to +
 
             if upper_penalty:
                 # for every X points above the point
@@ -106,5 +114,5 @@ def wire_NN_edit(grid, value_grid):
             # Set all neighbours to 0.1
             for N in p.neighbours:
                 x,y,z = N.location
-                value_grid[x][y][z] -= wire_penalty
+                value_grid[x][y][z] -= wire_penalty ## Changed to +++
     return value_grid

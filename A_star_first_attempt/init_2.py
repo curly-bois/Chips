@@ -33,7 +33,7 @@ def get_grid():
 
 def get_connections():
 
-    txt = os.path.join("options", "list_small.txt")
+    txt = os.path.join("options", "list_1.txt")
 
     # read the .txt file
         # filter only things inbetween brackets

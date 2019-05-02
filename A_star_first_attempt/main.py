@@ -6,14 +6,14 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sys
 
-cube = matrix(get_grid())
 
 connections = get_connections()
 matrix = matrix(get_grid())
 to_be_connected = make_conlist(connections,matrix)
 
+print(to_be_connected)
+np.random.shuffle(to_be_connected)
 print("***")
-
 
 print("\n\n\n ***********************************************************")
 
@@ -21,18 +21,24 @@ print("\n\n\n ***********************************************************")
 # Gets neighbours, checks if gate, if not gate -> go on
 # If gate: retrace steps
 
-to_be_connected = [(cube[0][0][3], cube[0][6][2]), (cube[0][10][10], cube[0][10][12]),
-                   (cube[0][1][5], cube[0][4][3]), (cube[1][1][5], cube[2][4][3])]
+# to_be_connected = [(cube[0][10][9], cube[0][1][15])]
 
 
 
 # While
 while to_be_connected:
+    print("***********************************************************")
+    print("***********************************************************")
+    print("***********************************************************")
     print(f"Amount of sets to be connected: {len(to_be_connected)}")
+    print("***********************************************************")
+    print("***********************************************************")
+    print("***********************************************************")
     start = to_be_connected[0][0]
     end = to_be_connected[0][1]
-    print(start.location)
-    print(end.location)
+    end.attribute = "empty"
+    print(f"Start location is: {start.location}")
+    print(f"End location is: {end.location}")
 
     found = False
 
@@ -47,24 +53,48 @@ while to_be_connected:
 
     for neighbour in start.get_neighbours():
         parent[neighbour] = start
+        
         openlist[neighbour] = neighbour.calculate_f(start.get_location(),
                                                     end.get_location())
     closedlist.append(start)
-    print(f"This is openlist {openlist}")
+    #print(f"This is openlist {openlist}")
 
     tries = 0
     while not found:
         tries += 1
         if tries == 1000:
             print("Tried 500 times")
+            print(len(to_be_connected))
             sys.exit()
 
         current = min(openlist, key=openlist.get)
-        print(current)
+
+        lowest_f = openlist[current]
+
+        lowest_fs = []
+
+        for point in openlist:
+            if openlist[point] == lowest_f:
+                lowest_fs.append(point)
+
+        # If there are multiple points with the lowest f value, go to lowest h
+        if len(lowest_fs) > 1:
+            h_vals = {}
+            for point in lowest_fs:
+                h_vals[point] = point.calculate_h(end.get_location())
+
+            print("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
+            print("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
+            print("HHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHHH")
+            current = min(h_vals, key=h_vals.get)
+            print(f"There is a lower h: {current.get_location()}")
+
+
+        print(f"lowest in openlist is now: {current.get_location()} with an f of {current.calculate_f(start.get_location(), end.get_location())}")
 
         del openlist[current]
         closedlist.append(current)
-        print(f"This is openlist {openlist}")
+        #print(f"This is openlist {openlist}")
 
         if current == end:
             end.attribute = "taken"
@@ -79,6 +109,14 @@ while to_be_connected:
                 going_back = parent[going_back]
 
             found = True
+
+            ## TESTER ##
+
+            # tester+=1
+            # if tester == 3:
+            #     exit()
+
+
             break
 
         for neighbour in current.get_neighbours():
@@ -157,7 +195,7 @@ print("All sets have been connected")
 wires = []
 taken = []
 wire_pieces = 0
-for three_dimensions in cube:
+for three_dimensions in matrix:
     for two_dimensions in three_dimensions:
         for point in two_dimensions:
             if point.get_attribute() == "wire":
@@ -170,11 +208,11 @@ for three_dimensions in cube:
 
 fig = plt.figure()
 ax = plt.axes(projection='3d')
-ax.set_zlim(0, 2)
+ax.set_zlim(0, 6)
+print(wires)
 ax.scatter3D(*zip(*wires))
 ax.scatter3D(*zip(*taken))
 plt.show()
-
 
 
 # midlayer = []

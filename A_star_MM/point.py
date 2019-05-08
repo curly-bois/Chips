@@ -2,10 +2,11 @@ import numpy
 
 class Point(object):
 
-    def __init__(self, location, attribute, neighbours, value, id = 0, h= 0):
+    def __init__(self, location, attr ibute, neighbours, value, id = 0, h= 0):
         self.location = location
         self.attribute = attribute
         self.neighbours = neighbours
+        self.next_to_gate = False
         self.value = value
         self.id = id
         self.h = h
@@ -56,15 +57,17 @@ class Point(object):
             manhattan_to_end += abs(dimensional_difference)
 
         #print(f"The manhattan distance until the end is {manhattan_to_end}")
-        if self.location[1] >= 1:
-            f = (self.h + manhattan_to_end) * 0.3
-        elif self.location[1] >= 3:
-            f = (self.h + manhattan_to_end) * 0.2
-        elif self.location[1] >= 5:
-            f = (self.h + manhattan_to_end) * 0.01
-        elif self.location[1] == 0:
-            f = (self.h + manhattan_to_end) * 1.2
+        if self.location[2] >= 1:
+            f = (self.h + manhattan_to_end) * 0.9
+        elif self.location[2] >= 3:
+            f = (self.h + manhattan_to_end) * 0.8
+        elif self.location[2] >= 5:
+            f = (self.h + manhattan_to_end) * 0.7
+        elif self.location[2] == 0:
+            f = (self.h + manhattan_to_end) * 1
         # print(f"{self.location} distance from start: {manhattan_from_start} To end: {manhattan_to_end} Total f:{f} \n")
+        if self.next_to_gate:
+            return (f + 3)
         return f
 
     # def __str__(self):

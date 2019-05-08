@@ -8,6 +8,7 @@ import os
 import heapq
 import itertools
 from point import Point
+from set import Set
 
 
 def get_grid():
@@ -15,11 +16,7 @@ def get_grid():
     # make a dict of all the points and their location
     points = []
 
-<<<<<<< HEAD:A_star_first_attempt/init_2.py
-    txt = os.path.join("connections.txt")
-=======
     txt = os.path.join("options", "connections.txt")
->>>>>>> 5688f84afc50518feb8f568050fb2b5c374b9439:A_star_MM/init.py
 
     with open(txt, "r") as f:
         for line in f:
@@ -115,10 +112,15 @@ def matrix(grid):
                 if matrix[i][j][k].attribute == "gate":
                     gates.append(matrix[i][j][k].location)
 
+    for neighbour in matrix[i][j][k].get_neighbours():
+        if neighbour.get_attribute() == "gate" and matrix[i][j][k].get_attribute() != "gate":
+            matrix[i][j][k].next_to_gate = True
+
+
     return matrix
 
 def make_conlist(connections, matrix):
-
+    setlist = []
     locations = []
     coordinates = {}
     for i in range(len(matrix)):
@@ -132,6 +134,7 @@ def make_conlist(connections, matrix):
         connection[1] += 1
         locations.append(
             (coordinates[connection[0]], coordinates[connection[1]]))
+        setlist.append(Set(coordinates[connection[0]], coordinates[connection[1]]))
     print("in de init")
     print(matrix[0][8][2])
-    return locations
+    return setlist

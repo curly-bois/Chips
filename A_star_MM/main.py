@@ -1,4 +1,5 @@
 from point import Point
+from set import Set
 from init import *
 
 from mpl_toolkits import mplot3d
@@ -14,13 +15,16 @@ to_be_connected = make_conlist(connections, matrix)
 # shuffle the points randomly
 np.random.shuffle(to_be_connected)
 not_connected = []
+all_sets = []
 
 while to_be_connected:
+    route = []
+    all_sets.append(to_be_connected[0])
 
     # make start and end point
-    start = to_be_connected[0][0]
+    start = all_sets[-1].get_startpoint()
     start.h = 0
-    end = to_be_connected[0][1]
+    end = all_sets[-1].get_endpoint()
     end.attribute = "empty"
     print(f"Start location is: {start.location}")
     print(f"End location is: {end.location}")
@@ -30,7 +34,7 @@ while to_be_connected:
     wire = []
 
     # Removes first set
-    to_be_connected.pop(0)
+    removed_set = to_be_connected.pop(0)
 
     openlist = {}
     closedlist = []
@@ -97,16 +101,22 @@ while to_be_connected:
             end.attribute = "taken"
             start.attribute = "taken"
             print("End has been found")
+            all_sets[-1].is_connected = True
 
             # Retrace final step
             going_back = parent[current]
 
+            route.append(end)
+
             #  retrace the rest of the steps
             while going_back is not start:
+                route.append(going_back)
                 going_back.set_attribute("wire")
                 print(f"Retracing steps: {going_back.location}")
                 going_back = parent[going_back]
 
+            route.append(start)
+            all_sets[-1].set_route(list(reversed(route)))
             found = True
 
             break
@@ -141,3 +151,6 @@ ax.set_zlim(0, 6)
 ax.scatter3D(*zip(*wires))
 ax.scatter3D(*zip(*taken))
 plt.show()
+
+for set in all_sets:
+    print(set)

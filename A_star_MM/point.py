@@ -26,6 +26,7 @@ class Point(object):
         return self.attribute
 
     def get_h(self):
+
         return self.h
 
     def calculate_h(self, end_location):
@@ -55,9 +56,15 @@ class Point(object):
             manhattan_to_end += abs(dimensional_difference)
 
         #print(f"The manhattan distance until the end is {manhattan_to_end}")
-
-        f = self.h + manhattan_to_end
-        print(f"{self.location} distance from start: {manhattan_from_start} To end: {manhattan_to_end} Total f:{f} \n")
+        if self.location[1] >= 1:
+            f = (self.h + manhattan_to_end) * 0.3
+        elif self.location[1] >= 3:
+            f = (self.h + manhattan_to_end) * 0.2
+        elif self.location[1] >= 5:
+            f = (self.h + manhattan_to_end) * 0.01
+        elif self.location[1] == 0:
+            f = (self.h + manhattan_to_end) * 1.2
+        # print(f"{self.location} distance from start: {manhattan_from_start} To end: {manhattan_to_end} Total f:{f} \n")
         return f
 
     # def __str__(self):

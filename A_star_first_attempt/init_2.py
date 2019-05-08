@@ -15,7 +15,7 @@ def get_grid():
     # make a dict of all the points and their location
     points = []
 
-    txt = os.path.join("connections2.txt")
+    txt = os.path.join("connections.txt")
 
     with open(txt, "r") as f:
         for line in f:
@@ -33,7 +33,7 @@ def get_grid():
 
 def get_connections():
 
-    txt = os.path.join("options", "list_small.txt")
+    txt = os.path.join("options", "list_1.txt")
 
     # read the .txt file
         # filter only things inbetween brackets

@@ -1,5 +1,5 @@
 from point import Point
-from init_2 import *
+from init import *
 
 from mpl_toolkits import mplot3d
 import numpy as np

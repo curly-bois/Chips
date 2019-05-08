@@ -1,4 +1,4 @@
-from init_2 import *
+from init import *
 
 import operator
 import numpy

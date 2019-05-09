@@ -1,5 +1,4 @@
 from point import Point
-from set import Set
 from init import *
 from make_data import *
 from connect import *
@@ -19,7 +18,8 @@ def disconnect_sets(sets_to_disconnect):
         set.disconnect()
 
 while counter < 1:
-    counter += 1
+    # initializing the grid and making the points
+
     matrix = make_matrix(gridpoints)
     to_be_connected = make_conlist(connections, matrix)
 
@@ -45,7 +45,7 @@ while counter < 1:
     ax.scatter3D(*zip(*taken))
     # plt.show()
 
- 
+
 
     print(f"After the first try {len(unconnected_sets)} are unconnected")
 

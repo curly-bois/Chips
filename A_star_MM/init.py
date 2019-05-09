@@ -46,7 +46,7 @@ def get_connections():
     for number in text:
         number = number.replace(")", "").replace("(", "").split(",")
         x, y = int(number[0]), int(number[1])
-        connections.append([x, y])
+        connections.append([(x + 1), (y + 1)])
 
     return connections
 
@@ -124,10 +124,9 @@ def make_conlist(connections, matrix):
                     coordinates[matrix[i][j][k].id] = matrix[i][j][k]
 
     for connection in connections:
-        connection[0] += 1
-        connection[1] += 1
+        # connection[0] += 1
+        # connection[1] += 1
         locations.append(
             (coordinates[connection[0]], coordinates[connection[1]]))
-    print("in de init")
-    print(matrix[0][8][2])
+
     return locations

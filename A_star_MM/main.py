@@ -1,5 +1,6 @@
 from point import Point
 from init import *
+from make_data import *
 
 from mpl_toolkits import mplot3d
 import numpy as np
@@ -7,137 +8,157 @@ import matplotlib.pyplot as plt
 import sys
 
 # initializing the grid and making the points
-connections = get_connections()
-matrix = matrix(get_grid())
-to_be_connected = make_conlist(connections, matrix)
+counter = 0
 
-# shuffle the points randomly
-np.random.shuffle(to_be_connected)
-not_connected = []
+while counter <= 10:
 
-while to_be_connected:
+    connections = get_connections()
+    list = get_grid()
+    print(matrix(list))
+    matrix = matrix(list)
+    to_be_connected = make_conlist(connections, matrix)
 
-    # make start and end point
-    start = to_be_connected[0][0]
-    start.h = 0
-    end = to_be_connected[0][1]
-    end.attribute = "empty"
-    print(f"Start location is: {start.location}")
-    print(f"End location is: {end.location}")
+    # shuffle the points randomly
+    np.random.shuffle(to_be_connected)
+    orderlist = []
 
-    found = False
+    for point in to_be_connected:
+        orderlist.append(f"({point[0].id},{point[1].id})")
 
-    wire = []
 
-    # Removes first set
-    to_be_connected.pop(0)
+    not_connected = []
 
-    openlist = {}
-    closedlist = []
-    parent = {}
+    while to_be_connected:
 
-    # loop trough neighbours and append them to the openlist
-    # also append startpoint to parent dict
-    for neighbour in start.get_neighbours():
-        parent[neighbour] = start
-        neighbour.h = start.h + 1
-        openlist[neighbour] = neighbour.calculate_f(start.get_location(),
-                                                    end.get_location())
+        # make start and end point
+        start = to_be_connected[0][0]
+        start.h = 0
+        end = to_be_connected[0][1]
+        end.attribute = "empty"
+        # print(f"Start location is: {start.location}")
+        # print(f"End location is: {end.location}")
 
-    # append start to closed list for it is visited
-    closedlist.append(start)
+        found = False
 
-    # set tries to 0
-    tries = 0
+        wire = []
 
-    while not found:
-        tries += 1
+        # Removes first set
+        to_be_connected.pop(0)
 
-        # try N amount of times
-        if tries == 500:
-            print("Tried 3000 times")
-            print(len(to_be_connected))
-            not_connected.append([start.id, end.id])
-            break
+        openlist = {}
+        closedlist = []
+        parent = {}
 
-        #  if no route append points
-        if len(openlist) == 0:
-            print("HELAAS")
-            not_connected.append([start.id, end.id])
-            break
+        # loop trough neighbours and append them to the openlist
+        # also append startpoint to parent dict
+        for neighbour in start.get_neighbours():
+            parent[neighbour] = start
+            neighbour.h = start.h + 1
+            openlist[neighbour] = neighbour.calculate_f(start.get_location(),
+                                                        end.get_location())
 
-        # get the lowest f value of the openlist, make this current
-        current = min(openlist, key=openlist.get)
+        # append start to closed list for it is visited
+        closedlist.append(start)
 
-        # get the lowest F value
-        lowest_f = openlist[current]
+        # set tries to 0
+        tries = 0
 
-        #  make list of the lowest f values
-        lowest_fs = []
+        while not found:
+            tries += 1
 
-        # make list of lowest f values
-        for point in openlist:
-            if openlist[point] <= lowest_f:
-                lowest_fs.append(point)
+            # try N amount of times
+            if tries == 1000:
+                print("Tried 1000 times")
+                print(len(to_be_connected))
+                not_connected.append(f"({start.id},{end.id})")
+                break
 
-        # If there are multiple points with the lowest f value, go to lowest h
-        if len(lowest_fs) > 1:
-            h_vals = {}
-            for point in lowest_fs:
-                h_vals[point] = point.get_h()
+            #  if no route append points
+            if len(openlist) == 0:
+                print("HELAAS")
+                not_connected.append(f"({start.id},{end.id})")
+                break
 
-        # print(f"lowest in openlist is now: {current.get_location()} with an f of {current.calculate_f(start.get_location(), end.get_location())}")
+            # get the lowest f value of the openlist, make this current
+            current = min(openlist, key=openlist.get)
 
-        # delete the current postion from openlist
-        del openlist[current]
-        closedlist.append(current)
+            # get the lowest F value
+            lowest_f = openlist[current]
 
-        # if current is the end, set ths as taken
-        if current == end:
-            end.attribute = "taken"
-            start.attribute = "taken"
-            print("End has been found")
+            #  make list of the lowest f values
+            lowest_fs = []
 
-            # Retrace final step
-            going_back = parent[current]
+            # make list of lowest f values
+            for point in openlist:
+                if openlist[point] <= lowest_f:
+                    lowest_fs.append(point)
 
-            #  retrace the rest of the steps
-            while going_back is not start:
-                going_back.set_attribute("wire")
-                print(f"Retracing steps: {going_back.location}")
-                going_back = parent[going_back]
+            # If there are multiple points with the lowest f value, go to lowest h
+            if len(lowest_fs) > 1:
+                h_vals = {}
+                for point in lowest_fs:
+                    h_vals[point] = point.get_h()
 
-            found = True
+            # print(f"lowest in openlist is now: {current.get_location()} with an f of {current.calculate_f(start.get_location(), end.get_location())}")
 
-            break
+            # delete the current postion from openlist
+            del openlist[current]
+            closedlist.append(current)
 
-        for neighbour in current.get_neighbours():
-            if neighbour.get_attribute() != "empty" or neighbour in closedlist:
-                continue
 
-            if neighbour not in openlist:
-                parent[neighbour] = current
-                neighbour.h = current.h + 1
-                openlist[neighbour] = neighbour.calculate_f(start.get_location(),
-                                                            end.get_location())
+            # if current is the end, set ths as taken
+            if current == end:
+                end.attribute = "taken"
+                start.attribute = "taken"
+                print("End has been found")
 
-#  make the plot
-wires = []
-taken = []
-wire_pieces = 0
-for three_dimensions in matrix:
-    for two_dimensions in three_dimensions:
-        for point in two_dimensions:
-            if point.get_attribute() == "wire":
-                wires.append(point.location)
-                wire_pieces += 1
-            if point.get_attribute() == "taken" or point.get_attribute() == "gate":
-                taken.append(point.location)
+                # Retrace final step
+                going_back = parent[current]
 
-print(not_connected)
-fig = plt.figure()
-ax = plt.axes(projection='3d')
-ax.set_zlim(0, 6)
-ax.scatter3D(*zip(*wires))
-ax.scatter3D(*zip(*taken))
-plt.show()
+                #  retrace the rest of the steps
+                while going_back is not start:
+                    going_back.set_attribute("wire")
+                    # print(f"Retracing steps: {going_back.location}")
+                    going_back = parent[going_back]
+
+                found = True
+
+                break
+
+            for neighbour in current.get_neighbours():
+                if neighbour.get_attribute() != "empty" or neighbour in closedlist:
+                    continue
+
+                if neighbour not in openlist:
+                    parent[neighbour] = current
+                    neighbour.h = current.h + 1
+                    openlist[neighbour] = neighbour.calculate_f(start.get_location(),
+                                                                end.get_location())
+
+    #  make the plot
+    wires = []
+    taken = []
+    wire_pieces = 0
+    for three_dimensions in matrix:
+        for two_dimensions in three_dimensions:
+            for point in two_dimensions:
+                if point.get_attribute() == "wire":
+                    wires.append(point.location)
+                    wire_pieces += 1
+                if point.get_attribute() == "taken" or point.get_attribute() == "gate":
+                    taken.append(point.location)
+
+
+    make_data(counter,orderlist,not_connected)
+    print(not_connected)
+    counter = counter + 1
+
+    del matrix
+
+    # print(not_connected)
+    # fig = plt.figure()
+    # ax = plt.axes(projection='3d')
+    # ax.set_zlim(0, 6)
+    # ax.scatter3D(*zip(*wires))
+    # ax.scatter3D(*zip(*taken))
+    # plt.show()

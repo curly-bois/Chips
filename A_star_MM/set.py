@@ -6,6 +6,16 @@ class Set(object):
         self.route = []
         self.is_connected = is_connected
 
+    def disconnect(self):
+        self.is_connected = False
+        for point in self.route:
+            point.set_attribute("empty")
+
+    def reconnect(self): # ???
+        self.is_connected = False
+        for point in self.route:
+            point.set_attribute("wire")
+
     def get_startpoint(self):
         return self.startpoint
 

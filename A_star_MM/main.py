@@ -13,6 +13,7 @@ row = 221
 connections = get_connections(netlist_1)
 gridpoints = make_grid(grid_1)
 
+
 while counter < 1:
     counter += 1
     matrix = make_matrix(gridpoints)
@@ -20,6 +21,9 @@ while counter < 1:
 
     # shuffle the points randomly
     np.random.shuffle(to_be_connected)
+    orderlist = []
+    for set in to_be_connected:
+        orderlist.append(f"({set.get_startpoint().get_id()},{set.get_endpoint().get_id()})")
     not_connected = []
     all_sets = []
 
@@ -160,3 +164,5 @@ while counter < 1:
 
     for set in all_sets:
         print(set)
+
+    print(orderlist)

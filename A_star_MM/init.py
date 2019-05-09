@@ -9,50 +9,39 @@ import heapq
 import itertools
 from point import Point
 from set import Set
+from netlists import *
+from grids import *
 
 
-def get_grid():
+def make_grid(grid):
 
-    # make a dict of all the points and their location
-    points = []
-
-    txt = os.path.join("options", "connections.txt")
-
-    with open(txt, "r") as f:
-        for line in f:
-            line = line.strip()
-            points.append(line.split(','))
+    points = get_grid(grid)
 
     grid = {}
+    num = 1
     for point in points:
-        x = int(point[1])
-        y = int(point[2])
-        num = int(point[0])
+        x = int(point[0])
+        y = int(point[1])
+
         grid[x, y] = num
+        num += 1
 
     return grid
 
 
-def get_connections():
+def get_connections(list):
 
-    txt = os.path.join("options", "list_1.txt")
-
-    # read the .txt file
-    # filter only things inbetween brackets
-    with open(txt, "r") as f:
-        text = re.findall('\(.*?\)', f.read())
-
-    # make a list of tuples from al connections to make
+    netlist = get_netlist(list)
     connections = []
-    for number in text:
-        number = number.replace(")", "").replace("(", "").split(",")
-        x, y = int(number[0]), int(number[1])
-        connections.append([x, y])
+
+    # add 1 to make the connections valid
+    for tup in netlist:
+        connections.append((tup[0] + 1, tup[1] + 1))
 
     return connections
 
 
-def matrix(grid):
+def make_matrix(grid):
 
     z = 7
     tuplist = []
@@ -119,6 +108,7 @@ def matrix(grid):
 
     return matrix
 
+
 def make_conlist(connections, matrix):
     setlist = []
     locations = []
@@ -130,8 +120,8 @@ def make_conlist(connections, matrix):
                     coordinates[matrix[i][j][k].id] = matrix[i][j][k]
 
     for connection in connections:
-        connection[0] += 1
-        connection[1] += 1
+        # connection[0] += 1
+        # connection[1] += 1
         locations.append(
             (coordinates[connection[0]], coordinates[connection[1]]))
         setlist.append(Set(coordinates[connection[0]], coordinates[connection[1]]))

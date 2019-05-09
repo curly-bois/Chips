@@ -1,8 +1,9 @@
 import numpy
 
+
 class Point(object):
 
-    def __init__(self, location, attr ibute, neighbours, value, id = 0, h= 0):
+    def __init__(self, location, attribute, neighbours, value, id=0, h=0):
         self.location = location
         self.attribute = attribute
         self.neighbours = neighbours
@@ -58,9 +59,9 @@ class Point(object):
 
         #print(f"The manhattan distance until the end is {manhattan_to_end}")
         if self.location[2] >= 1:
-            f = (self.h + manhattan_to_end) * 0.9
-        elif self.location[2] >= 3:
             f = (self.h + manhattan_to_end) * 0.8
+        elif self.location[2] >= 3:
+            f = (self.h + manhattan_to_end) * 0.7
         elif self.location[2] >= 5:
             f = (self.h + manhattan_to_end) * 0.7
         elif self.location[2] == 0:
@@ -69,8 +70,3 @@ class Point(object):
         if self.next_to_gate:
             return (f + 3)
         return f
-
-    # def __str__(self):
-    #     return(f"This point is at location {self.location} and is " +
-    #            f"{self.attribute} with {self.neighbours} as neighbours " +
-    #            f"and has value {self.value}")

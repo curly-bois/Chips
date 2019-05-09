@@ -7,16 +7,17 @@ import numpy as np
 import matplotlib.pyplot as plt
 import sys
 
-# initializing the grid and making the points
 counter = 0
+row = 221
+connections = get_connections(netlist_1)
+gridpoints = make_grid(grid_1)
 
-while counter <= 10:
+while counter < 1780:
+    # initializing the grid and making the points
 
-    connections = get_connections()
-    list = get_grid()
-    print(matrix(list))
-    matrix = matrix(list)
+    matrix = make_matrix(gridpoints)
     to_be_connected = make_conlist(connections, matrix)
+
 
     # shuffle the points randomly
     np.random.shuffle(to_be_connected)
@@ -24,7 +25,6 @@ while counter <= 10:
 
     for point in to_be_connected:
         orderlist.append(f"({point[0].id},{point[1].id})")
-
 
     not_connected = []
 
@@ -68,14 +68,14 @@ while counter <= 10:
 
             # try N amount of times
             if tries == 1000:
-                print("Tried 1000 times")
+                # print("Tried 1000 times")
                 print(len(to_be_connected))
                 not_connected.append(f"({start.id},{end.id})")
                 break
 
             #  if no route append points
             if len(openlist) == 0:
-                print("HELAAS")
+                # print("HELAAS")
                 not_connected.append(f"({start.id},{end.id})")
                 break
 
@@ -110,7 +110,7 @@ while counter <= 10:
             if current == end:
                 end.attribute = "taken"
                 start.attribute = "taken"
-                print("End has been found")
+                # print("End has been found")
 
                 # Retrace final step
                 going_back = parent[current]
@@ -149,11 +149,12 @@ while counter <= 10:
                     taken.append(point.location)
 
 
-    make_data(counter,orderlist,not_connected)
+    make_data(row,orderlist,not_connected)
     print(not_connected)
+    row +=2
     counter = counter + 1
+    del matrix[:]
 
-    del matrix
 
     # print(not_connected)
     # fig = plt.figure()

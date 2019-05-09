@@ -1,28 +1,23 @@
-# import xlsxwriter module
-import xlsxwriter
-
+import openpyxl as op
 
 def make_data(row,orderlist,not_connected):
-# Start from the first cell.
-# Rows and columns are zero indexed.
-    xbook = xlsxwriter.Workbook('Test.xlsx')
-    xsheet = xbook.add_worksheet('Test')
-    # write operation perform
-    xsheet.write(row,0,"orderlist")
-
-
     column = 1
-    for i in orderlist:
-        xsheet.write(row,column,i)
-        column = column + 1
+    order = f"{orderlist}"
+    notcon = f'{not_connected}'
+    name1 = "order of points"
+    name2 = "not connected points"
 
+    wb = op.load_workbook('HeuristiekenData.xlsx')
+    # ws = wb.get_sheet_by_name('Sheet1')
+    ws = wb.active
+    ws.cell(row=row, column=column).value = name1
+    column += 1
+    ws.cell(row=row, column=column).value = order
+    row += 1
     column = 1
-    row = row + 1
-    xsheet.write(row,0,"not connnected")
-    for i in not_connected:
-        xsheet.write(row,column,i)
-        column = column + 1
+    ws.cell(row=row, column=column).value = name2
+    column += 1
+    ws.cell(row=row, column=column).value = notcon
 
-    # for i in not_connected:
-    #     worksheet.write_string(row, 1, i)
-    xbook.close()
+    wb.save('HeuristiekenData.xlsx')
+    wb.close()

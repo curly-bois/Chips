@@ -1,5 +1,4 @@
 from point import Point
-from set import Set
 from init import *
 from make_data import *
 
@@ -14,33 +13,38 @@ connections = get_connections(netlist_1)
 gridpoints = make_grid(grid_1)
 
 while counter < 1:
-    counter += 1
+    # initializing the grid and making the points
+
     matrix = make_matrix(gridpoints)
     to_be_connected = make_conlist(connections, matrix)
 
+
     # shuffle the points randomly
     np.random.shuffle(to_be_connected)
+    orderlist = []
+
+
+    for point in to_be_connected:
+        orderlist.append(f"({point[0].id},{point[1].id})")
+
     not_connected = []
-    all_sets = []
 
     while to_be_connected:
-        route = []
-        all_sets.append(to_be_connected[0])
 
         # make start and end point
-        start = all_sets[-1].get_startpoint()
+        start = to_be_connected[0][0]
         start.h = 0
-        end = all_sets[-1].get_endpoint()
+        end = to_be_connected[0][1]
         end.attribute = "empty"
-        print(f"Start location is: {start.location}")
-        print(f"End location is: {end.location}")
+        # print(f"Start location is: {start.location}")
+        # print(f"End location is: {end.location}")
 
         found = False
 
         wire = []
 
         # Removes first set
-        removed_set = to_be_connected.pop(0)
+        to_be_connected.pop(0)
 
         openlist = {}
         closedlist = []
@@ -64,16 +68,16 @@ while counter < 1:
             tries += 1
 
             # try N amount of times
-            if tries == 500:
-                print("Tried 3000 times")
+            if tries == 1000:
+                # print("Tried 1000 times")
                 print(len(to_be_connected))
-                not_connected.append([start.id, end.id])
+                not_connected.append(f"({start.id},{end.id})")
                 break
 
             #  if no route append points
             if len(openlist) == 0:
-                print("HELAAS")
-                not_connected.append([start.id, end.id])
+                # print("HELAAS")
+                not_connected.append(f"({start.id},{end.id})")
                 break
 
             # get the lowest f value of the openlist, make this current
@@ -102,27 +106,22 @@ while counter < 1:
             del openlist[current]
             closedlist.append(current)
 
+
             # if current is the end, set ths as taken
             if current == end:
                 end.attribute = "taken"
                 start.attribute = "taken"
-                print("End has been found")
-                all_sets[-1].is_connected = True
+                # print("End has been found")
 
                 # Retrace final step
                 going_back = parent[current]
 
-                route.append(end)
-
                 #  retrace the rest of the steps
                 while going_back is not start:
-                    route.append(going_back)
                     going_back.set_attribute("wire")
-                    print(f"Retracing steps: {going_back.location}")
+                    # print(f"Retracing steps: {going_back.location}")
                     going_back = parent[going_back]
 
-                route.append(start)
-                all_sets[-1].set_route(list(reversed(route)))
                 found = True
 
                 break
@@ -150,13 +149,18 @@ while counter < 1:
                 if point.get_attribute() == "taken" or point.get_attribute() == "gate":
                     taken.append(point.location)
 
-    print(not_connected)
-    fig = plt.figure()
-    ax = plt.axes(projection='3d')
-    ax.set_zlim(0, 6)
-    ax.scatter3D(*zip(*wires))
-    ax.scatter3D(*zip(*taken))
-    plt.show()
 
-    for set in all_sets:
-        print(set)
+    # make_data(row,orderlist,not_connected)
+    print(not_connected)
+    row +=2
+    counter = counter + 1
+    del matrix[:]
+
+
+    # print(not_connected)
+    # fig = plt.figure()
+    # ax = plt.axes(projection='3d')
+    # ax.set_zlim(0, 6)
+    # ax.scatter3D(*zip(*wires))
+    # ax.scatter3D(*zip(*taken))
+    # plt.show()

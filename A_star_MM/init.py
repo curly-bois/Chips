@@ -1,8 +1,5 @@
 from operator import itemgetter
 import numpy as np
-import matplotlib.pyplot as plt
-import matplotlib.colors as mcolors
-import csv
 import re
 import os
 import heapq
@@ -125,6 +122,5 @@ def make_conlist(connections, matrix):
         locations.append(
             (coordinates[connection[0]], coordinates[connection[1]]))
         setlist.append(Set(coordinates[connection[0]], coordinates[connection[1]]))
-    print("in de init")
-    print(matrix[0][8][2])
+
     return setlist

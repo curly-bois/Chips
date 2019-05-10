@@ -10,7 +10,6 @@ import matplotlib.pyplot as plt
 import sys
 
 counter = 0
-row = 221
 connections = get_connections(netlist_1)
 gridpoints = make_grid(grid_1)
 
@@ -19,32 +18,47 @@ def disconnect_sets(sets_to_disconnect):
         set.disconnect()
 
 while counter < 1:
-    # initializing the grid and making the points
-
+        # initializing the grid and making the points
     matrix = make_matrix(gridpoints)
     to_be_connected = make_conlist(connections, matrix)
 
     all_sets, connected_sets, unconnected_sets = connect(to_be_connected)
-
     #  make the plot
     wires = []
     taken = []
     wire_pieces = 0
+
+
+
     for three_dimensions in matrix:
         for two_dimensions in three_dimensions:
             for point in two_dimensions:
                 if point.get_attribute() == "wire":
-                    wires.append(point.location)
+                    wires.append(point.get_location())
                     wire_pieces += 1
                 if point.get_attribute() == "taken" or point.get_attribute() == "gate":
-                    taken.append(point.location)
+                    taken.append(point.get_location())
+
+    routes = []
+    for set in connected_sets:
+        route = set.get_route()
+        routearr = []
+        for point in route:
+            routearr.append(point.get_location())
+        routes.append(routearr)
 
     fig = plt.figure()
     ax = plt.axes(projection='3d')
+
+    for route in routes:
+        if len(route) > 0:
+            linex, liney, linez, = zip(*route)
+            ax.plot(linex, liney, linez, linewidth=3, color='lightblue')
+
     ax.set_zlim(0, 6)
     ax.scatter3D(*zip(*wires))
     ax.scatter3D(*zip(*taken))
-    # plt.show()
+    plt.show()
 
 
 
@@ -68,8 +82,8 @@ while counter < 1:
             new_connections.append(connected_sets[i])
 
 
-        all_sets, connected_sets, unconnected_sets = connect(new_connections)
+    # all_sets, connected_sets, unconnected_sets = connect(new_connections)
 
-        print(f"After this {len(unconnected_sets)} are unconnected")
+    print(f"After this {len(unconnected_sets)} are unconnected")
 
-        counter += 1
+    counter += 1

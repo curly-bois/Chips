@@ -124,3 +124,27 @@ def make_conlist(connections, matrix):
         setlist.append(Set(coordinates[connection[0]], coordinates[connection[1]]))
 
     return setlist
+
+def make_order(sets):
+
+    horizontal = []
+    vertical = []
+    diagonal = []
+
+    for set in sets:
+        if set.direction == "horizontal":
+            horizontal.append(set)
+        elif set.direction == "vertical":
+            vertical.append(set)
+        elif set.direction == "diagonal":
+            diagonal.append(set)
+
+    np.random.shuffle(diagonal)
+    np.random.shuffle(vertical)
+    np.random.shuffle(horizontal)
+
+    complete = list(diagonal+horizontal+vertical)
+    
+    return complete
+
+    pass

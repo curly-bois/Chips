@@ -23,51 +23,11 @@ while counter < 1:
     counter += 1
     matrix = make_matrix(gridpoints)
     to_be_connected = make_conlist(connections, matrix)
-    sort_list(to_be_connected)
+    make_order(to_be_connected)
 
     all_sets, connected_sets, unconnected_sets = connect(to_be_connected)
     new_connections = []
     print(f"THIS MANY IS LEFT: {int(len(unconnected_sets) / len(all_sets) * 100)}%")
-
-    #  make the plot
-
-    # wires = []
-    # taken = []
-    # wire_pieces = 0
-    # for three_dimensions in matrix:
-    #     for two_dimensions in three_dimensions:
-    #         for point in two_dimensions:
-    #             if point.get_attribute() == "wire":
-    #                 wires.append(point.location)
-    #                 wire_pieces += 1
-    #             if point.get_attribute() == "taken" or point.get_attribute() == "gate":
-    #                 taken.append(point.location)
-    #
-    #
-    # routes = []
-    # for set in connected_sets:
-    #     route = set.get_route()
-    #     routearr = []
-    #     for point in route:
-    #         routearr.append(point.get_location())
-    #     routes.append(routearr)
-    #
-    # fig = plt.figure()
-    # ax = plt.axes(projection='3d')
-    #
-    # for route in routes:
-    #     if len(route) > 0:
-    #         linex, liney, linez, = zip(*route)
-    #         ax.plot(linex, liney, linez, linewidth=3, color='blue')
-    #
-    # ax.set_zlim(0, 6)
-    # ax.scatter3D(*zip(*wires))
-    # ax.scatter3D(*zip(*taken))
-    # plt.show()
-
-
-
-    # print(f"After the first try {len(unconnected_sets)} are unconnected")
 
     # Breaks 15 % of connected sets and combines them with the unconnected sets to run the A algorithm on again
 
@@ -106,17 +66,17 @@ while counter < 1:
 
             #  make the plot
 
-            wires = []
-            taken = []
-            wire_pieces = 0
-            for three_dimensions in matrix:
-                for two_dimensions in three_dimensions:
-                    for point in two_dimensions:
-                        if point.get_attribute() == "wire":
-                            wires.append(point.location)
-                            wire_pieces += 1
-                        if point.get_attribute() == "taken" or point.get_attribute() == "gate":
-                            taken.append(point.location)
+            # wires = []
+            # taken = []
+            # wire_pieces = 0
+            # for three_dimensions in matrix:
+            #     for two_dimensions in three_dimensions:
+            #         for point in two_dimensions:
+            #             if point.get_attribute() == "wire":
+            #                 wires.append(point.location)
+            #                 wire_pieces += 1
+            #             if point.get_attribute() == "taken" or point.get_attribute() == "gate":
+            #                 taken.append(point.location)
 
 
             # routes = []

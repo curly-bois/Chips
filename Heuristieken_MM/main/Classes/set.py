@@ -54,6 +54,12 @@ class Set(object):
     def is_it_connected(self):
         return self.is_connected
 
+    def get_distance(self):
+        return self.distance
+
+    def get_direction(self):
+        return self.direction
+
 
 
 

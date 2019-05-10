@@ -62,7 +62,7 @@ class Point(object):
 
         #print(f"The manhattan distance until the end is {manhattan_to_end}")
         if self.location[2] >= 1:
-            f = (self.h + manhattan_to_end) * 0.8
+            f = (self.h + manhattan_to_end) * 0.7
         elif self.location[2] >= 3:
             f = (self.h + manhattan_to_end) * 0.7
         elif self.location[2] >= 5:
@@ -71,5 +71,5 @@ class Point(object):
             f = (self.h + manhattan_to_end) * 1
         # print(f"{self.location} distance from start: {manhattan_from_start} To end: {manhattan_to_end} Total f:{f} \n")
         if self.next_to_gate:
-            return (f + 3)
+            return (f + 8)
         return f

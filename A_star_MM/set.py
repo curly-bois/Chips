@@ -11,8 +11,8 @@ class Set(object):
         for point in self.route:
             point.set_attribute("empty")
 
-    def reconnect(self): # ???
-        self.is_connected = False
+    def reconnect(self):
+        self.is_connected = True
         for point in self.route:
             point.set_attribute("wire")
 

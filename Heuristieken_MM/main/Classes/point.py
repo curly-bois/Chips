@@ -61,11 +61,11 @@ class Point(object):
             manhattan_to_end += abs(dimensional_difference)
 
         #print(f"The manhattan distance until the end is {manhattan_to_end}")
-        if self.location[2] >= 1:
-            f = (self.h + manhattan_to_end) * 0.8
+        if self.location[2] >= 5:
+            f = (self.h + manhattan_to_end) * 0.2
         elif self.location[2] >= 3:
-            f = (self.h + manhattan_to_end) * 0.7
-        elif self.location[2] >= 5:
+            f = (self.h + manhattan_to_end) * 0.4
+        elif self.location[2] >= 1:
             f = (self.h + manhattan_to_end) * 0.7
         elif self.location[2] == 0:
             f = (self.h + manhattan_to_end) * 1

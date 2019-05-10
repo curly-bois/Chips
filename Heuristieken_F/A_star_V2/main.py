@@ -11,8 +11,8 @@ import time
 
 SIZE = (17,17,7)
 NUMBER = 50
-LOOPS = 10
-OUTER_LOOPS = 10
+LOOPS = 3
+OUTER_LOOPS = 3
 
 def get_wires(mainGrid, points_to_connect):
     # Start the loop for all the wires

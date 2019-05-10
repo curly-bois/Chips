@@ -143,7 +143,7 @@ while counter < 1:
 
 
 
-        for set in new_all_sets:
+        for set in new_connected_sets:
             set.disconnect()
 
         for set in broken_sets:

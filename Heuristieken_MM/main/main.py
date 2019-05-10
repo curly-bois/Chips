@@ -10,7 +10,7 @@ import sys
 
 counter = 0
 row = 221
-connections = get_connections(netlist_5)
+connections = get_connections(netlist_6)
 gridpoints = make_grid(grid_2)
 
 def disconnect_sets(sets_to_disconnect):
@@ -22,13 +22,14 @@ while counter < 1:
     counter += 1
     matrix = make_matrix(gridpoints)
     to_be_connected = make_conlist(connections, matrix)
+    make_order(to_be_connected)
 
     all_sets, connected_sets, unconnected_sets = connect(to_be_connected)
     new_connections = []
     print(f"THIS MANY ARE LEFT: {len(unconnected_sets)}")
 
     #  make the plot
-    
+
     wires = []
     taken = []
     wire_pieces = 0
@@ -59,7 +60,7 @@ while counter < 1:
             ax.plot(linex, liney, linez, linewidth=3, color='lightblue')
 
     ax.set_zlim(0, 6)
-    ax.scatter3D(*zip(*wires))
+    # ax.scatter3D(*zip(*wires))
     ax.scatter3D(*zip(*taken))
     plt.show()
 

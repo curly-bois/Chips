@@ -7,6 +7,7 @@ class Set(object):
         self.endpoint = endpoint
         self.route = []
         self.is_connected = is_connected
+        self.calc_distance()
 
     def disconnect(self):
         self.is_connected = False

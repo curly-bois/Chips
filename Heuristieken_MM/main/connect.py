@@ -1,4 +1,6 @@
 import numpy as np
+from Classes.point import Point
+from Classes.set import Set
 
 def connect(to_be_connected):
     '''
@@ -6,8 +8,10 @@ def connect(to_be_connected):
     '''
     np.random.shuffle(to_be_connected)
     orderlist = []
+
     for set in to_be_connected:
         orderlist.append(f"({set.get_startpoint().get_id()},{set.get_endpoint().get_id()})")
+
     all_sets = []
     connected_sets = []
 

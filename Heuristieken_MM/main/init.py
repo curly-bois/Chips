@@ -139,12 +139,12 @@ def make_order(sets):
         elif set.direction == "diagonal":
             diagonal.append(set)
 
-    np.random.shuffle(diagonal)
-    np.random.shuffle(vertical)
-    np.random.shuffle(horizontal)
+    # np.random.shuffle(diagonal)
+    # np.random.shuffle(vertical)
+    # np.random.shuffle(horizontal)
 
     complete = list(diagonal+horizontal+vertical)
-    
+
     return complete
 
     pass

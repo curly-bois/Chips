@@ -2,12 +2,13 @@ import numpy as np
 from Classes.point import Point
 from Classes.set import Set
 from Preprocessing.sort_connections import *
+from init import *
 
 def connect(to_be_connected):
     '''
     to_be_connnected [list of sets]
     '''
-    
+    np.random.shuffle(to_be_connected)
     orderlist = []
 
     for set in to_be_connected:

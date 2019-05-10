@@ -1,4 +1,5 @@
 import numpy as np
+from init import *
 from Classes.point import Point
 from Classes.set import Set
 from Preprocessing.sort_connections import *
@@ -7,7 +8,7 @@ def connect(to_be_connected):
     '''
     to_be_connnected [list of sets]
     '''
-    
+    to_be_connected = make_order(to_be_connected)
     orderlist = []
 
     for set in to_be_connected:
@@ -92,6 +93,7 @@ def connect(to_be_connected):
 
             # if current is the end, set ths as taken
             if current == end:
+                route.append(end)
                 end.attribute = "taken"
                 start.attribute = "taken"
                 all_sets[-1].is_connected = True
@@ -107,6 +109,7 @@ def connect(to_be_connected):
                     route.append(going_back)
                     going_back.set_attribute("wire")
                     going_back = parent[going_back]
+                route.append(start)
 
 
                 all_sets[-1].set_route(list(reversed(route)))

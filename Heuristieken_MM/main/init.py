@@ -127,24 +127,36 @@ def make_conlist(connections, matrix):
 
 def make_order(sets):
 
-    horizontal = []
-    vertical = []
-    diagonal = []
+    horizontal = {}
+    vertical = {}
+    diagonal = {}
+    templist = []
+    horlist = []
+    verlist = []
+    dialist = []
 
     for set in sets:
         if set.direction == "horizontal":
-            horizontal.append(set)
+            horizontal[set.distance] = set
         elif set.direction == "vertical":
-            vertical.append(set)
+            vertical[set.distance] = set
         elif set.direction == "diagonal":
-            diagonal.append(set)
+            diagonal[set.distance] = set
 
-    np.random.shuffle(diagonal)
-    np.random.shuffle(vertical)
-    np.random.shuffle(horizontal)
 
-    complete = list(diagonal+horizontal+vertical)
-    
+    templist = sorted (diagonal.keys())
+    reversed(templist)
+    for i in templist:
+        dialist.append(diagonal[i])
+    templist = sorted (horizontal.keys())
+    reversed(templist)
+    for i in templist:
+        horlist.append(horizontal[i])
+    templist = sorted (vertical.keys())
+    reversed(templist)
+    for i in templist:
+        verlist.append(vertical[i])
+
+    complete = list(dialist+verlist+horlist)
+
     return complete
-
-    pass

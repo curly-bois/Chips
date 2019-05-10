@@ -40,28 +40,14 @@ while counter < 1:
                     wire_pieces += 1
                 if point.get_attribute() == "taken" or point.get_attribute() == "gate":
                     taken.append(point.location)
-                    '''
-
-    routes = []
-    for set in connected_sets:
-        route = set.get_route()
-        routearr = []
-        for point in route:
-            routearr.append(point.get_location())
-        routes.append(routearr)
 
     fig = plt.figure()
     ax = plt.axes(projection='3d')
-
-    for route in routes:
-        if len(route) > 0:
-            linex, liney, linez, = zip(*route)
-            ax.plot(linex, liney, linez, linewidth=3, color='lightblue')
-
     ax.set_zlim(0, 6)
     ax.scatter3D(*zip(*wires))
     ax.scatter3D(*zip(*taken))
-    plt.show()
+    '''
+    # plt.show()
 
 
 
@@ -83,7 +69,8 @@ while counter < 1:
     print(f"this set that was once in connected_sets is now {connected_sets[0].is_it_connected()} and this set in testlist should be the same and is {testlist[0].is_it_connected()}")
 
 
-    while len(unconnected_sets) > 0 and hilltries < 50:
+    while len(unconnected_sets) > 0 and hilltries < 10:
+        console.log(f"Length of unconnected should remain the same and is now {len(unconnected_sets)}")
         np.random.shuffle(connected_sets)
         hilltries += 1
         new_connections = []

@@ -1,3 +1,5 @@
+import numpy as np
+
 class Set(object):
 
     def __init__(self, startpoint, endpoint, is_connected=False):
@@ -16,6 +18,27 @@ class Set(object):
         for point in self.route:
             point.set_attribute("wire")
 
+    def calc_distance(self):
+
+        difference = abs(np.subtract(self.startpoint.location,
+                                     self.endpoint.location))
+
+        difference = np.delete(difference, [2])
+
+        xdistance = difference[0]
+        ydistance = difference[1]
+
+        delta = round(abs((max(difference)+1)/(min(difference)+1)),2)
+
+        self.distance = xdistance + ydistance
+
+        if delta < 4:
+            self.direction = "diagonal"
+        elif ydistance <= 2:
+            self.direction = "horizontal"
+        elif xdistance <= 2:
+            self.direction = "vertical"
+
     def get_startpoint(self):
         return self.startpoint
 
@@ -30,6 +53,15 @@ class Set(object):
 
     def is_it_connected(self):
         return self.is_connected
+
+    def get_distance(self):
+        return self.distance
+
+    def get_direction(self):
+        return self.direction
+
+
+
 
     def __str__(self):
         if self.route:

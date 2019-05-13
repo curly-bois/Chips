@@ -40,11 +40,13 @@ def connect(to_be_connected):
 
         # loop trough neighbours and append them to the openlist
         # also append startpoint to parent dict
+
         for neighbour in start.get_neighbours():
-            parent[neighbour] = start
-            neighbour.h = start.h + 1
-            openlist[neighbour] = neighbour.calculate_f(start.get_location(),
-                                                        end.get_location())
+            if neighbour.get_attribute() == "empty":
+                parent[neighbour] = start
+                neighbour.h = start.h + 1
+                openlist[neighbour] = neighbour.calculate_f(start.get_location(),
+                                                            end.get_location())
 
         # append start to closed list for it is visited
         closedlist.append(start)
@@ -94,8 +96,8 @@ def connect(to_be_connected):
             # if current is the end, set ths as taken
             if current == end:
                 route.append(end)
-                end.attribute = "taken"
-                start.attribute = "taken"
+                end.set_attribute("taken")
+                start.set_attribute("taken")
                 all_sets[-1].is_connected = True
                 connected_sets.append(all_sets[-1])
 
@@ -106,13 +108,18 @@ def connect(to_be_connected):
 
                 #  retrace the rest of the steps
                 while going_back is not start:
-                    route.append(going_back)
-                    going_back.set_attribute("wire")
-                    going_back = parent[going_back]
+                    if going_back.get_attribute() != "gate":
+                        route.append(going_back)
+                        going_back.set_attribute("wire")
+                        going_back = parent[going_back]
+
+                plotroute = route
                 route.append(start)
+                # plotroute = plotroute + [end]
 
 
                 all_sets[-1].set_route(list(reversed(route)))
+                all_sets[-1].set_plotroute(list(reversed(plotroute)))
                 found = True
 
                 break
@@ -121,7 +128,7 @@ def connect(to_be_connected):
                 if neighbour.get_attribute() != "empty" or neighbour in closedlist:
                     continue
 
-                if neighbour not in openlist:
+                elif neighbour not in openlist:
                     parent[neighbour] = current
                     neighbour.h = current.h + 1
                     openlist[neighbour] = neighbour.calculate_f(start.get_location(),

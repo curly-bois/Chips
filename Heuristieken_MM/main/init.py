@@ -145,18 +145,18 @@ def make_order(sets):
 
 
     templist = sorted (diagonal.keys())
-    reversed(templist)
+    # reversed(templist)
     for i in templist:
         dialist.append(diagonal[i])
     templist = sorted (horizontal.keys())
-    reversed(templist)
+    # reversed(templist)
     for i in templist:
         horlist.append(horizontal[i])
     templist = sorted (vertical.keys())
-    reversed(templist)
+    # reversed(templist)
     for i in templist:
         verlist.append(vertical[i])
 
-    complete = list(dialist+verlist+horlist)
+    complete = list(dialist+horlist+verlist)
 
     return complete

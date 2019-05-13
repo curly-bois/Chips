@@ -10,9 +10,8 @@ import matplotlib.pyplot as plt
 import sys
 
 counter = 0
-row = 221
-connections = get_connections(netlist_6)
-gridpoints = make_grid(grid_2)
+connections = get_connections(netlist_1)
+gridpoints = make_grid(grid_1)
 
 def disconnect_sets(sets_to_disconnect):
     for set in sets_to_disconnect:
@@ -107,3 +106,29 @@ while counter < 1:
 
         for set in broken_sets:
             set.reconnect()
+
+     # make the plot
+    taken = []
+    routes = []
+    for set in all_sets:
+        taken.append(set.startpoint.location)
+        taken.append(set.endpoint.location)
+
+    for set in connected_sets:
+        route = set.get_route()
+        routearr = []
+        for point in route:
+            routearr.append(point.get_location())
+        routes.append(routearr)
+
+    fig = plt.figure()
+    ax = plt.axes(projection='3d')
+    ax.set_zlim(0, 6)
+    for route in routes:
+        if len(route) > 0:
+            linex, liney, linez, = zip(*route)
+            ax.plot(linex, liney, linez, linewidth=3, color='blue')
+
+    # ax.scatter3D(*zip(*wires))
+    ax.scatter3D(*zip(*taken),linewidth=4,color = "red")
+    plt.show()

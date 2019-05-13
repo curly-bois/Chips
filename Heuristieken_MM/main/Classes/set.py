@@ -1,5 +1,6 @@
 import numpy as np
 
+
 class Set(object):
 
     def __init__(self, startpoint, endpoint, is_connected=False):
@@ -29,16 +30,22 @@ class Set(object):
         xdistance = difference[0]
         ydistance = difference[1]
 
-        delta = round(abs((max(difference)+1)/(min(difference)+1)),2)
-
         self.distance = xdistance + ydistance
 
-        if delta < 4:
-            self.direction = "diagonal"
-        elif ydistance <= 2:
-            self.direction = "horizontal"
-        elif xdistance <= 2:
+        if xdistance == 0:
             self.direction = "vertical"
+        elif ydistance == 0:
+            self.direction = "horizontal"
+        else:
+            delta = round((ydistance / xdistance), 2)
+            degrees = np.degrees(np.arctan(delta))
+
+            if 30 < degrees < 60:
+                self.direction = "diagonal"
+            elif degrees <= 30:
+                self.direction = "horizontal"
+            else:
+                self.direction = "vertical"
 
     def get_startpoint(self):
         return self.startpoint
@@ -60,9 +67,6 @@ class Set(object):
 
     def get_direction(self):
         return self.direction
-
-
-
 
     def __str__(self):
         if self.route:

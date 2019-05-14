@@ -29,6 +29,7 @@ while counter < 1:
 
     # Breaks 15 % of connected sets and combines them with the unconnected sets to run the A algorithm on again
 
+    ## Hier heb je toch al een lijst van --> Unconnected??
     for set in all_sets:
         if not set.is_it_connected():
             new_connections.append(set)
@@ -45,6 +46,7 @@ while counter < 1:
         for set in unconnected_sets:
             new_connections.append(set)
 
+        ## Hard coded?
         sets_to_be_broken = int(len(connected_sets) * 0.2)
         for i in range(sets_to_be_broken):
             connected_sets[i].disconnect()
@@ -69,6 +71,7 @@ while counter < 1:
         wires = []
         taken = []
         wire_pieces = 0
+        ## Je loopt hier een tweede keer achter elkaar door de punten...
         for three_dimensions in matrix:
             for two_dimensions in three_dimensions:
                 for point in two_dimensions:
@@ -107,6 +110,7 @@ while counter < 1:
         for set in broken_sets:
             set.reconnect()
 
+    ## Nog een keer?
      # make the plot
     taken = []
     routes = []

@@ -2,6 +2,52 @@ import random
 import numpy as np
 import pandas as pd
 
+def get_wires(mainGrid, points_to_connect):
+    # Start the loop for all the wires
+    wires = []
+    connected = 0
+    wire_num = -1
+    not_connected = []
+
+    for start,end in points_to_connect:
+        wire_num += 1
+
+        # find line, else return empty dict
+        parent, tries = mainGrid.find_line(start, end)
+        if parent == {}:
+            not_connected.append((start, end))
+            pass
+        else:
+            # Retrace the line and laydown the wire
+            wire = mainGrid.make_wire(start, end, parent)
+            con_wire = Wire(wire_num, start, end, wire, tries)
+            wires.append(con_wire)
+
+            # Update value grid
+            mainGrid.update_layer()
+            # mainGrid.wire_NN_edit() ## Commented out
+            connected += 1
+
+    return wires, connected, not_connected
+
+def swap_wires(wires, not_connected, mainGrid):
+
+    old_wires = [i for i in wires]
+
+    for wire in old_wires:
+        not_con_len = len(not_connected)
+
+        start, end, number = mainGrid.remove_wire(wire)
+        wires2, connected2, not_connected2 = get_wires(mainGrid, not_connected)
+
+        if not_con_len - 1 >= len(not_connected2):
+            not_connected.append((start, end))
+            wires += wires2
+            not_connected = not_connected2
+        else:
+            mainGrid.add_wire(wire)
+    return mainGrid, wires, not_connected
+
 def get_distance(matrix, points, p1, p2):
     ver = points.index(p1)
     hor = points.index(p2)

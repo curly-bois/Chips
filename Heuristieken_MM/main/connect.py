@@ -8,7 +8,7 @@ def connect(to_be_connected):
     '''
     to_be_connnected [list of sets]
     '''
-    to_be_connected = make_order(to_be_connected)
+
     orderlist = []
 
     for set in to_be_connected:
@@ -119,7 +119,6 @@ def connect(to_be_connected):
 
 
                 all_sets[-1].set_route(list(reversed(route)))
-                all_sets[-1].set_plotroute(list(reversed(plotroute)))
                 found = True
 
                 break

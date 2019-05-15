@@ -10,8 +10,8 @@ import matplotlib.pyplot as plt
 import sys
 
 counter = 0
-connections = get_connections(netlist_1)
-gridpoints = make_grid(grid_1)
+connections = get_connections(netlist_6)
+gridpoints = make_grid(grid_2)
 
 def disconnect_sets(sets_to_disconnect):
     for set in sets_to_disconnect:
@@ -24,7 +24,7 @@ while counter < 1:
     to_be_connected = make_conlist(connections, matrix)
 
 
-    all_sets, connected_sets, unconnected_sets = connect(to_be_connected)
+    all_sets, connected_sets, unconnected_sets = connect(make_order(to_be_connected))
     new_connections = []
     print(f"THIS MANY IS LEFT: {int(len(unconnected_sets) / len(all_sets) * 100)}%")
 
@@ -51,6 +51,7 @@ while counter < 1:
             connected_sets[i].disconnect()
             new_connections.append(connected_sets[i])
             broken_sets.append(connected_sets[i])
+            np.random.shuffle(new_connections)
         new_all_sets, new_connected_sets, new_unconnected_sets = connect(new_connections)
 
         print(f"After this {int(len(new_unconnected_sets) / len(all_sets) * 100)}% is unconnected")
@@ -73,8 +74,8 @@ while counter < 1:
     taken = []
     routes = []
     for set in all_sets:
-        taken.append(set.startpoint.location)
-        taken.append(set.endpoint.location)
+        taken.append(set.get_startpoint().get_location())
+        taken.append(set.get_endpoint().get_location())
 
     for set in connected_sets:
         route = set.get_route()

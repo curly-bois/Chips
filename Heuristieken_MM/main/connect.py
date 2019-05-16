@@ -9,12 +9,7 @@ def connect(to_be_connected):
     '''
     to_be_connnected [list of sets]
     '''
-<<<<<<< HEAD
 
-=======
-    # np.random.shuffle(to_be_connected)
-    # to_be_connected = make_order(to_be_connected)
->>>>>>> 1b3e589cfac76c991dd468e0e878bc4402fc3391
     orderlist = []
 
     for set in to_be_connected:

@@ -26,13 +26,7 @@ while counter < 1:
 
     # Breaks 15 % of connected sets and combines them with the unconnected sets to run the A algorithm on again
 
-    ## Hier heb je toch al een lijst van --> Unconnected??
-    for set in all_sets:
-        if not set.is_it_connected():
-            new_connections.append(set)
-
 solved_sets = hillsolve(50, matrix, all_sets, unconnected_sets, connected_sets)
-
 
 make_plot(solved_sets)
 make_xlsx(solved_sets,matrix,netlistname)

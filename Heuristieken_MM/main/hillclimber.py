@@ -56,3 +56,7 @@ def hillsolve(max_tries, matrix, all_sets, unconnected_sets, connected_sets):
             set.set_route(old_routes[set])
             # print(f"These sets are being reconnected now in try {hilltries}:  {set}, this set is {set.is_it_connected()} ")
             set.reconnect()
+
+
+def hillimprove():
+    pass

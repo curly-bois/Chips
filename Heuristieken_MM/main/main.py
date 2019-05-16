@@ -66,45 +66,6 @@ while counter < 1:
             print(f"SOLUTION HAS BEEN FOUND after {hilltries} hillclimbs, IT TOOK {wire_pieces} pieces of wire")
 
 
-
-        #  make the plot
-
-        wires = []
-        taken = []
-        wire_pieces = 0
-        ## Je loopt hier een tweede keer achter elkaar door de punten...
-        for three_dimensions in matrix:
-            for two_dimensions in three_dimensions:
-                for point in two_dimensions:
-                    if point.get_attribute() == "wire":
-                        wires.append(point.location)
-                        wire_pieces += 1
-                    if point.get_attribute() == "taken" or point.get_attribute() == "gate":
-                        taken.append(point.location)
-
-
-        routes = []
-        for set in connected_sets:
-            route = set.get_route()
-            routearr = []
-            for point in route:
-                routearr.append(point.get_location())
-            routes.append(routearr)
-
-        fig = plt.figure()
-        ax = plt.axes(projection='3d')
-
-        for route in routes:
-            if len(route) > 0:
-                linex, liney, linez, = zip(*route)
-                ax.plot(linex, liney, linez, linewidth=3, color='blue')
-
-        ax.set_zlim(0, 6)
-        ax.scatter3D(*zip(*wires))
-        ax.scatter3D(*zip(*taken))
-        plt.show()
-
-
         for set in new_connected_sets:
             set.disconnect()
 

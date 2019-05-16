@@ -17,6 +17,7 @@ class Set(object):
 
     def reconnect(self):
         self.is_connected = True
+
         for point in self.route:
             point.set_attribute("wire")
 

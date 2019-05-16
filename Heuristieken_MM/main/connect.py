@@ -60,7 +60,7 @@ def connect(to_be_connected):
             tries += 1
 
             # try N amount of times
-            if tries == 1500:
+            if tries == 2000:
                 end.set_attribute("gate")
                 break
 
@@ -89,7 +89,6 @@ def connect(to_be_connected):
                 for point in lowest_fs:
                     h_vals[point] = point.get_h()
 
-            # print(f"lowest in openlist is now: {current.get_location()} with an f of {current.calculate_f(start.get_location(), end.get_location())}")
 
             # delete the current postion from openlist
             del openlist[current]

@@ -2,52 +2,60 @@ import pandas as pd
 from Classes.point import Point
 from Classes.set import Set
 
-def make_xlsx(all_sets,matrix,netlistname):
+def make_xlsx(all_sets,connected_sets,matrix,netlistname,unconnected_sets):
 
     wires = []
     order = []
     directions = []
     lower_bound = 0
 
-    # get the data
-    for set in all_sets:
+    # get the data form the connected sets (wire length only)
+    for set in connected_sets:
         route = set.get_route()
-        start = set.get_startpoint().get_id()
-        end = set.get_endpoint().get_id()
-        lower_bound += set.get_distance()
-        directions.append(set.get_direction())
         wires.append(set.get_endpoint())
-
-        order.append((start,end))
         for point in route:
             wires.append(point)
 
-    count = 0
+    # get the data that has to do someting with all the sets
+    for set in all_sets:
+        start = set.get_startpoint().get_id()
+        end = set.get_endpoint().get_id()
+        order.append((start,end))
+        lower_bound += set.get_distance()
+        directions.append(set.get_direction())
+
+
+    width = 0
+    length = 0
+    height = 0
 
     #  get the upper bound
     for i in range(len(matrix)):
+        height += 1
         for j in range(len(matrix[i])):
-            count += 1
+            width += 1
             for k in range(len(matrix[i][j])):
-                count += 1
-    count *= len(matrix)
+                length += 1
+
+    upper_bound = (length * width * height)
 
     # print(f"order = {order}")
     # print(f"directions of order = {directions}")
-    print(f"upper bound = {count}")
-    print(f"lower bound = {lower_bound}")
-    print(f"amount of wires = {len(wires)}")
-
+    # print(f"upper bound = {count}")
+    # print(f"lower bound = {lower_bound}")
+    # print(f"amount of wires = {len(wires)}")
+    # print(f"unconnected = {int(len(unconnected_sets) / len(all_sets) * 100)}")
 
     # colums in the xlsx file
     data = {'netlist':netlistname}
     data['order'] = [order]
     data['directions of order'] = [directions]
-    data['upper bound'] = count
+    data['upper bound'] = upper_bound
     data['lower bound'] = lower_bound
     data['amount of wires'] = len(wires)
+    data['unconnected'] = f"{int(len(unconnected_sets) / len(all_sets) * 100)}%"
 
-    output('Test.xlsx', data)
+    output('random_only.xlsx', data)
 
 
 def output(filename, data):

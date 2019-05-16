@@ -1,6 +1,10 @@
 from Classes.point import Point
 from mpl_toolkits import mplot3d
 import matplotlib.pyplot as plt
+import matplotlib.animation as animation
+import numpy as np
+
+
 
 def make_plot(all_sets):
     # make the plot
@@ -19,14 +23,11 @@ def make_plot(all_sets):
             routes.append(routearr)
 
 
-
     fig = plt.figure()
     ax = plt.axes(projection='3d')
     ax.set_zlim(0, 6)
     for route in routes:
-        if len(route) > 0:
-            linex, liney, linez, = zip(*route)
-            ax.plot(linex, liney, linez, linewidth=3, color='blue')
-
+        linex, liney, linez, = zip(*route)
+        ax.plot(linex, liney, linez, linewidth=3, color='blue')
     ax.scatter3D(*zip(*dot),linewidth=4,color = "red")
     plt.show()

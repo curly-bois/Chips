@@ -127,8 +127,6 @@ def make_conlist(connections, matrix):
                     coordinates[matrix[i][j][k].id] = matrix[i][j][k]
 
     for connection in connections:
-        # connection[0] += 1
-        # connection[1] += 1
         locations.append(
             (coordinates[connection[0]], coordinates[connection[1]]))
         setlist.append(Set(coordinates[connection[0]], coordinates[connection[1]]))

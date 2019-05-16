@@ -9,9 +9,9 @@ import numpy as np
 import sys
 
 counter = 0
-netlistname = "netlist_2"
-grid = grid_1
-connections = get_connections(netlist_2)
+netlistname = "netlist_6"
+grid = grid_2
+connections = get_connections(netlist_6)
 gridpoints = make_grid(grid)
 
 while counter < 1:

@@ -39,7 +39,7 @@ def get_connections(list):
 
 
 def make_matrix(grid):
-
+    ## Hard coded
     z = 7
     tuplist = []
 
@@ -47,6 +47,9 @@ def make_matrix(grid):
         tuplist.append(tup)
     x = max(tuplist, key=itemgetter(0))[0] + 1
     y = max(tuplist, key=itemgetter(1))[1] + 1
+
+    ## Je kan deze matrix en de hier na komende nested for loops in een 'regel'
+    ## Schrijven, door ze een functie te geven die de if else aanpakt.
     matrix = [[[0 for x in range(x)]
                for y in range(y)]
               for z in range(z)]
@@ -60,10 +63,14 @@ def make_matrix(grid):
                         (k, j, i), "gate", [], 0, grid[k, j])
                 # Point is empty
                 else:
+                    ## JE kan ook deze waardes van te voren als leeg zetten
+                    ## In de class, dan hoef je ze ook niet hier als random
+                    ## waardes neer te zetten
                     matrix[i][j][k] = Point((k, j, i), "empty", [], 0)
 
     gates = []
     # Initialize neighbours
+    ## Dit had ik al getyped, had veel kunnen schelen
     for i in range(z):
         for j in range(y):
             for k in range(x):
@@ -98,10 +105,10 @@ def make_matrix(grid):
                 if matrix[i][j][k].attribute == "gate":
                     gates.append(matrix[i][j][k].location)
 
+    ## Moet je hier een aparte variable voor maken?
     for neighbour in matrix[i][j][k].get_neighbours():
         if neighbour.get_attribute() == "gate" and matrix[i][j][k].get_attribute() != "gate":
             matrix[i][j][k].next_to_gate = True
-
 
     return matrix
 
@@ -110,6 +117,9 @@ def make_conlist(connections, matrix):
     setlist = []
     locations = []
     coordinates = {}
+
+    ## Je loopt hier door de lengte van de matrix of ze vervolgens als index
+    ## Te gebruiken, je kan ook een lijst maken van de matrix en hier over loopen
     for i in range(len(matrix)):
         for j in range(len(matrix[i])):
             for k in range(len(matrix[i][j])):
@@ -145,15 +155,15 @@ def make_order(sets):
 
 
     templist = sorted (diagonal.keys())
-    # reversed(templist)
+    reversed(templist)
     for i in templist:
         dialist.append(diagonal[i])
     templist = sorted (horizontal.keys())
-    # reversed(templist)
+    reversed(templist)
     for i in templist:
         horlist.append(horizontal[i])
     templist = sorted (vertical.keys())
-    # reversed(templist)
+    reversed(templist)
     for i in templist:
         verlist.append(vertical[i])
 

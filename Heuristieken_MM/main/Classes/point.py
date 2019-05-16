@@ -15,6 +15,7 @@ class Point(object):
     def get_id(self):
         return self.id
 
+
     def set_neighbours(self, neighbours):
         self.neighbours = neighbours
 
@@ -61,7 +62,7 @@ class Point(object):
             manhattan_to_end += abs(dimensional_difference)
 
 
-
+        ## Wat gebeurt hier?
         #print(f"The manhattan distance until the end is {manhattan_to_end}")
         if self.location[2] >= 6:
             f = (self.h + manhattan_to_end) * 0.1

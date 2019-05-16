@@ -1,6 +1,10 @@
+from point import Point
+from wire import Wire
+
 import random
 import numpy as np
 import pandas as pd
+import time
 
 def get_wires(mainGrid, points_to_connect):
     # Start the loop for all the wires
@@ -13,7 +17,7 @@ def get_wires(mainGrid, points_to_connect):
         wire_num += 1
 
         # find line, else return empty dict
-        parent, tries = mainGrid.find_line(start, end)
+        parent, tries = mainGrid.Astar(start, end)
         if parent == {}:
             not_connected.append((start, end))
             pass
@@ -46,29 +50,9 @@ def swap_wires(wires, not_connected, mainGrid):
             not_connected = not_connected2
         else:
             mainGrid.add_wire(wire)
+
+    random.shuffle(not_connected)
     return mainGrid, wires, not_connected
-
-def get_distance(matrix, points, p1, p2):
-    ver = points.index(p1)
-    hor = points.index(p2)
-    return matrix[ver][hor]
-
-def cal_val(matrix, points, value_grid, tup_cur, tup_end, tup_start):
-    '''
-    Calculate the values for the Astar Algo
-    '''
-    # Get distance values
-    # dis2end = threedimdistance(tup_cur, tup_end)
-    dis2end = get_distance(matrix, points, tup_cur, tup_end)
-    # dis2start = threedimdistance(tup_start, tup_cur)
-    dis2start = get_distance(matrix, points, tup_start, tup_cur)
-
-    # Get coordinates
-    x,y,z = tup_cur[0],tup_cur[1],tup_cur[2]
-
-    # Adjust for value_grid
-    value = (dis2end - dis2start)*float(value_grid[x][y][z])
-    return value
 
 def threedimdistance( i, j):
     '''
@@ -102,25 +86,8 @@ def make_random_points(size, resolution, number=-1):
 
     return starts, ends
 
-def cross_check(wires):
-    '''
-    Checks if a line is crossing (For testing)
-    '''
-    all = []
-    for w in wires:
-        all += w.route
-
-    print('\nNothing is crossing =', end='')
-    print(len(all) == len(set(all)), '\n')
-
-def check_duplicates(points, count):
-    '''
-    Checks if a point is dubble (for testing)
-    '''
-    print("No duplicates =", end='')
-    print(len(points) == count )
-
-def length_score(wires, percentile, not_connected, cal_time, net_number, points_to_connect):
+def length_score(data_file, wires, percentile, not_connected,
+                 cal_time, net_number, points_to_connect):
     '''
     Nice start of how we can "SCORE" our result
     (Store in CSV????)
@@ -144,7 +111,9 @@ def length_score(wires, percentile, not_connected, cal_time, net_number, points_
     data['len_percentile'] = sum(len_list)/sum(minlen_list)
     data['starting order'] = str(points_to_connect)
 
-    output('Book1.xlsx', data)
+    print(f'\nThe score was: {percentile}')
+    output(data_file, data)
+    print(f'Data is saved in {data_file}')
     return percentile
 
 def make_imported_points(points, netlist):
@@ -155,7 +124,7 @@ def make_imported_points(points, netlist):
 
 def output(filename, data):
     df = pd.read_excel(filename, sheet_name=0)
+    data['time'] = str(time.localtime())
     df_new = pd.DataFrame(data, index = [1])
-    df_file = df.append(df_new, ignore_index=True)
-    print(df_file.tail())
+    df_file = df.append(df_new, ignore_index=True, sort=False)
     df_file.to_excel(filename)

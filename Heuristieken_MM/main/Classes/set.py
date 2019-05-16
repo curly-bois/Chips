@@ -12,12 +12,15 @@ class Set(object):
 
     def disconnect(self):
         self.is_connected = False
+        self.startpoint.set_attribute("gate")
+        self.endpoint.set_attribute("gate")
         for point in self.route:
             point.set_attribute("empty")
 
     def reconnect(self):
         self.is_connected = True
-
+        self.startpoint.set_attribute("taken")
+        self.endpoint.set_attribute("taken")
         for point in self.route:
             point.set_attribute("wire")
 

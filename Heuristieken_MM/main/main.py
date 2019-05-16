@@ -26,11 +26,13 @@ while counter < 1:
     print(f"THIS MANY IS LEFT: {int(len(unconnected_sets) / len(all_sets) * 100)}%")
 
 if len(unconnected_sets) == 0:
+    hillimprove(50, all_sets)
     print("eerste try")
     make_plot(connected_sets)
     make_xlsx(connected_sets,matrix,netlistname)
 else:
     print("niet eerste try")
     solved_sets = hillsolve(50, matrix, all_sets, unconnected_sets, connected_sets)
+    hillimprove(50, solved_sets)
     make_plot(solved_sets)
     make_xlsx(solved_sets,matrix,netlistname)

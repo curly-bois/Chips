@@ -38,8 +38,16 @@ def hillsolve(max_tries, matrix, all_sets, unconnected_sets, connected_sets):
                     for point in two_dimensions:
                         if point.get_attribute() == "wire":
                             wire_pieces += 1
-            print(f"SOLUTION HAS BEEN FOUND after {hilltries} hillclimbs, IT TOOK {wire_pieces} pieces of wire")
-            print(solved_sets)
+            print(f"SOLUTION HAS BEEN FOUND after {hilltries} hillclimbs, IT TOOK {wire_pieces + len(all_sets)} pieces of wire")
+
+            wire_count = 0
+            for set in all_sets:
+                for point in set.get_route():
+                    if point.get_attribute() == "wire":
+                        wire_count += 1
+
+            print(f"ALTERNATIVE COUNT, SOLUTION FOUND AFTER {hilltries} hillclimbs, IT TOOK {wire_count + len(all_sets)} pieces of wire")
+
             return all_sets
 
         for set in new_all_sets:
@@ -59,5 +67,69 @@ def hillsolve(max_tries, matrix, all_sets, unconnected_sets, connected_sets):
             set.reconnect()
 
 
-def hillimprove():
-    pass
+def hillimprove(max_tries, solved_sets):
+    not_improved = 0
+    best_so_far = len(solved_sets)
+    for set in solved_sets:
+        for point in set.get_route():
+            if point.get_attribute() == "wire":
+                best_so_far += 1
+    print(f"STARTING HILLIMPROVE WITH {best_so_far} pieces of wire")
+    better_solutions = []
+    hillimproves = 0
+    while(not_improved < max_tries):
+        hillimproves += 1
+
+        # Save all OG routes
+        if hillimproves == 1:
+
+            old_routes = {}
+            print("FIRST HILLSOLVE REMEMBERING ROUTES")
+            for set in solved_sets:
+                old_routes[set] = set.get_route()
+
+        # Take 2 random sets and disconnect them
+        broken_sets = []
+        np.random.shuffle(solved_sets)
+        for i in range(2):
+            broken_sets.append(solved_sets[i])
+            solved_sets[i].disconnect()
+
+        # Try to solve again
+        new_all_sets, new_connected_sets, new_unconnected_sets = connect(broken_sets)
+
+        # Check if solved:
+        if len(new_unconnected_sets) == 0:
+            wire_count = len(solved_sets)
+            for set in solved_sets:
+                for point in set.get_route():
+                    if point.get_attribute() == "wire":
+                        wire_count += 1
+
+            # If better
+            if wire_count < best_so_far:
+                not_improved = 0
+                print(f"Found a BETTER solution after {hillimproves} hillimproves which takes {wire_count} instead of {best_so_far}")
+                best_so_far = wire_count
+
+                # Save old routes again
+                for set in solved_sets:
+                    old_routes[set] = set.get_route()
+
+
+            else:
+                not_improved += 1
+                print(f"Found a WORSE solution after {hillimproves} hillimproves which takes {wire_count} instead of {best_so_far}")
+
+                for set in new_all_sets:
+                    set.disconnect()
+                    set.set_route(old_routes[set])
+                    set.reconnect()
+
+        # If no solution was found
+        else:
+            not_improved += 1
+            for set in new_all_sets:
+                set.disconnect()
+                set.set_route(old_routes[set])
+                set.reconnect()

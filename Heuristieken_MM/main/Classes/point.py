@@ -69,9 +69,9 @@ class Point(object):
         elif self.location[2] >= 5:
             f = (self.h + manhattan_to_end) * 0.3
         elif self.location[2] >= 4:
-            f = (self.h + manhattan_to_end) * 0.4
+            f = (self.h + manhattan_to_end) * 1
         elif self.location[2] >= 3:
-            f = (self.h + manhattan_to_end) * 0.5
+            f = (self.h + manhattan_to_end) * 1
         elif self.location[2] >= 2:
             f = (self.h + manhattan_to_end) * 0.6
         elif self.location[2] >= 1:

@@ -17,8 +17,6 @@ def make_xlsx(all_sets,matrix,netlistname):
         lower_bound += set.get_distance()
         directions.append(set.get_direction())
         wires.append(set.get_endpoint())
-        wires.append(set.get_startpoint())
-
 
         order.append((start,end))
         for point in route:
@@ -50,11 +48,11 @@ def make_xlsx(all_sets,matrix,netlistname):
     data['amount of wires'] = len(wires)
 
     output('Test.xlsx', data)
-    # return percentile
+
 
 def output(filename, data):
     df = pd.read_excel(filename, sheet_name=0)
     df_new = pd.DataFrame(data, index = [1])
-    df_file = df.append(df_new, ignore_index=True)
-    print(df_file.tail())
+    df_file = df.append(df_new, ignore_index=True, sort=False)
+    df_file.set_index('netlist', inplace=True)
     df_file.to_excel(filename)

@@ -24,18 +24,10 @@ def make_xlsx(all_sets,connected_sets,matrix,netlistname,unconnected_sets):
         lower_bound += set.get_distance()
         directions.append(set.get_direction())
 
-
-    width = 0
-    length = 0
-    height = 0
-
     #  get the upper bound
-    for i in range(len(matrix)):
-        height += 1
-        for j in range(len(matrix[i])):
-            width += 1
-            for k in range(len(matrix[i][j])):
-                length += 1
+    height = len(matrix)
+    width = len(matrix[0])
+    length = len(matrix[0][0])
 
     upper_bound = (length * width * height)
 
@@ -55,7 +47,7 @@ def make_xlsx(all_sets,connected_sets,matrix,netlistname,unconnected_sets):
     data['amount of wires'] = len(wires)
     data['unconnected'] = f"{int(len(unconnected_sets) / len(all_sets) * 100)}%"
 
-    output('random_only.xlsx', data)
+    output('Random_Astar_H_vals.xlsx', data)
 
 
 def output(filename, data):

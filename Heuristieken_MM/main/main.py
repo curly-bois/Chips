@@ -10,11 +10,11 @@ import sys
 
 counter = 0
 netlistname = "netlist_1"
-grid = grid_2
-connections = get_connections(netlist_2)
+grid = grid_1
+connections = get_connections(netlist_1)
 gridpoints = make_grid(grid)
 
-while counter < 1:
+while counter < 500:
     # initializing the grid and making the points
     counter += 1
 
@@ -26,16 +26,16 @@ while counter < 1:
     new_connections = []
 
     if len(unconnected_sets) == 0:
-        hillimprove(100, all_sets)
-        simulated_annealing(100, solved_sets, 30)
+        # hillimprove(100, all_sets)
+        # simulated_annealing(100, solved_sets, 30)
         # print("eerste try")
         # make_plot(connected_sets)
         make_xlsx(all_sets,connected_sets,matrix,netlistname,unconnected_sets)
     else:
         # print("niet eerste try")
-        solved_sets = hillsolve(50, matrix, all_sets, unconnected_sets, connected_sets)
-        make_plot(solved_sets)
+        # solved_sets = hillsolve(50, matrix, all_sets, unconnected_sets, connected_sets)
+        # make_plot(solved_sets)
         # hillimprove(100, solved_sets)
-        simulated_annealing(100, solved_sets, 30)
+        # simulated_annealing(100, solved_sets, 30)
     #     make_plot(solved_sets)
         make_xlsx(all_sets,connected_sets,matrix,netlistname,unconnected_sets)

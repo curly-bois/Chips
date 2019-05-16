@@ -69,16 +69,16 @@ class Point(object):
         elif self.location[2] >= 5:
             f = (self.h + manhattan_to_end) * 1
         elif self.location[2] >= 4:
-            f = (self.h + manhattan_to_end) * 0.4
+            f = (self.h + manhattan_to_end) * 1
         elif self.location[2] >= 3:
-            f = (self.h + manhattan_to_end) * 0.5
+            f = (self.h + manhattan_to_end) * 1
         elif self.location[2] >= 2:
             f = (self.h + manhattan_to_end) * 0.7
         elif self.location[2] >= 1:
             f = (self.h + manhattan_to_end) * 0.7
         elif self.location[2] == 0:
             f = (self.h + manhattan_to_end) * 1
-
+        #
         # if self.location[0] > 6 and self.location[0] < 9:
         #     ## CENTRE
         #     if self.location[1] > 6 and self.location[1] < 9:

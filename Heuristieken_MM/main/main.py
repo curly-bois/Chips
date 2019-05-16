@@ -9,12 +9,12 @@ import numpy as np
 import sys
 
 counter = 0
-netlistname = "netlist_2"
-grid = grid_1
-connections = get_connections(netlist_2)
+netlistname = "netlist_1"
+grid = grid_2
+connections = get_connections(netlist_1)
 gridpoints = make_grid(grid)
 
-while counter < 1:
+while counter < 10:
     # initializing the grid and making the points
     counter += 1
 
@@ -25,12 +25,12 @@ while counter < 1:
     new_connections = []
     print(f"THIS MANY IS LEFT: {int(len(unconnected_sets) / len(all_sets) * 100)}%")
 
-if len(unconnected_sets) == 0:
-    print("eerste try")
-    make_plot(connected_sets)
-    make_xlsx(connected_sets,matrix,netlistname)
-else:
-    print("niet eerste try")
-    solved_sets = hillsolve(50, matrix, all_sets, unconnected_sets, connected_sets)
-    make_plot(solved_sets)
-    make_xlsx(solved_sets,matrix,netlistname)
+    if len(unconnected_sets) == 0:
+        print("eerste try")
+        make_plot(connected_sets)
+        make_xlsx(connected_sets,matrix,netlistname)
+    else:
+        print("niet eerste try")
+        solved_sets = hillsolve(25, matrix, all_sets, unconnected_sets, connected_sets)
+        make_plot(solved_sets)
+        make_xlsx(solved_sets,matrix,netlistname)

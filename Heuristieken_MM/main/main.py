@@ -26,9 +26,26 @@ while counter < 1:
     new_connections = []
     print(f"THIS MANY IS LEFT: {int(len(unconnected_sets) / len(all_sets) * 100)}%")
 
+<<<<<<< HEAD
+if len(unconnected_sets) == 0:
+    # hillimprove(100, all_sets)
+    simulated_annealing(100, solved_sets, 30)
+    print("eerste try")
+    make_plot(connected_sets)
+    make_xlsx(connected_sets,matrix,netlistname)
+else:
+    print("niet eerste try")
+    solved_sets = hillsolve(50, matrix, all_sets, unconnected_sets, connected_sets)
+    make_plot(solved_sets)
+    # hillimprove(100, solved_sets)
+    simulated_annealing(100, solved_sets, 30)
+    make_plot(solved_sets)
+    make_xlsx(solved_sets,matrix,netlistname)
+=======
     if len(unconnected_sets) == 0:
         print("eerste try")
         make_xlsx(connected_sets,matrix,netlistname)
+<<<<<<< HEAD
 
     make_plot(connected_sets)
     # else:
@@ -36,3 +53,11 @@ while counter < 1:
     #     solved_sets = hillsolve(50, matrix, all_sets, unconnected_sets, connected_sets)
     #     make_plot(solved_sets)
     #     make_xlsx(solved_sets,matrix,netlistname)
+=======
+    else:
+        print("niet eerste try")
+        solved_sets = hillsolve(25, matrix, all_sets, unconnected_sets, connected_sets)
+        make_plot(solved_sets)
+        make_xlsx(solved_sets,matrix,netlistname)
+>>>>>>> 0a15de1b59e2cedc286aca75e792cfa1c21a1092
+>>>>>>> f12d17939e1b5c5f18c3eac32e41f8edef83052d

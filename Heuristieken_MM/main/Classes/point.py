@@ -15,6 +15,7 @@ class Point(object):
     def get_id(self):
         return self.id
 
+
     def set_neighbours(self, neighbours):
         self.neighbours = neighbours
 

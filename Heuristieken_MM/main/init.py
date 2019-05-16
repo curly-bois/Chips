@@ -167,6 +167,6 @@ def make_order(sets):
     for i in templist:
         verlist.append(vertical[i])
 
-    complete = list(dialist+horlist+verlist)
+    complete = list(dialist+verlist+horlist)
 
     return complete

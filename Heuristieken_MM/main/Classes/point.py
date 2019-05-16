@@ -65,9 +65,9 @@ class Point(object):
         ## Wat gebeurt hier?
         #print(f"The manhattan distance until the end is {manhattan_to_end}")
         if self.location[2] >= 6:
-            f = (self.h + manhattan_to_end) * 1
+            f = (self.h + manhattan_to_end) * 0.2
         elif self.location[2] >= 5:
-            f = (self.h + manhattan_to_end) * 1
+            f = (self.h + manhattan_to_end) * 0.3
         elif self.location[2] >= 4:
             f = (self.h + manhattan_to_end) * 1
         elif self.location[2] >= 3:
@@ -78,23 +78,25 @@ class Point(object):
             f = (self.h + manhattan_to_end) * 0.7
         elif self.location[2] == 0:
             f = (self.h + manhattan_to_end) * 1
-        #
-        # if self.location[0] > 6 and self.location[0] < 9:
-        #     ## CENTRE
-        #     if self.location[1] > 6 and self.location[1] < 9:
-        #         f = f * 1.5
-        #     if self.location[1] > 5 and self.location[1] < 10:
-        #         f = f * 1.3
-        #     if self.location[1] > 3 and self.location[1] < 12:
-        #         f = f * 1.1
-        # elif self.location[0] > 4 and self.location[0] < 12:
-        #     ## CENTRE
-        #     if self.location[1] > 6 and self.location[1] < 9:
-        #         f = f * 1.3
-        #     if self.location[1] > 5 and self.location[1] < 10:
-        #         f = f * 1.2
-        #     if self.location[1] > 3 and self.location[1] < 12:
-        #         f = f * 1.1
+
+        if self.location[0] > 6 and self.location[0] < 9:
+            ## CENTRE
+            if self.location[1] > 6 and self.location[1] < 9:
+                if self.location[2] < 3:
+                    f = f * 1.5
+            if self.location[1] > 5 and self.location[1] < 10:
+                f = f * 1
+            if self.location[1] > 3 and self.location[1] < 12:
+                f = f * 1
+        elif self.location[0] > 4 and self.location[0] < 12:
+            ## CENTRE
+            if self.location[1] > 6 and self.location[1] < 9:
+                if self.location[2] < 3:
+                    f = f * 1.5
+            if self.location[1] > 5 and self.location[1] < 10:
+                f = f * 1
+            if self.location[1] > 3 and self.location[1] < 12:
+                f = f * 1
 
         # print(f"{self.location} distance from start: {manhattan_from_start} To end: {manhattan_to_end} Total f:{f} \n")
         if self.next_to_gate:

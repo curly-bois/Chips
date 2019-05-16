@@ -39,7 +39,7 @@ def hillsolve(max_tries, matrix, all_sets, unconnected_sets, connected_sets):
                         if point.get_attribute() == "wire":
                             wire_pieces += 1
             print(f"SOLUTION HAS BEEN FOUND after {hilltries} hillclimbs, IT TOOK {wire_pieces} pieces of wire")
-            
+
             return all_sets
 
         for set in new_all_sets:
@@ -57,3 +57,7 @@ def hillsolve(max_tries, matrix, all_sets, unconnected_sets, connected_sets):
             set.set_route(old_routes[set])
             # print(f"These sets are being reconnected now in try {hilltries}:  {set}, this set is {set.is_it_connected()} ")
             set.reconnect()
+
+
+def hillimprove():
+    pass

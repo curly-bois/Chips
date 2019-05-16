@@ -13,12 +13,13 @@ import time
 import os
 import sys
 
-
+## Settings of the Main loop ##
 OUTER_LOOPS = 1
-SWAP = False
-LOOPS = 4
-SORT = False
+SWAP = True
+LOOPS = 2
+SORT = True
 data_file = 'Book1.xlsx'
+###############################
 
 if __name__ == '__main__':
     # Get input from command line
@@ -49,6 +50,7 @@ if __name__ == '__main__':
             points_to_connect = sort_points(starts, ends) #
         else:
             points_to_connect = sort_points_random(starts, ends)
+
 
         # Initialize the grid
         mainGrid = Grid(SIZE, starts + ends)
@@ -82,5 +84,5 @@ if __name__ == '__main__':
         print(f'We found this sollution in: {cal_time}')
 
     # Plots result
-    plot_anam(wires, SIZE)
-    # mainGrid.plot_wire(wires)
+    # plot_anam(wires, SIZE)
+    mainGrid.plot_wire(wires)

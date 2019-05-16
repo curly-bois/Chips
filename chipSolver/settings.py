@@ -3,46 +3,51 @@ import random
 import pandas as pd
 import time
 
+from extra import *
+
 # File location
 filename = "book2.xlsx"
 
 # Settings
-layer_multiplier = [3,3,3,2,2,2,2]
+layer_multiplier = [1,1,1,1,1,1,1]
 layer_coef = 0.05
 
-NN_penalty = 1.5
+NN_penalty = 3
 # wire_penalty = 0.4
 # upper_penalty = 0
 
-
 option = {'layer_multiplier':str(layer_multiplier), 'layer_coef':layer_coef, 'NN_penalty': NN_penalty}
-df = pd.read_excel(filename, sheet_name=0)
-option['time'] = str(time.localtime())
-df_new = pd.DataFrame(option, index = [1])
-df_file = df.append(df_new, ignore_index=True, sort=False)
-df_file.to_excel(filename)
+def save_option(filename, option):
+    df = pd.read_excel(filename, sheet_name=0)
+    option['time'] = str(time.localtime())
+    df_new = pd.DataFrame(option, index = [1])
+    df_file = df.append(df_new, ignore_index=True, sort=False)
+    df_file.to_excel(filename)
 
 def get_distance(matrix, points, p1, p2):
     ver = points.index(p1)
     hor = points.index(p2)
     return matrix[ver][hor]
 
-def cal_val(matrix, points, value_grid, tup_cur, tup_end, tup_start):
+def cal_val(value_grid, cur, tup_end, tup_start, current_point):
     '''
     Calculate the values for the Astar Algo
     '''
+    tup_cur = cur.location
+
     # Get distance values
-    # dis2end = threedimdistance(tup_cur, tup_end)
-    dis2end = get_distance(matrix, points, tup_cur, tup_end)
-    # dis2start = threedimdistance(tup_start, tup_cur)
-    dis2start = get_distance(matrix, points, tup_start, tup_cur)
+    dis2end = threedimdistance(tup_cur, tup_end)
+    # dis2end = get_distance(matrix, points, tup_cur, tup_end)
+
+    dis2start = current_point.g + 1
+    cur.setG(dis2start)
 
     # Get coordinates
     x,y,z = tup_cur[0],tup_cur[1],tup_cur[2]
 
     # Adjust for value_grid
     value = (dis2end + dis2start)*float(value_grid[x][y][z])
-    return value
+    return (value, dis2end)
 
 def sort_points(starts, ends):
     '''
@@ -142,3 +147,5 @@ def wire_NN_edit(grid, value_grid):
                 x,y,z = N.location
                 value_grid[x][y][z] += wire_penalty ## Changed to +++
     return value_grid
+
+save_option(filename, option)

@@ -30,7 +30,7 @@ class Grid(object):
         # Some deeper charataristics of the grid
         self.make_neighbours()
         self.set_points()
-        self.matrix = self.distance_matrix()
+        # self.matrix = self.distance_matrix()
 
         # Add some logic to the grid
         self.value_grid = first_value(size)
@@ -104,6 +104,7 @@ class Grid(object):
         self.grid[start].set_attribute('closed')
         self.grid[end].set_attribute('end')
         current_point  = self.grid[start]
+        current_point.setG(0)
 
         # Set temp memory variables
         found = False
@@ -122,9 +123,9 @@ class Grid(object):
 
                 # When open is there: "Possible next move"
                 elif N.attribute == "free":
-                    N.set_value(cal_val(self.matrix, self.plane_points,
-                                        self.value_grid, N.location,
-                                        end, start))
+                    N.set_value(cal_val(self.value_grid,
+                                        N,
+                                        end, start, current_point))
                     N.set_attribute('open')
                     parent[N.location] = current_point.location
 
@@ -132,9 +133,13 @@ class Grid(object):
             # this will be the next move
             lowest = 999
             for P in self.grid.values():
-                if P.attribute == 'open' and P.value < lowest:
-                    lowest = P.value
+                if P.attribute == 'open' and P.value[0] < lowest:
+                    lowest = P.value[0]
                     lowest_point = P
+                ## Check for double lowest values
+                elif P.value == lowest:
+                    if P.value[1] < lowest_point.value[1]:
+                        lowest_point = P
 
             # When there are no open points, give error (impossiple area)
             try:
@@ -179,6 +184,7 @@ class Grid(object):
 
         # If end is found, add the end (here: 'start' -> reversed).
         wire.append(cur)
+        self.grid[cur].set_attribute('wire')
         wire.append(start)
         self.grid[start].set_attribute('wire')
 
@@ -264,6 +270,7 @@ class Grid(object):
                 line.append(round(threedimdistance(vertical, horizontal),1))
             matrix.append(line)
         return matrix
+
 
     ################################################## CLever ################
     def update_layer(self):

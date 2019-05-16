@@ -8,6 +8,7 @@ class Point(object):
         self.attribute = 'free'
         self.neighbours = []
         self.value = None
+        self.g = 0
 
     def set_neighbour(self, neighbour):
         self.neighbours.append(neighbour)
@@ -23,6 +24,9 @@ class Point(object):
 
     def set_value(self, value):
         self.value = value
+
+    def setG(self, g):
+        self.g = g
 
     def __str__(self):
         return(f"This point is at location {self.location} and is " +

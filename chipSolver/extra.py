@@ -39,16 +39,20 @@ def swap_wires(wires, not_connected, mainGrid):
     old_wires = [i for i in wires]
 
     for wire in old_wires:
-        not_con_len = len(not_connected)
-
         start, end, number = mainGrid.remove_wire(wire)
+        not_connected.append((start, end))
+        not_con_len = len(not_connected)
         wires2, connected2, not_connected2 = get_wires(mainGrid, not_connected)
 
-        if not_con_len - 1 >= len(not_connected2):
-            not_connected.append((start, end))
+        if not_con_len > (len(not_connected2)+1):
             wires += wires2
             not_connected = not_connected2
+
+        elif len(wires2) == 1:
+            mainGrid.remove_wire(wires2[0])
+            mainGrid.add_wire(wire)
         else:
+            print('oeps', len(wires2))
             mainGrid.add_wire(wire)
 
     random.shuffle(not_connected)
@@ -110,6 +114,7 @@ def length_score(data_file, wires, percentile, not_connected,
     data['cal_time'] = cal_time
     data['len_percentile'] = sum(len_list)/sum(minlen_list)
     data['starting order'] = str(points_to_connect)
+    data['ending order'] = str(not_connected)
 
     print(f'\nThe score was: {percentile}')
     output(data_file, data)

@@ -10,7 +10,6 @@ def connect(to_be_connected):
     to_be_connnected [list of sets]
     '''
 
-
     orderlist = []
 
     for set in to_be_connected:
@@ -97,7 +96,6 @@ def connect(to_be_connected):
 
             # if current is the end, set ths as taken
             if current == end:
-                route.append(end)
                 end.set_attribute("taken")
                 start.set_attribute("taken")
                 all_sets[-1].is_connected = True
@@ -116,7 +114,6 @@ def connect(to_be_connected):
                         going_back = parent[going_back]
 
                 plotroute = route
-                route.append(start)
                 # plotroute = plotroute + [end]
 
 

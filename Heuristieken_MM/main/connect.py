@@ -9,11 +9,8 @@ def connect(to_be_connected):
     '''
     to_be_connnected [list of sets]
     '''
-<<<<<<< HEAD
-    np.random.shuffle(to_be_connected)
-=======
-    to_be_connected = make_order(to_be_connected)
->>>>>>> ec9bcee91d8c06d1593190e9e363a0dd9d8a9b38
+    # np.random.shuffle(to_be_connected)
+    # to_be_connected = make_order(to_be_connected)
     orderlist = []
 
     for set in to_be_connected:
@@ -100,7 +97,7 @@ def connect(to_be_connected):
 
             # if current is the end, set ths as taken
             if current == end:
-                route.append(end)
+                # route.append(end)
                 end.set_attribute("taken")
                 start.set_attribute("taken")
                 all_sets[-1].is_connected = True
@@ -119,12 +116,11 @@ def connect(to_be_connected):
                         going_back = parent[going_back]
 
                 plotroute = route
-                route.append(start)
+                # route.append(start)
                 # plotroute = plotroute + [end]
 
 
                 all_sets[-1].set_route(list(reversed(route)))
-                all_sets[-1].set_plotroute(list(reversed(plotroute)))
                 found = True
 
                 break

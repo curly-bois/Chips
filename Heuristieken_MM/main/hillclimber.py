@@ -39,6 +39,7 @@ def hillsolve(max_tries, matrix, all_sets, unconnected_sets, connected_sets):
                         if point.get_attribute() == "wire":
                             wire_pieces += 1
             print(f"SOLUTION HAS BEEN FOUND after {hilltries} hillclimbs, IT TOOK {wire_pieces} pieces of wire")
+            print(solved_sets)
             return all_sets
 
         for set in new_all_sets:

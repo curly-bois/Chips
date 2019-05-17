@@ -224,6 +224,8 @@ def simulated_annealing(max_tries, solved_sets, allowance):
 
         temp *= alpha
 
+    return None
+
 def acceptance_probability(old_cost, new_cost, temp):
     ap = math.exp((old_cost-new_cost) / temp)
     return ap

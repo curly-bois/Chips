@@ -2,52 +2,32 @@ import numpy as np
 import random
 import pandas as pd
 import time
-
-from extra import *
+import sys
 
 # File location
-filename = "book2.xlsx"
+filename = "options.xlsx"
+
+settings = sys.argv[2]
+print(settings)
+
+df = pd.read_excel(filename, sheet_name=0)
+var = df.iloc[int(settings)]
+var = [int(i) for i in var]
+layer_coef = var[0]
+NN_penalty = var[1]
 
 # Settings
-layer_multiplier = [1,1,1,1,1,1,1]
-layer_coef = 0.05
+layer_multiplier = [var[2],var[3],var[4],var[5],var[6],var[7],var[8]]
 
-NN_penalty = 3
 # wire_penalty = 0.4
 # upper_penalty = 0
 
-option = {'layer_multiplier':str(layer_multiplier), 'layer_coef':layer_coef, 'NN_penalty': NN_penalty}
-def save_option(filename, option):
-    df = pd.read_excel(filename, sheet_name=0)
-    option['time'] = str(time.localtime())
-    df_new = pd.DataFrame(option, index = [1])
-    df_file = df.append(df_new, ignore_index=True, sort=False)
-    df_file.to_excel(filename)
 
 def get_distance(matrix, points, p1, p2):
     ver = points.index(p1)
     hor = points.index(p2)
     return matrix[ver][hor]
 
-def cal_val(value_grid, cur, tup_end, tup_start, current_point):
-    '''
-    Calculate the values for the Astar Algo
-    '''
-    tup_cur = cur.location
-
-    # Get distance values
-    dis2end = threedimdistance(tup_cur, tup_end)
-    # dis2end = get_distance(matrix, points, tup_cur, tup_end)
-
-    dis2start = current_point.g + 1
-    cur.setG(dis2start)
-
-    # Get coordinates
-    x,y,z = tup_cur[0],tup_cur[1],tup_cur[2]
-
-    # Adjust for value_grid
-    value = (dis2end + dis2start)*float(value_grid[x][y][z])
-    return (value, dis2end)
 
 def sort_points(starts, ends):
     '''
@@ -90,6 +70,22 @@ def first_value(size):
 
     # layer bonus
     super_matrix *= np.array(layer_multiplier)
+    return super_matrix
+
+def second_value(size):
+    '''
+    Very influencial defenition, creates the first instance of the value grid
+    At the moment the values are set to 0, testing should result in best values
+    '''
+    # triple list comperhansion
+    super_grid = [[[        1.00
+                            for z in range(size[2])]
+                            for y in range(size[1])]
+                            for x in range(size[0])]
+
+    # Return a Numpy array (faster)
+    super_matrix = np.array(super_grid)
+
     return super_matrix
 
 def update_layer(layer_info, value_grid):
@@ -147,5 +143,3 @@ def wire_NN_edit(grid, value_grid):
                 x,y,z = N.location
                 value_grid[x][y][z] += wire_penalty ## Changed to +++
     return value_grid
-
-save_option(filename, option)

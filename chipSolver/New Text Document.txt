@@ -1,1 +1,5 @@
-Value zo gemaakt dat de lijn naar een niveau stijgt waar het zo min mogelijk op en neer hoeft, dus welk vlak kan hij een route vinden, ga naar dat vlak.
+python .\main.py 4 0
+python .\main.py 4 1
+python .\main.py 4 2
+python .\main.py 4 3
+python .\main.py 4 4

@@ -4,29 +4,26 @@ from wire import Wire
 import random
 import numpy as np
 import pandas as pd
+import sys
 import time
 
 def get_wires(mainGrid, points_to_connect):
     # Start the loop for all the wires
     wires = []
     connected = 0
-    wire_num = -1
     not_connected = []
 
     for start,end in points_to_connect:
-        wire_num += 1
-
         # find line, else return empty dict
-        parent, tries = mainGrid.Astar(start, end)
+        parent = mainGrid.Astar(start, end)
         if parent == {}:
             not_connected.append((start, end))
             pass
         else:
             # Retrace the line and laydown the wire
             wire = mainGrid.make_wire(start, end, parent)
-            con_wire = Wire(wire_num, start, end, wire, tries)
+            con_wire = Wire(start, end, wire)
             wires.append(con_wire)
-
             # Update value grid
             mainGrid.update_layer()
             # mainGrid.wire_NN_edit() ## Commented out
@@ -34,38 +31,67 @@ def get_wires(mainGrid, points_to_connect):
 
     return wires, connected, not_connected
 
-def swap_wires(wires, not_connected, mainGrid):
+def swap_wires(wires, not_connected, mainGrid, swaps):
 
     old_wires = [i for i in wires]
+    random.shuffle(old_wires)
 
-    for wire in old_wires:
-        start, end, number = mainGrid.remove_wire(wire)
-        not_connected.append((start, end))
+    # len_list = sum([len(i.route) for i in wires])
+    len_list = len(not_connected)
+    not_connected_new = []
+    for wire in old_wires[:swaps]:
+        start, end = mainGrid.remove_wire(wire)
+        not_connected_new.append((start, end))
         not_con_len = len(not_connected)
-        wires2, connected2, not_connected2 = get_wires(mainGrid, not_connected)
 
-        if not_con_len > (len(not_connected2)+1):
-            wires += wires2
-            not_connected = not_connected2
+    points_to_connect = not_connected+not_connected_new
+    random.shuffle(points_to_connect)
+    wires2, connected, not_connected2 = get_wires(mainGrid, points_to_connect)
+    # len_list2 = sum([len(i.route) for i in wires2 + old_wires[3:]])
+    len_list2 = len(not_connected2)
 
-        elif len(wires2) == 1:
-            mainGrid.remove_wire(wires2[0])
-            mainGrid.add_wire(wire)
-        else:
-            print('oeps', len(wires2))
-            mainGrid.add_wire(wire)
+    if len_list > len_list2:
+        wires = wires2 + old_wires[swaps:]
+        not_connected = not_connected2
+    else:
+        for w in wires2:
+            mainGrid.remove_wire(w)
+        for w in old_wires[swaps:]:
+            mainGrid.add_wire(w)
 
     random.shuffle(not_connected)
     return mainGrid, wires, not_connected
 
-def threedimdistance( i, j):
-    '''
-    Get three dimesional distance
-    '''
-    deltaxsquared = (i[0] - j[0]) ** 2
-    deltaysquared = (i[1] - j[1]) ** 2
-    deltazsquared = (i[2] - j[2]) ** 2
-    return (deltaxsquared + deltaysquared + deltazsquared) ** 0.5
+def swap_wires_for_score(wires, not_connected, mainGrid, swaps):
+
+    old_wires = [i for i in wires]
+    random.shuffle(old_wires)
+
+    len_list = sum([len(i.route) for i in wires])
+    len1 = len(not_connected)
+    not_connected_new = []
+    for wire in old_wires[:swaps]:
+        start, end = mainGrid.remove_wire(wire)
+        not_connected_new.append((start, end))
+        not_con_len = len(not_connected)
+
+    points_to_connect = not_connected+not_connected_new
+    random.shuffle(points_to_connect)
+    wires2, connected, not_connected2 = get_wires(mainGrid, points_to_connect)
+    ## SCORE
+    len_list2 = sum([len(i.route) for i in wires2 + old_wires[swaps:]])
+    len2 = len(not_connected2)
+
+    if len_list > len_list2 and len1 == len2:
+        wires = wires2 + old_wires[swaps:]
+        not_connected = not_connected2
+    else:
+        for w in wires2:
+            mainGrid.remove_wire(w)
+        for w in old_wires[swaps:]:
+            mainGrid.add_wire(w)
+
+    return mainGrid, wires, not_connected
 
 def make_random_points(size, resolution, number=-1):
     '''
@@ -115,8 +141,14 @@ def length_score(data_file, wires, percentile, not_connected,
     data['len_percentile'] = sum(len_list)/sum(minlen_list)
     data['starting order'] = str(points_to_connect)
     data['ending order'] = str(not_connected)
+    df = pd.read_excel("options.xlsx", sheet_name=0)
+    settings = sys.argv[2]
+    var = df.iloc[int(settings)]
+    data['options'] = str(list(var))
+    data['option_num'] = int(settings)
 
     print(f'\nThe score was: {percentile}')
+    print(f'\nThe len was: {sum(len_list)}')
     output(data_file, data)
     print(f'Data is saved in {data_file}')
     return percentile

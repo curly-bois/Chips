@@ -143,12 +143,13 @@ def make_order(sets):
     verlist = []
     dialist = []
 
+
     for set in sets:
         if set.direction == "horizontal":
             horizontal[set.distance] = set
         elif set.direction == "vertical":
             vertical[set.distance] = set
-        elif set.direction == "diagonal":
+        else:
             diagonal[set.distance] = set
 
 
@@ -164,6 +165,7 @@ def make_order(sets):
     reversed(templist)
     for i in templist:
         verlist.append(vertical[i])
+
 
     complete = list(dialist+verlist+horlist)
 

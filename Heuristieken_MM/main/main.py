@@ -23,7 +23,6 @@ counter = 0
 netlistname = f"netlist_1"
 connections = get_connections(netlist_4)
 gridpoints = make_grid(grid_2)
-print(len(netlist_4))
 
 while counter < 1:
     matrix = make_matrix(gridpoints)

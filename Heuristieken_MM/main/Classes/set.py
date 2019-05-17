@@ -48,21 +48,29 @@ class Set(object):
             self.direction = "vertical"
         elif ydistance == 0:
             self.direction = "horizontal"
+
         elif ydistance < 0:
             delta = round((abs(ydistance) / abs(xdistance)), 2)
             degrees = np.degrees(np.arctan(delta))
 
-            print(degrees)
-
             if 30 < degrees < 60:
-                self.direction = "diagonal-up"
-            elif -30 > degrees > -60:
                 self.direction = "diagonal-down"
             elif -30 <= degrees <= 30:
                 self.direction = "horizontal"
             else:
                 self.direction = "vertical"
-            print(self.direction)
+
+        elif ydistance > 0:
+            delta = round((abs(ydistance) / abs(xdistance)), 2)
+            degrees = np.degrees(np.arctan(delta))
+            
+            if 30 < degrees < 60:
+                self.direction = "diagonal-up"
+            elif -30 <= degrees <= 30:
+                self.direction = "horizontal"
+            else:
+                self.direction = "vertical"
+
 
     def get_startpoint(self):
         return self.startpoint

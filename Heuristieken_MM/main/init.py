@@ -3,6 +3,7 @@ import numpy as np
 import re
 import os
 import heapq
+import operator
 import itertools
 from Classes.point import Point
 from Classes.set import Set
@@ -137,9 +138,8 @@ def make_order(sets):
 
     horizontal = {}
     vertical = {}
-    diagonal_up = {}
-    diagonal_down = {}
-    templist = []
+    diagonalup = {}
+    diagonaldown = {}
     horlist = []
     verlist = []
     diadownlist = []
@@ -147,42 +147,31 @@ def make_order(sets):
 
     for set in sets:
         if set.direction == "horizontal":
-            horizontal[set.distance] = set
+            horizontal[set] = set.distance
         elif set.direction == "vertical":
-            vertical[set.distance] = set
-        elif set.direction == "diagonal-up":
-            diagonal_up[set.distance] = set
+            vertical[set] = set.distance
         elif set.direction == "diagonal-down":
-            diagonal_down[set.distance] = set
+            diagonaldown[set] = set.distance
+        elif set.direction == "diagonal-up":
+            diagonalup[set] = set.distance
 
 
-    templist = sorted (diagonal_up.keys())
-    # templist = reversed(templist)
-    for i in templist:
-        diauplist.append(diagonal_up[i])
-    # np.random.shuffle(dialist)
-
-    templist = sorted (diagonal_down.keys())
-    # templist = reversed(templist)
-    for i in templist:
-        diadownlist.append(diagonal_down[i])
-    # np.random.shuffle(dialist)
-
-    templist = sorted (horizontal.keys())
-    for i in templist:
-        horlist.append(horizontal[i])
-    # np.random.shuffle(horlist)
-
-    templist = sorted (vertical.keys())
-    # templist = reversed(templist)
-    for i in templist:
-        verlist.append(vertical[i])
-
-    complete =list(diauplist+diadownlist+verlist+horlist)
-
-    print(len(complete))
-    # for i in complete:
-    #     print(i.direction)
 
 
+    temp = sorted(diagonaldown.items(), key=operator.itemgetter(1))
+    for i in temp:
+        diadownlist.append(i[0])
+    temp = sorted(diagonalup.items(), key=operator.itemgetter(1))
+    for i in temp:
+        diauplist.append(i[0])
+    temp = sorted(horizontal.items(), key=operator.itemgetter(1))
+    for i in temp:
+        horlist.append(i[0])
+    temp = sorted(vertical.items(), key=operator.itemgetter(1))
+    for i in temp:
+        verlist.append(i[0])
+
+
+    complete = list(diauplist+diadownlist+verlist+horlist)
+    
     return complete

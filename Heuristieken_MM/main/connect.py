@@ -9,7 +9,6 @@ def connect(to_be_connected):
     '''
     to_be_connnected [list of sets]
     '''
-
     orderlist = []
 
     for set in to_be_connected:

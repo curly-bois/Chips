@@ -66,15 +66,15 @@ class Point(object):
         if self.dynamic == False:
 
             if self.location[2] >= 6:
-                f = (self.h + manhattan_to_end) * 0.3
+                f = (self.h + manhattan_to_end) * 0.2
             elif self.location[2] >= 5:
-                f = (self.h + manhattan_to_end) * 0.4
+                f = (self.h + manhattan_to_end) * 0.3
             elif self.location[2] >= 4:
                 f = (self.h + manhattan_to_end) * 0.4
             elif self.location[2] >= 3:
                 f = (self.h + manhattan_to_end) * 0.5
             elif self.location[2] >= 2:
-                f = (self.h + manhattan_to_end) * 0.5
+                f = (self.h + manhattan_to_end) * 0.6
             elif self.location[2] >= 1:
                 f = (self.h + manhattan_to_end) * 0.7
             elif self.location[2] == 0:
@@ -83,8 +83,14 @@ class Point(object):
             if self.location[0] > 6 and self.location[0] < 9:
                 ## CENTRE
                 if self.location[1] > 6 and self.location[1] < 9:
-                    if self.location[2] < 3:
-                        f = f * 1.5
+                    if self.location[2] < 2:
+                        f = f * 1.8
+                    elif self.location[2] < 3:
+                        f = f * 1.6
+                    elif self.location[2] < 4:
+                        f = f * 1.4
+                    elif self.location[2] < 5:
+                        f = f * 1.2
                 if self.location[1] > 5 and self.location[1] < 10:
                     f = f * 1
                 if self.location[1] > 3 and self.location[1] < 12:
@@ -92,51 +98,24 @@ class Point(object):
             elif self.location[0] > 4 and self.location[0] < 12:
                 ## CENTRE
                 if self.location[1] > 6 and self.location[1] < 9:
-                    if self.location[2] < 3:
-                        f = f * 1.5
+                    if self.location[2] < 2:
+                        f = f * 1.8
+                    elif self.location[2] < 3:
+                        f = f * 1.6
+                    elif self.location[2] < 4:
+                        f = f * 1.4
+                    elif self.location[2] < 5:
+                        f = f * 1.2
                 if self.location[1] > 5 and self.location[1] < 10:
                     f = f * 1
                 if self.location[1] > 3 and self.location[1] < 12:
                     f = f * 1
 
-            if self.next_to_gate:
-                return (f + 8)
 
         else:
             f = self.h + manhattan_to_end
-            # evt nog gate extra cost
-        elif self.location[2] >= 4:
-            f = (self.h + manhattan_to_end) * 0.5
-        elif self.location[2] >= 3:
-            f = (self.h + manhattan_to_end) * 0.5
-        elif self.location[2] >= 2:
-            f = (self.h + manhattan_to_end) * 0.6
-        elif self.location[2] >= 1:
-            f = (self.h + manhattan_to_end) * 0.7
-        elif self.location[2] == 0:
-            f = (self.h + manhattan_to_end) * 1
-
-        if self.location[0] > 6 and self.location[0] < 9:
-            ## CENTRE
-            if self.location[1] > 6 and self.location[1] < 9:
-                if self.location[2] < 3:
-                    f = f * 1.5
-            if self.location[1] > 5 and self.location[1] < 10:
-                f = f * 1
-            if self.location[1] > 3 and self.location[1] < 12:
-                f = f * 1
-        elif self.location[0] > 4 and self.location[0] < 12:
-            ## CENTRE
-            if self.location[1] > 6 and self.location[1] < 9:
-                if self.location[2] < 3:
-                    f = f * 1.5
-            if self.location[1] > 5 and self.location[1] < 10:
-                f = f * 1
-            if self.location[1] > 3 and self.location[1] < 12:
-                f = f * 1
 
         if self.next_to_gate:
-            return (f + 8)
+            return (f + 10)
 
->>>>>>> bcfe5cadfe09dc50a2ada35c0f2e5aeebe798b72
         return f

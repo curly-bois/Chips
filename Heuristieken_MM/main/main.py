@@ -10,29 +10,23 @@ import numpy as np
 import sys
 
 counter = 0
-netlistname = "netlist_2"
+netlistname = "netlist_3"
 grid = grid_1
-connections = get_connections(netlist_2)
+connections = get_connections(netlist_3)
 gridpoints = make_grid(grid)
 print(len(connections))
-while counter < 1:
-    print(f"CURRENT LOOP: {counter}")
-    # initializing the grid and making the points
-    counter += 1
 
 while counter < 1:
+    counter += 1
     matrix = make_matrix(gridpoints)
     to_be_connected = make_conlist(connections, matrix)
+    to_be_connected = make_order(to_be_connected)
 
-    print(len(to_be_connected))
-
-    np.random.shuffle(to_be_connected)
 
     # A algorithm
     all_sets, connected_sets, unconnected_sets = connect(to_be_connected)
     print(len(all_sets))
     new_connections = []
-    make_plot(all_sets)
 
     if len(unconnected_sets) == 0:
         make_plot(connected_sets)

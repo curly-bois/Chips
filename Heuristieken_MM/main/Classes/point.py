@@ -32,7 +32,6 @@ class Point(object):
         return self.attribute
 
     def get_h(self):
-
         return self.h
 
     def calculate_h(self, end_location):
@@ -63,13 +62,19 @@ class Point(object):
 
 
         if self.location[2] >= 6:
+<<<<<<< HEAD
             f = (self.h + manhattan_to_end) * 0.5
         elif self.location[2] >= 5:
             f = (self.h + manhattan_to_end) * 0.5
+=======
+            f = (self.h + manhattan_to_end) * 0.6
+        elif self.location[2] >= 5:
+            f = (self.h + manhattan_to_end) * 0.6
+>>>>>>> 96ae4e22e2aba1fbfad9cf6f9b48e8a889aea08a
         elif self.location[2] >= 4:
             f = (self.h + manhattan_to_end) * 0.5
         elif self.location[2] >= 3:
-            f = (self.h + manhattan_to_end) * 0.6
+            f = (self.h + manhattan_to_end) * 0.5
         elif self.location[2] >= 2:
             f = (self.h + manhattan_to_end) * 0.6
         elif self.location[2] >= 1:

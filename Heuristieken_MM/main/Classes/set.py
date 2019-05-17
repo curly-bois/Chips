@@ -9,6 +9,7 @@ class Set(object):
         self.route = []
         self.is_connected = is_connected
         self.calc_distance()
+        self.calc_direction()
 
     def disconnect(self):
         self.is_connected = False
@@ -29,27 +30,47 @@ class Set(object):
         difference = abs(np.subtract(self.startpoint.location,
                                      self.endpoint.location))
 
-        difference = np.delete(difference, [2])
-
         xdistance = difference[0]
         ydistance = difference[1]
 
         self.distance = xdistance + ydistance
 
+    def calc_direction(self):
+        difference = np.subtract(self.startpoint.location,
+                                     self.endpoint.location)
+
+        difference = np.delete(difference, [2])
+
+        xdistance = difference[0]
+        ydistance = difference[1]
+
         if xdistance == 0:
             self.direction = "vertical"
         elif ydistance == 0:
             self.direction = "horizontal"
-        else:
-            delta = round((ydistance / xdistance), 2)
+
+        elif ydistance < 0:
+            delta = round((abs(ydistance) / abs(xdistance)), 2)
             degrees = np.degrees(np.arctan(delta))
 
             if 30 < degrees < 60:
-                self.direction = "diagonal"
-            elif degrees <= 30:
+                self.direction = "diagonal-down"
+            elif -30 <= degrees <= 30:
                 self.direction = "horizontal"
             else:
                 self.direction = "vertical"
+
+        elif ydistance > 0:
+            delta = round((abs(ydistance) / abs(xdistance)), 2)
+            degrees = np.degrees(np.arctan(delta))
+            
+            if 30 < degrees < 60:
+                self.direction = "diagonal-up"
+            elif -30 <= degrees <= 30:
+                self.direction = "horizontal"
+            else:
+                self.direction = "vertical"
+
 
     def get_startpoint(self):
         return self.startpoint

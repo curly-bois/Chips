@@ -10,6 +10,7 @@ def make_plot(all_sets):
     # make the plot
     dot = []
     routes = []
+
     for set in all_sets:
         dot.append(set.get_startpoint().get_location())
         dot.append(set.get_endpoint().get_location())
@@ -21,7 +22,6 @@ def make_plot(all_sets):
                 routearr.append(point.get_location())
             routearr.append(set.get_endpoint().get_location())
             routes.append(routearr)
-
 
     fig = plt.figure()
     ax = plt.axes(projection='3d')

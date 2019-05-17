@@ -9,8 +9,7 @@ def connect(to_be_connected):
     '''
     to_be_connnected [list of sets]
     '''
-    np.random.shuffle(to_be_connected)
-    # to_be_connected = make_order(to_be_connected)
+
     orderlist = []
 
     for set in to_be_connected:
@@ -60,7 +59,7 @@ def connect(to_be_connected):
             tries += 1
 
             # try N amount of times
-            if tries == 2000:
+            if tries == 1500:
                 end.set_attribute("gate")
                 break
 

@@ -20,6 +20,7 @@ while counter < 1:
     # initializing the grid and making the points
     counter += 1
 
+while counter < 1:
     matrix = make_matrix(gridpoints)
     to_be_connected = make_conlist(connections, matrix)
 
@@ -31,6 +32,7 @@ while counter < 1:
     all_sets, connected_sets, unconnected_sets = connect(to_be_connected)
     print(len(all_sets))
     new_connections = []
+    make_plot(all_sets)
 
     if len(unconnected_sets) == 0:
         make_plot(connected_sets)

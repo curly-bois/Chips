@@ -248,13 +248,13 @@ class Grid(object):
         for pos in wire.route:
             self.grid[pos].set_attribute('free')
 
-        return start, end
+        return (start, end)
 
     def add_wire(self, wire):
         for pos in wire.route:
             self.grid[pos].set_attribute('wire')
 
-        return wire.start, wire.end
+        return (wire.start, wire.end)
 
     def distance_matrix(self):
         points = []

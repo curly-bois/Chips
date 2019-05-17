@@ -7,6 +7,26 @@ import pandas as pd
 import sys
 import time
 
+def Check(wires):
+    all = []
+    pointss = []
+    for i in wires:
+        all += i.route
+        pointss.append(i.start)
+        pointss.append(i.end)
+    all_wire = []
+    for a in all:
+        if not a in pointss:
+            all_wire.append(a)
+
+    return (len(all_wire) == len(set(all_wire)))
+
+def shuffle(Wires):
+    r = [random.randint(0,1) for i in range(len(Wires))]
+    wires1 = [Wires[n]  for n, i in enumerate(r) if i == 1]
+    wires2 = [Wires[n]  for n, i in enumerate(r) if i == 0]
+    return wires1+wires2
+
 def get_wires(mainGrid, points_to_connect):
     # Start the loop for all the wires
     wires = []
@@ -25,7 +45,7 @@ def get_wires(mainGrid, points_to_connect):
             con_wire = Wire(start, end, wire)
             wires.append(con_wire)
             # Update value grid
-            mainGrid.update_layer()
+            # mainGrid.update_layer()
             # mainGrid.wire_NN_edit() ## Commented out
             connected += 1
 
@@ -33,65 +53,64 @@ def get_wires(mainGrid, points_to_connect):
 
 def swap_wires(wires, not_connected, mainGrid, swaps):
 
-    old_wires = [i for i in wires]
-    random.shuffle(old_wires)
-
-    # len_list = sum([len(i.route) for i in wires])
     len_list = len(not_connected)
-    not_connected_new = []
-    for wire in old_wires[:swaps]:
-        start, end = mainGrid.remove_wire(wire)
-        not_connected_new.append((start, end))
-        not_con_len = len(not_connected)
+    popped_wires = []
+    old_wires = [i for i in wires]
 
-    points_to_connect = not_connected+not_connected_new
-    random.shuffle(points_to_connect)
-    wires2, connected, not_connected2 = get_wires(mainGrid, points_to_connect)
-    # len_list2 = sum([len(i.route) for i in wires2 + old_wires[3:]])
-    len_list2 = len(not_connected2)
+    for wire in old_wires[:swaps]:
+        coords = mainGrid.remove_wire(wire)
+        popped_wires.append(wires.pop(wires.index(wire)))
+        not_connected.append(coords)
+
+    wires2, connected, not_connected = get_wires(mainGrid, not_connected)
+    len_list2 = len(not_connected)
 
     if len_list > len_list2:
-        wires = wires2 + old_wires[swaps:]
-        not_connected = not_connected2
+        wires3 = wires2 + wires
+        return mainGrid, wires3, not_connected
     else:
         for w in wires2:
-            mainGrid.remove_wire(w)
-        for w in old_wires[swaps:]:
-            mainGrid.add_wire(w)
+            not_connected.append(mainGrid.remove_wire(w))
+        # [(w.start, w.end) for w in wires]
+        # [(w.start, w.end) for w in wires2]
+        for w in popped_wires:
+            not_connected.pop(not_connected.index(mainGrid.add_wire(w)))
 
-    random.shuffle(not_connected)
-    return mainGrid, wires, not_connected
+        wires3 = popped_wires + wires
+        return mainGrid, wires3, not_connected
+
+
 
 def swap_wires_for_score(wires, not_connected, mainGrid, swaps):
 
-    old_wires = [i for i in wires]
-    random.shuffle(old_wires)
-
     len_list = sum([len(i.route) for i in wires])
     len1 = len(not_connected)
-    not_connected_new = []
+    popped_wires = []
+    old_wires = [i for i in wires]
+
     for wire in old_wires[:swaps]:
-        start, end = mainGrid.remove_wire(wire)
-        not_connected_new.append((start, end))
-        not_con_len = len(not_connected)
+        coords = mainGrid.remove_wire(wire)
+        popped_wires.append(wires.pop(wires.index(wire)))
+        not_connected.append(coords)
 
-    points_to_connect = not_connected+not_connected_new
-    random.shuffle(points_to_connect)
-    wires2, connected, not_connected2 = get_wires(mainGrid, points_to_connect)
-    ## SCORE
-    len_list2 = sum([len(i.route) for i in wires2 + old_wires[swaps:]])
-    len2 = len(not_connected2)
+    wires2, connected, not_connected = get_wires(mainGrid, not_connected)
+    len_list2 = sum([len(i.route) for i in wires2 + wires])
+    len2 = len(not_connected)
 
-    if len_list > len_list2 and len1 == len2:
-        wires = wires2 + old_wires[swaps:]
-        not_connected = not_connected2
+
+    if len_list > len_list2 and len1 >= len2:
+        wires3 = wires2 + wires
+        return mainGrid, wires3, not_connected
     else:
         for w in wires2:
-            mainGrid.remove_wire(w)
-        for w in old_wires[swaps:]:
-            mainGrid.add_wire(w)
+            not_connected.append(mainGrid.remove_wire(w))
+        # [(w.start, w.end) for w in wires]
+        # [(w.start, w.end) for w in wires2]
+        for w in popped_wires:
+            not_connected.pop(not_connected.index(mainGrid.add_wire(w)))
 
-    return mainGrid, wires, not_connected
+        wires3 = popped_wires + wires
+        return mainGrid, wires3, not_connected
 
 def make_random_points(size, resolution, number=-1):
     '''

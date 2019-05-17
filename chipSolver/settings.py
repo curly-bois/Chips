@@ -49,6 +49,25 @@ def sort_points(starts, ends):
     # return the sorted points
     return points
 
+def sort_points2(starts, ends):
+    '''
+    A way of sorting the points, very easy and not thought out.
+    '''
+    # Make two indentical list, sort one and use the other for indexing
+    def sorting(d):
+        s = d[0]
+        e = d[1]
+        v = abs(s[0]-s[1])
+        h = abs(e[0]-e[1])
+        d = v+h
+        return (v**2)*(h**2)*d
+
+    points = list(zip(starts, ends))
+    points.sort(key=sorting)
+    # points.reverse()
+
+    return points
+
 def sort_points_random(starts, ends):
     points_unsorted = list(zip(starts,ends))
     random.shuffle(points_unsorted)
@@ -60,7 +79,7 @@ def first_value(size):
     At the moment the values are set to 0, testing should result in best values
     '''
     # triple list comperhansion
-    super_grid = [[[        1.00
+    super_grid = [[[        1.00 + (abs(y-size[1]/2) + abs(x-size[1]/2)) * (1/size[1])
                             for z in range(size[2])]
                             for y in range(size[1])]
                             for x in range(size[0])]

@@ -23,7 +23,7 @@ var = df.iloc[int(settings)]
 SWAP = True
 LOOPS = int(var[9])
 SWAPS = int(var[10])
-SORT = False
+SORT = True
 data_file = 'nightdata.xlsx'
 ###############################
 
@@ -53,7 +53,8 @@ if __name__ == '__main__':
 
         # Normal order, or custom order
         if SORT:
-            points_to_connect = sort_points(starts, ends) #
+            points_to_connect = sort_points2(starts, ends) #
+            # points_to_connect.reverse()
         else:
             points_to_connect = sort_points_random(starts, ends)
 
@@ -62,7 +63,7 @@ if __name__ == '__main__':
         mainGrid = Grid(SIZE, starts + ends)
 
         # A star algo
-        wires, connected, not_connected = get_wires(mainGrid, points_to_connect)
+        Wires, connected, not_connected = get_wires(mainGrid, points_to_connect)
 
         # Reset value grid
         mainGrid.value_grid = second_value(SIZE)
@@ -70,57 +71,67 @@ if __name__ == '__main__':
         # # swap wires
         if SWAP:
             for i in range(LOOPS):
+            # for i in range(10):
                 # print('Swap #', i, 'points to connect:', len(not_connected))
-                mainGrid, wires, not_connected = swap_wires(wires,
+                mainGrid, Wires, not_connected = swap_wires(Wires,
                                                             not_connected,
                                                             mainGrid,
                                                             SWAPS)
+
+                Wires = shuffle(Wires)
+
                 if len(not_connected) == 0:
                     break
 
             if len(not_connected) != 0:
+                print(Check(Wires))
+                print(len(Wires))
                 print(len(not_connected))
-                break
+                continue
             else:
-                print(len(wires))
+                print(Check(Wires))
 
 
-            print(sum([len(i.route) for i in wires]))
             for i in range(100):
-                mainGrid, wires, not_connected = swap_wires_for_score(wires,
+                mainGrid, Wires, not_connected = swap_wires_for_score(Wires,
                                                                   not_connected,
                                                                   mainGrid,
                                                                   SWAPS*3)
-                print('..', sum([len(i.route) for i in wires]), '..', end='\r')
-            for i in range(300):
-                mainGrid, wires, not_connected = swap_wires_for_score(wires,
+                print('..', sum([len(i.route) for i in Wires]), '..', end='\r')
+                Wires = shuffle(Wires)
+
+            for i in range(100):
+                mainGrid, Wires, not_connected = swap_wires_for_score(Wires,
                                                                   not_connected,
                                                                   mainGrid,
-                                                                  SWAPS)
-                print('..', sum([len(i.route) for i in wires]), '..', end='\r')
+                                                                  1)
+                print('..', sum([len(i.route) for i in Wires]), '..', end='\r')
+                Wires = shuffle(Wires)
 
-        print(len(wires))
+            print('')
+            print(Check(Wires))
+
+            # for i in range(100):
+            #     mainGrid, Wires, not_connected = swap_wires(Wires,
+            #                                                       not_connected,
+            #                                                       mainGrid,
+            #                                                       SWAPS)
+                # print('..', sum([len(i.route) for i in Wires]), '..', end='\r')
+                # Wires = shuffle(Wires)
+
+            print(Check(Wires))
+
         connected = total_poits_number - len(not_connected)
 
-        all = []
-        pointss = []
-        for i in wires:
-            all += i.route
-            pointss.append(i.start)
-            pointss.append(i.end)
-        all_wire = []
-        for a in all:
-            if not a in pointss:
-                all_wire.append(a)
 
-        print(len(all_wire))
-        print(len(set(all_wire)))
+
+        # Check(Wires)
 
 
         # Print lenght + minimal lenght
         cal_time = time.time() - start_time
         score = length_score(data_file,
-                             wires,
+                             Wires,
                              connected / total_poits_number,
                              not_connected,
                              cal_time,
@@ -133,4 +144,4 @@ if __name__ == '__main__':
     else:
         # Plots result
         # plot_anam(wires, SIZE)
-        mainGrid.plot_wire(wires)
+        mainGrid.plot_wire(Wires)

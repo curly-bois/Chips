@@ -153,18 +153,21 @@ def make_order(sets):
 
 
     templist = sorted (diagonal.keys())
-    reversed(templist)
+    # templist = reversed(templist)
     for i in templist:
         dialist.append(diagonal[i])
+    np.random.shuffle(dialist)
     templist = sorted (horizontal.keys())
-    reversed(templist)
+    # templist = reversed(templist)
     for i in templist:
         horlist.append(horizontal[i])
+    np.random.shuffle(horlist)
     templist = sorted (vertical.keys())
-    reversed(templist)
+    # templist = reversed(templist)
     for i in templist:
         verlist.append(vertical[i])
+        np.random.shuffle(verlist)
 
-    complete = list(dialist+verlist+horlist)
-
+    complete =list(dialist+verlist+horlist)
+    np.random.shuffle(complete)
     return complete

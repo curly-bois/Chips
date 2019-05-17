@@ -47,7 +47,7 @@ def make_xlsx(all_sets,connected_sets,matrix,netlistname,unconnected_sets):
     data['amount of wires'] = len(wires)
     data['unconnected'] = f"{int(len(unconnected_sets) / len(all_sets) * 100)}%"
 
-    output('Random_Astar_H_vals.xlsx', data)
+    output('A_star_dir_order.xlsx', data)
 
 
 def output(filename, data):

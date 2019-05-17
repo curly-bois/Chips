@@ -137,37 +137,52 @@ def make_order(sets):
 
     horizontal = {}
     vertical = {}
-    diagonal = {}
+    diagonal_up = {}
+    diagonal_down = {}
     templist = []
     horlist = []
     verlist = []
-    dialist = []
+    diadownlist = []
+    diauplist = []
 
     for set in sets:
         if set.direction == "horizontal":
             horizontal[set.distance] = set
         elif set.direction == "vertical":
             vertical[set.distance] = set
-        elif set.direction == "diagonal":
-            diagonal[set.distance] = set
+        elif set.direction == "diagonal-up":
+            diagonal_up[set.distance] = set
+        elif set.direction == "diagonal-down":
+            diagonal_down[set.distance] = set
 
 
-    templist = sorted (diagonal.keys())
+    templist = sorted (diagonal_up.keys())
     # templist = reversed(templist)
     for i in templist:
-        dialist.append(diagonal[i])
-    np.random.shuffle(dialist)
-    templist = sorted (horizontal.keys())
+        diauplist.append(diagonal_up[i])
+    # np.random.shuffle(dialist)
+
+    templist = sorted (diagonal_down.keys())
     # templist = reversed(templist)
+    for i in templist:
+        diadownlist.append(diagonal_down[i])
+    # np.random.shuffle(dialist)
+
+    templist = sorted (horizontal.keys())
     for i in templist:
         horlist.append(horizontal[i])
-    np.random.shuffle(horlist)
+    # np.random.shuffle(horlist)
+
     templist = sorted (vertical.keys())
     # templist = reversed(templist)
     for i in templist:
         verlist.append(vertical[i])
-        np.random.shuffle(verlist)
 
-    complete =list(dialist+verlist+horlist)
-    np.random.shuffle(complete)
+    complete =list(diauplist+diadownlist+verlist+horlist)
+
+    print(len(complete))
+    # for i in complete:
+    #     print(i.direction)
+
+
     return complete

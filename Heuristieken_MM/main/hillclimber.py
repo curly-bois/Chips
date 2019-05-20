@@ -141,11 +141,14 @@ def simulated_annealing(max_tries, solved_sets, allowance):
     temp = 1
     T_min = 0.00001
     alpha = 0.99
+
+    # Calculate current score
     best_so_far = len(solved_sets)
     for set in solved_sets:
         for point in set.get_route():
             if point.get_attribute() == "wire":
                 best_so_far += 1
+
     print(f"STARTING HILLIMPROVE WITH {best_so_far} pieces of wire")
     better_solutions = []
     hillimproves = 0
@@ -186,21 +189,21 @@ def simulated_annealing(max_tries, solved_sets, allowance):
             # If better
             if wire_count < best_so_far:
                 not_improved = 0
-                print(f"Found a BETTER solution after {hillimproves} hillimproves which takes {wire_count} instead of {best_so_far}")
+                print(f"Found a BETTER solution after {hillimproves} hillimproves which takes {wire_count} wires pieces instead of {best_so_far}")
                 best_so_far = wire_count
 
                 # Save old routes again
-                for set in solved_sets:
+                for set in new_all_sets:
                     old_routes[set] = set.get_route()
 
             # If not better BUT continuing because of simulated annealing
             elif ap > random.random():
                 not_improved = 0
-                print(f"SIMULATED ANNEALING SAVED YOU. WORSE SOLUTION after {hillimproves} hillimproves which takes {wire_count} instead of {best_so_far}")
+                print(f"SIMULATED ANNEALING SAVED YOU. WORSE SOLUTION after {hillimproves} hillimproves which takes {wire_count} wire pieces instead of {best_so_far}")
                 best_so_far = wire_count
 
                 # Save old routes again
-                for set in solved_sets:
+                for set in new_all_sets:
                     old_routes[set] = set.get_route()
 
             # If worse and too bad to continue with for simulated annealing
@@ -209,21 +212,162 @@ def simulated_annealing(max_tries, solved_sets, allowance):
                 print("NOT ACCEPTING THE NEW SOLUTION")
                 print("***")
                 not_improved += 1
+                # !!! dit slaat nergens op
                 for set in new_all_sets:
                     set.disconnect()
                     set.set_route(old_routes[set])
+
+                for set in broken_sets:
                     set.reconnect()
+
+
+
 
         # If no solution was found
         else:
             not_improved += 1
+            # !!! dit slaat nergens op
             for set in new_all_sets:
                 set.disconnect()
                 set.set_route(old_routes[set])
+
+            for set in broken_sets:
                 set.reconnect()
 
         temp *= alpha
 
+    return None
+
+
+def simulsolve(max_tries, all_sets, connected_sets, unconnected_sets):
+    not_improved = 0
+    temp = 1
+    T_min = 0.00001
+    alpha = 0.99
+    to_break = 1
+    break_check = 0
+    best_so_far = len(unconnected_sets)
+    start_score = len(unconnected_sets)
+    print(f"STARTING SIMULSOLVE WITH {best_so_far} solved sets")
+    better_solutions = []
+    hillimproves = 0
+    while(not_improved < max_tries):
+        if break_check == 100 and not (to_break > 5):
+            break_check = 0
+            to_break += 1
+        hillimproves += 1
+
+        # Create new list for new tries
+        new_tries = []
+        initially_unconnected_sets = []
+        connected_sets = []
+        for set in all_sets:
+            if set.is_it_connected() == False:
+                initially_unconnected_sets.append(set)
+                new_tries.append(set)
+            else:
+                connected_sets.append(set)
+
+        # Save all OG routes in first iteration
+        if hillimproves == 1:
+            old_routes = {}
+            print("FIRST HILLSOLVE REMEMBERING ROUTES")
+            for set in all_sets:
+                old_routes[set] = set.get_route()
+
+        # Break a random set
+        broken_sets = []
+        np.random.shuffle(connected_sets)
+        for i in range(to_break):
+            connected_sets[i].disconnect()
+            broken_sets.append(connected_sets[i])
+            new_tries.append(connected_sets[i])
+
+        # Try to solve again
+        np.random.shuffle(new_tries)
+        new_all_sets, new_connected_sets, new_unconnected_sets = connect(new_tries)
+
+        # Check if solved:
+        if len(new_unconnected_sets) == 0:
+            print(f"SIMULSOLVE FOUND A SOLUTION AFTER {hillimproves} simulsolves")
+            return all_sets
+
+        # If not yet solved check if this is a better solution that we will accept
+        new_score = 0
+        for set in all_sets:
+            if set.is_it_connected() == False:
+                new_score += 1
+
+        # Calculate SA chance
+        # ap = acceptance_probability(best_so_far, new_score, temp)
+
+        # If better
+        if best_so_far >= new_score:
+            if best_so_far == new_score:
+                break_check += 1
+            else:
+                break_check = 0
+                to_break = 1
+            not_improved = 0
+            print(f"Found a BETTER solution after {hillimproves} hillimproves with {new_score} unconnected sets instead of {best_so_far}")
+            best_so_far = new_score
+
+            # Save old routes again
+            for set in all_sets:
+                old_routes[set] = set.get_route()
+
+        # If not better BUT continuing because of simulated annealing
+        # elif ap > random.random():
+        #     not_improved = 0
+        #     print(f"SIMULATED ANNEALING SAVED YOU. WORSE SOLUTION after {hillimproves} hillimproves with {new_score} unconnected sets instead of {best_so_far}")
+        #     best_so_far = new_score
+        #
+        #     # Save old routes again
+        #     for set in all_sets:
+        #         old_routes[set] = set.get_route()
+
+        # If worse and too bad to continue with for simulated annealing
+        else:
+            print("***")
+            print("NOT ACCEPTING THE NEW SOLUTION")
+            print("***")
+            not_improved += 1
+
+            for set in new_all_sets:
+                set.disconnect()
+
+            for set in all_sets:
+                set.set_route(old_routes[set])
+
+            for set in initially_unconnected_sets:
+                set.disconnect()
+
+            for set in connected_sets:
+                set.set_route(old_routes[set])
+                set.reconnect()
+
+
+            # for set in new_all_sets:
+            #     # print(f"These sets are being disconnected now in try {hilltries}:  {set}, this set is {set.is_it_connected()} ")
+            #     set.disconnect()
+            #
+            # for set in all_sets:
+            #     set.set_route(old_routes[set])
+            #
+            # for set in unconnected_sets:
+            #     set.set_route(old_routes[set])
+            #     set.disconnect()
+            #
+            # for set in connected_sets:
+            #     set.set_route(old_routes[set])
+            #     # print(f"These sets are being reconnected now in try {hilltries}:  {set}, this set is {set.is_it_connected()} ")
+            #     set.reconnect()
+
+
+        temp *= alpha
+
+    # Returns none when no solution has been found
+    print(f"simulsolve did not find a solution after {hillimproves} simulsolves, the amount of sets connected at the start was {start_score} and now it is {best_so_far}")
     return None
 
 def acceptance_probability(old_cost, new_cost, temp):

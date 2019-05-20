@@ -10,9 +10,9 @@ import numpy as np
 import sys
 
 counter = 0
-netlistname = "netlist_3"
+netlistname = "netlist_1"
 grid = grid_1
-connections = get_connections(netlist_3)
+connections = get_connections(netlist_1)
 gridpoints = make_grid(grid)
 print(len(connections))
 
@@ -40,11 +40,11 @@ while counter < 1:
         make_xlsx(all_sets,connected_sets,matrix,netlistname,unconnected_sets)
     else:
         print("niet eerste try")
-        solved_sets = hillsolve(50, matrix, all_sets, unconnected_sets, connected_sets)
+        solved_sets = simulsolve(200, all_sets, connected_sets, unconnected_sets)
+        make_plot(solved_sets)
         print(len(solved_sets))
 
         # make_plot(connected_sets)
-        make_plot(solved_sets)
         # hillimprove(100, solved_sets)
         dynamic(matrix)
         if solved_sets != None:

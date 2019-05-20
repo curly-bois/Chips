@@ -216,12 +216,7 @@ def simulated_annealing(max_tries, solved_sets, allowance):
                 for set in new_all_sets:
                     set.disconnect()
                     set.set_route(old_routes[set])
-
-                for set in broken_sets:
                     set.reconnect()
-
-
-
 
         # If no solution was found
         else:
@@ -230,8 +225,6 @@ def simulated_annealing(max_tries, solved_sets, allowance):
             for set in new_all_sets:
                 set.disconnect()
                 set.set_route(old_routes[set])
-
-            for set in broken_sets:
                 set.reconnect()
 
         temp *= alpha

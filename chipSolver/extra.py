@@ -6,6 +6,9 @@ import numpy as np
 import pandas as pd
 import sys
 import time
+import math
+
+option_file = r"data\options.xlsx"
 
 def Check(wires):
     all = []
@@ -21,11 +24,21 @@ def Check(wires):
 
     return (len(all_wire) == len(set(all_wire)))
 
-def shuffle(Wires):
-    r = [random.randint(0,1) for i in range(len(Wires))]
-    wires1 = [Wires[n]  for n, i in enumerate(r) if i == 1]
-    wires2 = [Wires[n]  for n, i in enumerate(r) if i == 0]
-    return wires1+wires2
+def shuffle(items):
+    r = [random.randint(0,1) for i in range(len(items))]
+    items1 = [items[n]  for n, i in enumerate(r) if i == 1]
+    items2 = [items[n]  for n, i in enumerate(r) if i == 0]
+    return items1+items2
+
+def update_temperature(T, delta_t):
+    # return T - 0.019
+    return T * delta_t
+
+def sortit(i):
+    return i.score1()
+
+def shortestit(i):
+    return i.score2()
 
 def get_wires(mainGrid, points_to_connect):
     # Start the loop for all the wires
@@ -79,7 +92,77 @@ def swap_wires(wires, not_connected, mainGrid, swaps):
         wires3 = popped_wires + wires
         return mainGrid, wires3, not_connected
 
+def acceptance_probability(old_cost, new_cost, temperature):
+    if new_cost < old_cost:
+        return 1.0
+    else:
+        return math.exp((old_cost - new_cost) / temperature)
 
+def swap_wiresA(wires, not_connected, mainGrid, swaps, t):
+
+    len_list = len(not_connected)
+    popped_wires = []
+    old_wires = [i for i in wires]
+
+    for wire in old_wires[:swaps]:
+        coords = mainGrid.remove_wire(wire)
+        popped_wires.append(wires.pop(wires.index(wire)))
+        not_connected.append(coords)
+
+    wires2, connected, not_connected = get_wires(mainGrid, not_connected)
+    len_list2 = len(not_connected)
+
+    prop = acceptance_probability(len_list, len_list2, t)
+
+    if prop > random.random():
+        wires3 = wires2 + wires
+        return mainGrid, wires3, not_connected
+    else:
+        for w in wires2:
+            not_connected.append(mainGrid.remove_wire(w))
+        # [(w.start, w.end) for w in wires]
+        # [(w.start, w.end) for w in wires2]
+        for w in popped_wires:
+            not_connected.pop(not_connected.index(mainGrid.add_wire(w)))
+
+        wires3 = popped_wires + wires
+        return mainGrid, wires3, not_connected
+
+def swap_wiresA_P(wires, not_connected, mainGrid, swaps, t):
+
+    len1 = len(not_connected)
+    len_list = sum([len(i.route) for i in wires])
+    popped_wires = []
+    old_wires = [i for i in wires]
+
+    for wire in old_wires[:swaps]:
+        coords = mainGrid.remove_wire(wire)
+        popped_wires.append(wires.pop(wires.index(wire)))
+        not_connected.append(coords)
+
+    wires2, connected, not_connected2 = get_wires(mainGrid, not_connected)
+    len2 = len(not_connected2)
+
+    prop = acceptance_probability(len1, len2, t)
+    len_list2 = sum([len(i.route) for i in wires2 + wires])
+    prop2 = acceptance_probability(len_list, len_list2, t)
+
+    if ((prop > random.random() or prop2 > random.random()) and prop > random.random()):
+        # print('this', len(wires2), len(wires), len(popped_wires))
+        # print('this2', len(not_connected), len(not_connected2))
+        wires3 = wires2 + wires
+        return mainGrid, wires3, not_connected2
+    else:
+        # print('that', len(wires2), len(wires), len(popped_wires))
+        # print('that2', len(not_connected), len(not_connected2))
+        for w in wires2:
+            not_connected2.append(mainGrid.remove_wire(w))
+
+        for w in popped_wires:
+            not_connected2.pop(not_connected2.index(mainGrid.add_wire(w)))
+
+        wires3 = popped_wires + wires
+        return mainGrid, wires3, not_connected2
 
 def swap_wires_for_score(wires, not_connected, mainGrid, swaps):
 
@@ -111,6 +194,39 @@ def swap_wires_for_score(wires, not_connected, mainGrid, swaps):
 
         wires3 = popped_wires + wires
         return mainGrid, wires3, not_connected
+
+def swap_wires_for_scoreA(wires, not_connected, mainGrid, swaps, t):
+
+    len_list = sum([len(i.route) for i in wires])
+    len1 = len(not_connected)
+    popped_wires = []
+    old_wires = [i for i in wires]
+
+    for wire in old_wires[:swaps]:
+        coords = mainGrid.remove_wire(wire)
+        popped_wires.append(wires.pop(wires.index(wire)))
+        not_connected.append(coords)
+
+    wires2, connected, not_connected = get_wires(mainGrid, not_connected)
+    len_list2 = sum([len(i.route) for i in wires2 + wires])
+    len2 = len(not_connected)
+
+    prop = acceptance_probability(len_list, len_list2, t)
+
+    if (prop > random.random() or len1 > len2) and len1 >= len2:
+        wires3 = wires2 + wires
+        return mainGrid, wires3, not_connected
+    else:
+        for w in wires2:
+            not_connected.append(mainGrid.remove_wire(w))
+        # [(w.start, w.end) for w in wires]
+        # [(w.start, w.end) for w in wires2]
+        for w in popped_wires:
+            not_connected.pop(not_connected.index(mainGrid.add_wire(w)))
+
+        wires3 = popped_wires + wires
+        return mainGrid, wires3, not_connected
+
 
 def make_random_points(size, resolution, number=-1):
     '''
@@ -160,23 +276,31 @@ def length_score(data_file, wires, percentile, not_connected,
     data['len_percentile'] = sum(len_list)/sum(minlen_list)
     data['starting order'] = str(points_to_connect)
     data['ending order'] = str(not_connected)
-    df = pd.read_excel("options.xlsx", sheet_name=0)
+    df = pd.read_excel(option_file, sheet_name=0)
     settings = sys.argv[2]
     var = df.iloc[int(settings)]
     data['options'] = str(list(var))
     data['option_num'] = int(settings)
 
     print(f'\nThe score was: {percentile}')
-    print(f'\nThe len was: {sum(len_list)}')
+    print(f'The len was: {sum(len_list)}')
     output(data_file, data)
-    print(f'Data is saved in {data_file}')
+    print(f'Data is saved in {data_file}\n')
     return percentile
 
 def make_imported_points(points, netlist):
     start_index, end_index = zip(*netlist)
     starts = [(points[i][0],points[i][1],0) for i in start_index]
     ends = [(points[i][0],points[i][1],0) for i in end_index]
-    return ends, starts
+
+    count_dict = {}
+    for i in ends+starts:
+        if i in count_dict:
+            count_dict[i] +=1
+        else:
+            count_dict[i] = 1
+
+    return ends, starts, count_dict
 
 def output(filename, data):
     df = pd.read_excel(filename, sheet_name=0)

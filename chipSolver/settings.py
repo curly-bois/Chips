@@ -5,7 +5,7 @@ import time
 import sys
 
 # File location
-filename = "options.xlsx"
+filename = r"data\options.xlsx"
 
 settings = sys.argv[2]
 print(settings)
@@ -67,6 +67,31 @@ def sort_points2(starts, ends):
     # points.reverse()
 
     return points
+
+def sort_points3(starts, ends, count_dict):
+    '''
+    A way of sorting the points, very easy and not thought out.
+    '''
+    # Make two indentical list, sort one and use the other for indexing
+    def sortingdict(d):
+        return d[1]
+
+    points = list(zip(count_dict.keys(), count_dict.values()))
+    points.sort(key=sortingdict)
+    points.reverse()
+
+    point_order = []
+    point_rand = list(zip(starts,ends))
+    point_rand += point_rand
+    all_points = starts+ends
+
+    for key, value in points:
+        for v in range(value):
+            i = all_points.index(key)
+            point_order.append(point_rand[i])
+            all_points[i] = 0
+
+    return point_order
 
 def sort_points_random(starts, ends):
     points_unsorted = list(zip(starts,ends))

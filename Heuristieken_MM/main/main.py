@@ -10,9 +10,9 @@ import numpy as np
 import sys
 
 counter = 0
-netlistname = "netlist_3"
-grid = grid_1
-connections = get_connections(netlist_3)
+netlistname = "netlist_6"
+grid = grid_2
+connections = get_connections(netlist_6)
 gridpoints = make_grid(grid)
 print(len(connections))
 
@@ -40,15 +40,43 @@ while counter < 1:
         make_xlsx(all_sets,connected_sets,matrix,netlistname,unconnected_sets)
     else:
         print("niet eerste try")
-        solved_sets = hillsolve(50, matrix, all_sets, unconnected_sets, connected_sets)
+        solved_sets = simulsolve(200, all_sets, connected_sets, unconnected_sets)
+        make_plot(solved_sets)
         print(len(solved_sets))
 
         # make_plot(connected_sets)
-        make_plot(solved_sets)
         # hillimprove(100, solved_sets)
         dynamic(matrix)
         if solved_sets != None:
             simulated_annealing(100, solved_sets, 30)
+            collisions = 0
+            for three_dim in matrix:
+                for two_dim in three_dim:
+                    for point in two_dim:
+                        if point.check > 1:
+                            collisions += 1
+            print("*******")
+            print("*******")
+            print("*******")
+            print("*******")
+            print("*******")
+            print("*******")
+            print("*******")
+            print(f"END OF RANDOM SOLUTION, AMOUNT OF COLLISIONS: {collisions}")
+            print("*******")
+            print("*******")
+            print("*******")
+            print("*******")
+            print("*******")
+            print("*******")
+            print("*******")
             make_plot(solved_sets)
             print(len(solved_sets))
+            collisions = 0
+            for three_dim in matrix:
+                for two_dim in three_dim:
+                    for point in two_dim:
+                        if point.check > 1:
+                            collisions += 1
+            print(f"END OF PROGRAM, AMOUNT OF COLLISIONS: {collisions}")
             make_xlsx(all_sets,connected_sets,matrix,netlistname,unconnected_sets)

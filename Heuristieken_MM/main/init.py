@@ -46,8 +46,8 @@ def make_matrix(grid):
 
     for tup in grid:
         tuplist.append(tup)
-    x = max(tuplist, key=itemgetter(0))[0] + 1
-    y = max(tuplist, key=itemgetter(1))[1] + 1
+    x = max(tuplist, key=itemgetter(0))[0] + 2
+    y = max(tuplist, key=itemgetter(1))[1] + 2
 
     ## Je kan deze matrix en de hier na komende nested for loops in een 'regel'
     ## Schrijven, door ze een functie te geven die de if else aanpakt.

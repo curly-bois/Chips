@@ -36,19 +36,19 @@ def init(GENS, netlist_number):
     # For every instance, connect the grid (deepcopy??)
     for gen in generation:
         # A algorithm
-        wires = pickle.load( open( "wires.p", "rb" ) )
-        not_connected  = [((1, 3, 0), (9, 10, 0))]
-        gen.snotc([i for i in not_connected])
-        new_wire = []
-        for i,w in enumerate(wires):
-            new_wire.append(Wire(w.start, w.end, w.route))
-            gen.main.add_wire(new_wire[i])
-        gen.swires(new_wire)
+        # wires = pickle.load( open( "wires.p", "rb" ) )
+        # not_connected  = [((1, 3, 0), (9, 10, 0))]
+        # gen.snotc([i for i in not_connected])
+        # new_wire = []
+        # for i,w in enumerate(wires):
+        #     new_wire.append(Wire(w.start, w.end, w.route))
+        #     gen.main.add_wire(new_wire[i])
+        # gen.swires(new_wire)
 
-        # Wires, connected, not_connected = get_wires(gen.main,
-        #                                             points_to_connect)
-        # # Link it to the instance
-        # gen.start((Wires, not_connected))
+        Wires, connected, not_connected = get_wires(gen.main,
+                                                    points_to_connect)
+        # Link it to the instance
+        gen.start((Wires, not_connected))
         gen.main.value_grid = second_value(SIZE)
 
     return generation, tpnum, SIZE, starts+ends

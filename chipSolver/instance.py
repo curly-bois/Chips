@@ -7,6 +7,7 @@ class Instance( ):
         self.not_connected = []
         self.add_wires()
         self.t = 1
+        self.swap = 10
 
     def start(self, vars):
         self.wires = vars[0]
@@ -24,7 +25,7 @@ class Instance( ):
 
     def score2(self):
         try:
-            return int(sum([len(i.route) for i in self.wires]))
+            return int(sum([i.length for i in self.wires]))
         except:
             0
 

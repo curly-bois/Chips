@@ -1,4 +1,6 @@
-python .\main2.py 4 20 50 sima
-python .\main2.py 4 21 50 sima
-python .\main2.py 4 22 50 sima
-
+python .\main.py 4 27 50 hill
+python .\main.py 4 28 50 hill
+python .\main.py 4 29 50 hill
+python .\main.py 4 30 50 hill
+python .\main.py 4 31 50 hill
+python .\main.py 4 32 50 hill

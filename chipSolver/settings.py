@@ -7,23 +7,21 @@ import sys
 # File location
 filename = r"data\options.xlsx"
 
+# Get settings, this script must run when package is excecuted.
 settings = sys.argv[2]
-print(settings)
-
 df = pd.read_excel(filename, sheet_name=0)
 var = df.iloc[int(settings)]
 var = [int(i) for i in var]
+
 layer_coef = var[0]
 NN_penalty = var[1]
-
-# Settings
 layer_multiplier = [var[2],var[3],var[4],var[5],var[6],var[7],var[8]]
-
-# wire_penalty = 0.4
-# upper_penalty = 0
 
 
 def get_distance(matrix, points, p1, p2):
+    '''
+    distance matrix helper functon, gets the distance between two points
+    '''
     ver = points.index(p1)
     hor = points.index(p2)
     return matrix[ver][hor]
@@ -51,7 +49,9 @@ def sort_points(starts, ends):
 
 def sort_points2(starts, ends):
     '''
-    A way of sorting the points, very easy and not thought out.
+    A way of sorting the points.
+    Using the vertical, horizontal and the distance as a index of
+    complexity, starting with the easiest points first
     '''
     # Make two indentical list, sort one and use the other for indexing
     def sorting(d):
@@ -70,7 +70,7 @@ def sort_points2(starts, ends):
 
 def sort_points3(starts, ends, count_dict):
     '''
-    A way of sorting the points, very easy and not thought out.
+    A way of sorting the points, by the amount of points they need to connect with
     '''
     # Make two indentical list, sort one and use the other for indexing
     def sortingdict(d):
@@ -94,14 +94,17 @@ def sort_points3(starts, ends, count_dict):
     return point_order
 
 def sort_points_random(starts, ends):
+    '''
+    Randomly sorting points
+    '''
     points_unsorted = list(zip(starts,ends))
     random.shuffle(points_unsorted)
     return points_unsorted
 
 def first_value(size):
     '''
-    Very influencial defenition, creates the first instance of the value grid
-    At the moment the values are set to 0, testing should result in best values
+    Creates the first instance of the value grid
+    Values are set, so it avoids the center
     '''
     # triple list comperhansion
     super_grid = [[[        1.00 + (abs(y-size[1]/2) + abs(x-size[1]/2)) * (1/size[1])
@@ -118,8 +121,7 @@ def first_value(size):
 
 def second_value(size):
     '''
-    Very influencial defenition, creates the first instance of the value grid
-    At the moment the values are set to 0, testing should result in best values
+    Removes the values, and just declares it one everywere.
     '''
     # triple list comperhansion
     super_grid = [[[        1.00
@@ -164,10 +166,6 @@ def edit_grid(grid, points, value_grid):
                 x,y,z = N.location
                 value_grid[x][y][z] += NN_penalty ## changes to +
 
-            # # for every X points above the point
-            # x,y,z = p.location
-            # for i in range(2): # This hard coded!!!!!!!!!
-            #     value_grid[x][y][i] += upper_penalty*(3-(i+1))*(1/3)
 
     return value_grid
 

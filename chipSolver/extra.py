@@ -1,5 +1,8 @@
 from point import Point
 from wire import Wire
+from instance import Instance
+import grid
+from settings import second_value
 
 import random
 import numpy as np
@@ -10,27 +13,60 @@ import math
 
 option_file = r"data\options.xlsx"
 
+
 def Check(wires):
+    '''
+    Checks if the wires aren't crossing. Very useful during testing
+    '''
     all = []
     pointss = []
+
+    # get all wire/point pieces
     for i in wires:
         all += i.route
         pointss.append(i.start)
         pointss.append(i.end)
+
     all_wire = []
+    # For all wires that are not in points, append
     for a in all:
         if not a in pointss:
             all_wire.append(a)
 
+    # Check if there are overlapping locations in the wires
     return (len(all_wire) == len(set(all_wire)))
 
+def get_options(settings):
+    '''
+    Get the options values from the excel sheet
+    '''
+    # Read file
+    df = pd.read_excel(option_file, sheet_name=0)
+    var = df.iloc[int(settings)]
+
+    # Assign the column name to the value in a option dict
+    options = {}
+    for key in list(df):
+        options[key] = df.iloc[int(settings)][list(df).index(key)]
+
+    return options
+
 def shuffle(items):
+    '''
+    Shuffle wires without shuffling the original list
+    ~ improvement nessecarry ~
+    '''
     r = [random.randint(0,1) for i in range(len(items))]
+    # Random order
     items1 = [items[n]  for n, i in enumerate(r) if i == 1]
     items2 = [items[n]  for n, i in enumerate(r) if i == 0]
     return items1+items2
 
 def update_temperature(T, delta_t):
+    '''
+    Temprature update fucntion
+    linear and exponetial
+    '''
     # return T - 0.019
     return T * delta_t
 
@@ -40,12 +76,26 @@ def sortit(i):
 def shortestit(i):
     return i.score2()
 
+def acceptance_probability(old_cost, new_cost, temperature):
+    '''
+    Probability function for Simulated annealing.
+    Always accept improvement
+    '''
+    if new_cost < old_cost:
+        return 2.0
+    else:
+        return math.exp((old_cost - new_cost) / temperature)
+
 def get_wires(mainGrid, points_to_connect):
+    '''
+    Lay wires down
+    '''
     # Start the loop for all the wires
     wires = []
     connected = 0
     not_connected = []
 
+    # For every unconnected pair of points, try to connect them
     for start,end in points_to_connect:
         # find line, else return empty dict
         parent = mainGrid.Astar(start, end)
@@ -58,80 +108,76 @@ def get_wires(mainGrid, points_to_connect):
             con_wire = Wire(start, end, wire)
             wires.append(con_wire)
             # Update value grid
-            # mainGrid.update_layer()
-            # mainGrid.wire_NN_edit() ## Commented out
+            # mainGrid.update_layer() ## Proven to be inrellevant
+            # mainGrid.wire_NN_edit() ## Proven to be inrellevant
             connected += 1
 
     return wires, connected, not_connected
 
 def swap_wires(wires, not_connected, mainGrid, swaps):
-
+    '''
+    swaps wires based on simply improvement, greedy
+    '''
+    # get wire lenght and not connected count
+    len_list1 = sum([i.length for i in wires])
     len_list = len(not_connected)
+
+    # fresh variables
     popped_wires = []
     old_wires = [i for i in wires]
 
+    # for a few wires: remove them from the grid
     for wire in old_wires[:swaps]:
         coords = mainGrid.remove_wire(wire)
         popped_wires.append(wires.pop(wires.index(wire)))
         not_connected.append(coords)
 
+    # Try to connect the wires removed and the pairs not connected
     wires2, connected, not_connected = get_wires(mainGrid, not_connected)
     len_list2 = len(not_connected)
+    len_list2 = sum([i.length for i in wires2 + wires])
 
-    if len_list > len_list2:
+    # Check for inprovement in lenght if all wires are connected
+    if len(not_connected) == 0 and len_list2 < len_list1:
         wires3 = wires2 + wires
         return mainGrid, wires3, not_connected
+    # Check for inprovement in wires connected
+    elif len_list > len_list2:
+        wires3 = wires2 + wires
+        return mainGrid, wires3, not_connected
+    # else, reverse everything
     else:
+        # Remove the new wires
         for w in wires2:
             not_connected.append(mainGrid.remove_wire(w))
-        # [(w.start, w.end) for w in wires]
-        # [(w.start, w.end) for w in wires2]
+        # Add the old removed wires
         for w in popped_wires:
             not_connected.pop(not_connected.index(mainGrid.add_wire(w)))
-
+        # Re create the wires list
         wires3 = popped_wires + wires
         return mainGrid, wires3, not_connected
 
-def acceptance_probability(old_cost, new_cost, temperature):
-    if new_cost < old_cost:
-        return 1.0
-    else:
-        return math.exp((old_cost - new_cost) / temperature)
 
-def swap_wiresA(wires, not_connected, mainGrid, swaps, t):
 
-    len_list = len(not_connected)
-    popped_wires = []
-    old_wires = [i for i in wires]
+def make_new_gen(X, GENS, swap_count, SIZE, all_points):
+    generations = [Instance(grid.Grid(SIZE, all_points)) for n in range(GENS)]
+    # print(GENS, swap_count)
+    for geni in generations:
+        geni.snotc([i for i in X.not_connected])
+        new_wire = []
+        for i,w in enumerate(X.wires):
+            new_wire.append(Wire(w.start, w.end, w.route))
+            geni.main.add_wire(new_wire[i])
+        geni.swires(new_wire)
+        geni.swap = swap_count
+        geni.main.value_grid = second_value(SIZE)
 
-    for wire in old_wires[:swaps]:
-        coords = mainGrid.remove_wire(wire)
-        popped_wires.append(wires.pop(wires.index(wire)))
-        not_connected.append(coords)
-
-    wires2, connected, not_connected = get_wires(mainGrid, not_connected)
-    len_list2 = len(not_connected)
-
-    prop = acceptance_probability(len_list, len_list2, t)
-
-    if prop > random.random():
-        wires3 = wires2 + wires
-        return mainGrid, wires3, not_connected
-    else:
-        for w in wires2:
-            not_connected.append(mainGrid.remove_wire(w))
-        # [(w.start, w.end) for w in wires]
-        # [(w.start, w.end) for w in wires2]
-        for w in popped_wires:
-            not_connected.pop(not_connected.index(mainGrid.add_wire(w)))
-
-        wires3 = popped_wires + wires
-        return mainGrid, wires3, not_connected
+    return generations
 
 def swap_wiresA_P(wires, not_connected, mainGrid, swaps, t):
 
     len1 = len(not_connected)
-    len_list = sum([len(i.route) for i in wires])
+    len_list = sum([i.length for i in wires])
     popped_wires = []
     old_wires = [i for i in wires]
 
@@ -144,88 +190,49 @@ def swap_wiresA_P(wires, not_connected, mainGrid, swaps, t):
     len2 = len(not_connected2)
 
     prop = acceptance_probability(len1, len2, t)
-    len_list2 = sum([len(i.route) for i in wires2 + wires])
+    len_list2 = sum([i.length for i in wires2 + wires])
     prop2 = acceptance_probability(len_list, len_list2, t)
 
-    if ((prop > random.random() or prop2 > random.random()) and prop > random.random()):
-        # print('this', len(wires2), len(wires), len(popped_wires))
-        # print('this2', len(not_connected), len(not_connected2))
-        wires3 = wires2 + wires
-        return mainGrid, wires3, not_connected2
-    else:
-        # print('that', len(wires2), len(wires), len(popped_wires))
-        # print('that2', len(not_connected), len(not_connected2))
-        for w in wires2:
-            not_connected2.append(mainGrid.remove_wire(w))
+    # If wire inprovement
+    if (prop > random.random()):
+        # If lenght improvement on same wire
+        if prop2 > random.random() and prop == 1.0:
+            wires3 = wires2 + wires
+            return mainGrid, wires3, not_connected2
+        # If wire is not same
+        elif prop == 2.0:
+            wires3 = wires2 + wires
+            return mainGrid, wires3, not_connected2
 
-        for w in popped_wires:
-            not_connected2.pop(not_connected2.index(mainGrid.add_wire(w)))
+    for w in wires2:
+        not_connected2.append(mainGrid.remove_wire(w))
 
-        wires3 = popped_wires + wires
-        return mainGrid, wires3, not_connected2
+    for w in popped_wires:
+        not_connected2.pop(not_connected2.index(mainGrid.add_wire(w)))
 
-def swap_wires_for_score(wires, not_connected, mainGrid, swaps):
+    wires3 = popped_wires + wires
+    return mainGrid, wires3, not_connected2
 
-    len_list = sum([len(i.route) for i in wires])
-    len1 = len(not_connected)
+def swap_wires_plant(wires, not_connected, mainGrid, swaps):
+    '''
+    swaps wires based on simply improvement, greedy
+    '''
+    # fresh variables
     popped_wires = []
     old_wires = [i for i in wires]
 
+    # for a few wires: remove them from the grid
     for wire in old_wires[:swaps]:
         coords = mainGrid.remove_wire(wire)
         popped_wires.append(wires.pop(wires.index(wire)))
         not_connected.append(coords)
 
+    # Try to connect the wires removed and the pairs not connected
     wires2, connected, not_connected = get_wires(mainGrid, not_connected)
-    len_list2 = sum([len(i.route) for i in wires2 + wires])
-    len2 = len(not_connected)
 
 
-    if len_list > len_list2 and len1 >= len2:
-        wires3 = wires2 + wires
-        return mainGrid, wires3, not_connected
-    else:
-        for w in wires2:
-            not_connected.append(mainGrid.remove_wire(w))
-        # [(w.start, w.end) for w in wires]
-        # [(w.start, w.end) for w in wires2]
-        for w in popped_wires:
-            not_connected.pop(not_connected.index(mainGrid.add_wire(w)))
-
-        wires3 = popped_wires + wires
-        return mainGrid, wires3, not_connected
-
-def swap_wires_for_scoreA(wires, not_connected, mainGrid, swaps, t):
-
-    len_list = sum([len(i.route) for i in wires])
-    len1 = len(not_connected)
-    popped_wires = []
-    old_wires = [i for i in wires]
-
-    for wire in old_wires[:swaps]:
-        coords = mainGrid.remove_wire(wire)
-        popped_wires.append(wires.pop(wires.index(wire)))
-        not_connected.append(coords)
-
-    wires2, connected, not_connected = get_wires(mainGrid, not_connected)
-    len_list2 = sum([len(i.route) for i in wires2 + wires])
-    len2 = len(not_connected)
-
-    prop = acceptance_probability(len_list, len_list2, t)
-
-    if (prop > random.random() or len1 > len2) and len1 >= len2:
-        wires3 = wires2 + wires
-        return mainGrid, wires3, not_connected
-    else:
-        for w in wires2:
-            not_connected.append(mainGrid.remove_wire(w))
-        # [(w.start, w.end) for w in wires]
-        # [(w.start, w.end) for w in wires2]
-        for w in popped_wires:
-            not_connected.pop(not_connected.index(mainGrid.add_wire(w)))
-
-        wires3 = popped_wires + wires
-        return mainGrid, wires3, not_connected
+    wires3 = wires2 + wires
+    return mainGrid, wires3, not_connected
 
 
 def make_random_points(size, resolution, number=-1):
@@ -258,7 +265,7 @@ def length_score(data_file, wires, percentile, not_connected,
     (Store in CSV????)
     '''
     # Retrive data
-    len_list = [len(i.route) for i in wires]
+    len_list = [i.length for i in wires]
     minlen_list = [abs(i.start[0] - i.end[0]) +
                    abs(i.start[1] - i.end[1])
                    for i in wires]

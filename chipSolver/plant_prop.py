@@ -66,17 +66,16 @@ if __name__ == '__main__':
         # Reset value grid
         gen.main.value_grid = second_value(SIZE)
 
-    loops = 20*5
+    loops = 20
     swaps = 3
     fifty_mark = 0.15
     delta_t = fifty_mark**(1/(loops/2))
 
     swap_list = [ i+1 * swaps for i in range(len(generation))]
-    # temp_list = [ (i*(1/len(generation)))+0.1 for i in range(len(generation))]
-    temp_list = [(i*(0.5/len(generation)))+0.5 for i in range(len(generation))]
+    temp_list = [ (i*(1/len(generation)))+0.1 for i in range(len(generation))]
+    # temp_list = [(i*(0.5/len(generation)))+0.5 for i in range(len(generation))]
 
-    for iter in range(5): #50
-
+    for iter in range(20):
         scrore_board = [i.score1() for i in generation]
         scrore_board.sort()
         scrore_board.reverse()
@@ -86,7 +85,7 @@ if __name__ == '__main__':
         for i, gen in enumerate(generation):
             SWAPS = swap_list[scrore_board.index(gen.score1())]
             TEMP = temp_list[scrore_board.index(gen.score1())]
-            for i in range(20): #100
+            for i in range(20):
                 gen.main, new_wires , new_not_con = swap_wiresA_P(gen.gwires(),
                                                             gen.gnotc(),
                                                             gen.main,
@@ -115,12 +114,21 @@ if __name__ == '__main__':
 
         short_list.sort(key=shortestit)
         X = short_list[0]
+        Y = short_list[1]
 
         generation = [Instance(Grid(SIZE, starts + ends)) for i in range(GENS)]
-        for geni in generation:
+        for geni in generation[:int(GENS/2)]:
             geni.snotc([i for i in X.not_connected])
             new_wire = []
             for i,w in enumerate(X.wires):
+                new_wire.append(Wire(w.start, w.end, w.route))
+                geni.main.add_wire(new_wire[i])
+            geni.swires(new_wire)
+
+        for geni in generation[int(GENS/2):]:
+            geni.snotc([i for i in Y.not_connected])
+            new_wire = []
+            for i,w in enumerate(Y.wires):
                 new_wire.append(Wire(w.start, w.end, w.route))
                 geni.main.add_wire(new_wire[i])
             geni.swires(new_wire)

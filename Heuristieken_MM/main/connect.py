@@ -9,11 +9,14 @@ def connect(to_be_connected):
     '''
     to_be_connnected [list of sets]
     '''
+<<<<<<< HEAD
 
     # np.random.shuffle(to_be_connected)
 
     to_be_connected = make_order(to_be_connected)
 
+=======
+>>>>>>> ec58cf30581cb3abee4373a2546fd62efbb1d16a
     orderlist = []
 
     for set in to_be_connected:
@@ -92,7 +95,6 @@ def connect(to_be_connected):
                 for point in lowest_fs:
                     h_vals[point] = point.get_h()
 
-            # print(f"lowest in openlist is now: {current.get_location()} with an f of {current.calculate_f(start.get_location(), end.get_location())}")
 
             # delete the current postion from openlist
             del openlist[current]
@@ -100,7 +102,6 @@ def connect(to_be_connected):
 
             # if current is the end, set ths as taken
             if current == end:
-                route.append(end)
                 end.set_attribute("taken")
                 start.set_attribute("taken")
                 all_sets[-1].is_connected = True
@@ -118,13 +119,8 @@ def connect(to_be_connected):
                         going_back.set_attribute("wire")
                         going_back = parent[going_back]
 
-                plotroute = route
-                route.append(start)
-                # plotroute = plotroute + [end]
-
 
                 all_sets[-1].set_route(list(reversed(route)))
-                all_sets[-1].set_plotroute(list(reversed(plotroute)))
                 found = True
 
                 break

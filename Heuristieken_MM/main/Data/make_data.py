@@ -2,19 +2,32 @@ import pandas as pd
 from Classes.point import Point
 from Classes.set import Set
 
-def make_xlsx(all_sets,connected_sets,matrix,netlistname,unconnected_sets):
+def make_xlsx(all_sets,matrix,netlistname,method):
 
     wires = []
     order = []
     directions = []
     lower_bound = 0
+    unconnected_sets = []
 
-    # get the data form the connected sets (wire length only)
-    for set in connected_sets:
-        route = set.get_route()
-        wires.append(set.get_endpoint())
-        for point in route:
-            wires.append(point)
+    wire_pieces = len(all_sets)
+    for three_dimensions in matrix:
+        for two_dimensions in three_dimensions:
+            for point in two_dimensions:
+                if point.get_attribute() == "wire":
+                    wire_pieces += 1
+
+    # get the data from connected and unconnected sets
+    for set in all_sets:
+        if set.is_it_connected():
+            route = set.get_route()
+            wires.append(set.get_endpoint())
+            for point in route:
+                wires.append(point)
+        # If unconnected
+        else:
+            unconnected_sets.append(set)
+
 
     # get the data that has to do someting with all the sets
     for set in all_sets:
@@ -44,8 +57,9 @@ def make_xlsx(all_sets,connected_sets,matrix,netlistname,unconnected_sets):
     data['directions of order'] = [directions]
     data['upper bound'] = upper_bound
     data['lower bound'] = lower_bound
-    data['amount of wires'] = len(wires)
+    data['amount of wires'] = wire_pieces
     data['unconnected'] = f"{int(len(unconnected_sets) / len(all_sets) * 100)}%"
+    data['method'] = method
 
     output('test.xlsx', data)
 

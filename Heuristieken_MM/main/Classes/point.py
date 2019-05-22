@@ -12,6 +12,7 @@ class Point(object):
         self.id = id
         self.h = h
         self.dynamic = False
+        self.check = 0
 
     def get_id(self):
         return self.id
@@ -29,6 +30,11 @@ class Point(object):
         return self.location
 
     def set_attribute(self, attribute):
+        if attribute == "wire":
+            self.check += 1
+        else:
+            self.check = 0
+            
         self.attribute = attribute
 
     def get_attribute(self):

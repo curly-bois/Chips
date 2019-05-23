@@ -3,11 +3,13 @@ import numpy as np
 
 class Set(object):
 
-    def __init__(self, startpoint, endpoint, is_connected=False):
+    def __init__(self, startpoint, endpoint, is_connected=False,was_connected=False):
         self.startpoint = startpoint
         self.endpoint = endpoint
         self.route = []
+        self.old_route = []
         self.is_connected = is_connected
+        self.was_connected = was_connected
         self.calc_distance()
         self.calc_direction()
 
@@ -17,6 +19,7 @@ class Set(object):
         self.endpoint.set_attribute("gate")
         for point in self.route:
             point.set_attribute("empty")
+        self.route = []
 
     def reconnect(self):
         self.is_connected = True
@@ -24,6 +27,7 @@ class Set(object):
         self.endpoint.set_attribute("taken")
         for point in self.route:
             point.set_attribute("wire")
+
 
     def calc_distance(self):
 
@@ -63,7 +67,7 @@ class Set(object):
         elif ydistance > 0:
             delta = round((abs(ydistance) / abs(xdistance)), 2)
             degrees = np.degrees(np.arctan(delta))
-            
+
             if 30 < degrees < 60:
                 self.direction = "diagonal-up"
             elif -30 <= degrees <= 30:
@@ -84,8 +88,17 @@ class Set(object):
     def get_route(self):
         return self.route
 
+    def set_old_route(self, route):
+        self.old_route = route
+
+    def get_old_route(self):
+        return self.old_route
+
     def is_it_connected(self):
         return self.is_connected
+
+    def was_it_connected(self):
+        return self.was_connected
 
     def get_distance(self):
         return self.distance

@@ -3,7 +3,7 @@ import numpy
 
 class Point(object):
 
-    def __init__(self, location, attribute, neighbours, value, id=0, h=0):
+    def __init__(self, location, attribute, neighbours, value, id=0, h=0,appearance=0,check=0):
         self.location = location
         self.attribute = attribute
         self.neighbours = neighbours
@@ -11,10 +11,23 @@ class Point(object):
         self.value = value
         self.id = id
         self.h = h
+        self.appearance = appearance
+        self.check = check
 
     def get_id(self):
         return self.id
 
+    def set_appearence(self, netlist):
+        self.appearance = 0
+
+        for id in netlist:
+            if id[0] == self.id:
+                self.appearance +=1
+            if id[1] == self.id:
+                self.appearance +=1
+
+    def get_appearence(self):
+        return self.appearance
 
     def set_neighbours(self, neighbours):
         self.neighbours = neighbours
@@ -26,7 +39,16 @@ class Point(object):
         return self.location
 
     def set_attribute(self, attribute):
+
         self.attribute = attribute
+
+        if self.attribute == "wire":
+            self.check +=1
+        else:
+            self.check = 0
+
+    def get_check(self):
+        return self.check
 
     def get_attribute(self):
         return self.attribute
@@ -62,27 +84,21 @@ class Point(object):
 
 
         if self.location[2] >= 6:
-<<<<<<< HEAD
             f = (self.h + manhattan_to_end) * 0.5
         elif self.location[2] >= 5:
             f = (self.h + manhattan_to_end) * 0.5
-=======
-            f = (self.h + manhattan_to_end) * 0.6
-        elif self.location[2] >= 5:
-            f = (self.h + manhattan_to_end) * 0.6
->>>>>>> 96ae4e22e2aba1fbfad9cf6f9b48e8a889aea08a
         elif self.location[2] >= 4:
             f = (self.h + manhattan_to_end) * 0.5
         elif self.location[2] >= 3:
             f = (self.h + manhattan_to_end) * 0.5
         elif self.location[2] >= 2:
-            f = (self.h + manhattan_to_end) * 0.6
-        elif self.location[2] >= 1:
             f = (self.h + manhattan_to_end) * 0.7
+        elif self.location[2] >= 1:
+            f = (self.h + manhattan_to_end) * 0.8
         elif self.location[2] == 0:
             f = (self.h + manhattan_to_end) * 1
 
-        if self.location[0] > 6 and self.location[0] < 9:
+        if self.location[0] > 7 and self.location[0] < 9:
             ## CENTRE
             if self.location[1] > 6 and self.location[1] < 9:
                 if self.location[2] < 3:
@@ -102,6 +118,6 @@ class Point(object):
                 f = f * 1
 
         if self.next_to_gate:
-            return (f + 8)
+            return (f + 10)
 
         return f

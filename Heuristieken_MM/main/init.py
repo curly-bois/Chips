@@ -39,7 +39,7 @@ def get_connections(list):
     return connections
 
 
-def make_matrix(grid):
+def make_matrix(grid,netlist):
     ## Hard coded
     z = 7
     tuplist = []
@@ -49,8 +49,7 @@ def make_matrix(grid):
     x = max(tuplist, key=itemgetter(0))[0] + 1
     y = max(tuplist, key=itemgetter(1))[1] + 1
 
-    ## Je kan deze matrix en de hier na komende nested for loops in een 'regel'
-    ## Schrijven, door ze een functie te geven die de if else aanpakt.
+
     matrix = [[[0 for x in range(x)]
                for y in range(y)]
               for z in range(z)]
@@ -64,14 +63,12 @@ def make_matrix(grid):
                         (k, j, i), "gate", [], 0, grid[k, j])
                 # Point is empty
                 else:
-                    ## JE kan ook deze waardes van te voren als leeg zetten
-                    ## In de class, dan hoef je ze ook niet hier als random
-                    ## waardes neer te zetten
+                        ## waardes neer te zetten
                     matrix[i][j][k] = Point((k, j, i), "empty", [], 0)
+
 
     gates = []
     # Initialize neighbours
-    ## Dit had ik al getyped, had veel kunnen schelen
     for i in range(z):
         for j in range(y):
             for k in range(x):
@@ -103,6 +100,7 @@ def make_matrix(grid):
                     neighbours.append(matrix[i - 1][j][k])
 
                 matrix[i][j][k].set_neighbours(neighbours)
+                matrix[i][j][k].set_appearence(netlist)
                 if matrix[i][j][k].attribute == "gate":
                     gates.append(matrix[i][j][k].location)
 
@@ -119,8 +117,6 @@ def make_conlist(connections, matrix):
     locations = []
     coordinates = {}
 
-    ## Je loopt hier door de lengte van de matrix of ze vervolgens als index
-    ## Te gebruiken, je kan ook een lijst maken van de matrix en hier over loopen
     for i in range(len(matrix)):
         for j in range(len(matrix[i])):
             for k in range(len(matrix[i][j])):
@@ -155,23 +151,45 @@ def make_order(sets):
         elif set.direction == "diagonal-up":
             diagonalup[set] = set.distance
 
-
-
-
     temp = sorted(diagonaldown.items(), key=operator.itemgetter(1))
+    temp = reversed(temp)
     for i in temp:
         diadownlist.append(i[0])
+
     temp = sorted(diagonalup.items(), key=operator.itemgetter(1))
+    temp = reversed(temp)
     for i in temp:
         diauplist.append(i[0])
+
     temp = sorted(horizontal.items(), key=operator.itemgetter(1))
+    # temp = reversed(temp)
     for i in temp:
         horlist.append(i[0])
+
     temp = sorted(vertical.items(), key=operator.itemgetter(1))
+    # temp = reversed(temp)
     for i in temp:
         verlist.append(i[0])
 
 
-    complete = list(diauplist+diadownlist+verlist+horlist)
-    
+    complete = list(verlist+horlist+diauplist+diadownlist)
+
+
     return complete
+
+def new_order(to_be_connected):
+    order = {}
+    orderlist = []
+
+    for set in to_be_connected:
+        if set.get_startpoint().get_appearence() > 3 < set.get_endpoint().get_appearence() :
+            order[set] = set.get_startpoint().get_appearence() + set.get_endpoint().get_appearence() + 3
+        else:
+            order[set] = set.get_startpoint().get_appearence() + set.get_endpoint().get_appearence() + 3
+
+    temp = sorted(order.items(), key=operator.itemgetter(1))
+    temp = reversed(temp)
+
+    for i in temp:
+        orderlist.append(i[0])
+    return orderlist

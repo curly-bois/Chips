@@ -2,46 +2,57 @@ import numpy as np
 from connect import connect
 import random
 import math
+from init import *
 
 def hillsolve(max_tries, matrix, all_sets, unconnected_sets, connected_sets):
     hilltries = 0
+    test = 0
+
     while len(unconnected_sets) > 0 and hilltries < max_tries:
         hilltries += 1
-        if hilltries == 1:
 
-            old_routes = {}
-            for set in all_sets:
-                print("FIRST HILLTRY REMEMBERING ROUTES")
-                old_routes[set] = set.get_route()
 
-        np.random.shuffle(connected_sets)
+        connected = []
+        unconnected = []
+
+        for set in all_sets:
+            if set.is_it_connected() == True:
+                connected.append(set)
+                set.was_connected = True
+                set.set_old_route(set.get_route())
+            elif set.is_it_connected() == False:
+                unconnected.append(set)
+                set.was_connected = False
+
+        print(f"after try {hilltries}, {int(len(unconnected) / len(all_sets) * 100)}% is unconnected")
+
+        np.random.shuffle(all_sets)
 
         new_connections = []
         broken_sets = []
 
-        for set in unconnected_sets:
-            new_connections.append(set)
-            # print(f"These are the unconnected sets in try {hilltries}: {set}, and this set is {set.is_it_connected()}")
+        counter = 0
+        i = 0
+        sets_to_be_broken = int(len(connected) * 0.3)
 
-        sets_to_be_broken = int(len(connected_sets) * 0.2)
-        for i in range(sets_to_be_broken):
-            connected_sets[i].disconnect()
-            new_connections.append(connected_sets[i])
-            broken_sets.append(connected_sets[i])
-            # print(f"These sets are being broken now in try {hilltries}:  {connected_sets[i]}, this set is {set.is_it_connected()} ")
+        while counter < sets_to_be_broken:
+            if all_sets[i].is_it_connected() == True:
+                all_sets[i].disconnect()
+                counter += 1
+                i += 1
+            else:
+                i += 1
 
-        new_all_sets, new_connected_sets, new_unconnected_sets = connect(new_connections)
+        if hilltries < 15:
+            all_sets = new_order(all_sets)
+        elif hilltries < 25:
+            all_sets = make_order(all_sets)
+        else:
+            np.random.shuffle(all_sets)
 
-        print(f"After this {int(len(new_unconnected_sets) / len(all_sets) * 100)}% is unconnected")
+        all_sets, new_connected_sets, new_unconnected_sets = connect(all_sets)
+
         if len(new_unconnected_sets) == 0:
-            wire_pieces = 0
-            for three_dimensions in matrix:
-                for two_dimensions in three_dimensions:
-                    for point in two_dimensions:
-                        if point.get_attribute() == "wire":
-                            wire_pieces += 1
-            print(f"SOLUTION HAS BEEN FOUND after {hilltries} hillclimbs, IT TOOK {wire_pieces + len(all_sets)} pieces of wire")
-
             wire_count = 0
             for set in all_sets:
                 for point in set.get_route():
@@ -52,22 +63,23 @@ def hillsolve(max_tries, matrix, all_sets, unconnected_sets, connected_sets):
 
             return all_sets
 
-        for set in new_all_sets:
-            # print(f"These sets are being disconnected now in try {hilltries}:  {set}, this set is {set.is_it_connected()} ")
-            set.disconnect()
 
-        for set in all_sets:
-            set.set_route(old_routes[set])
+        if len(new_unconnected_sets) < len(unconnected):
 
-        for set in unconnected_sets:
-            set.set_route(old_routes[set])
-            set.disconnect()
+            for set in all_sets:
+                if set.is_it_connected() == True:
+                    pass
 
-        for set in connected_sets:
-            set.set_route(old_routes[set])
-            # print(f"These sets are being reconnected now in try {hilltries}:  {set}, this set is {set.is_it_connected()} ")
-            set.reconnect()
+        else:
+            for set in all_sets:
+                set.disconnect()
 
+            for set in all_sets:
+                if set.was_it_connected() == True:
+                    set.set_route(set.get_old_route())
+                    set.reconnect()
+
+    exit()
 
 def hillimprove(max_tries, solved_sets):
     not_improved = 0
@@ -134,6 +146,7 @@ def hillimprove(max_tries, solved_sets):
                 set.disconnect()
                 set.set_route(old_routes[set])
                 set.reconnect()
+
 
 
 def simulated_annealing(max_tries, solved_sets, allowance):

@@ -2,47 +2,30 @@ import numpy as np
 import random
 import pandas as pd
 import time
+import sys
 
 # File location
-filename = "book2.xlsx"
+filename = r"data\options.xlsx"
 
-# Settings
-layer_multiplier = [3,3,3,2,2,2,2]
-layer_coef = 0.05
-
-NN_penalty = 1.5
-# wire_penalty = 0.4
-# upper_penalty = 0
-
-
-option = {'layer_multiplier':str(layer_multiplier), 'layer_coef':layer_coef, 'NN_penalty': NN_penalty}
+# Get settings, this script must run when package is excecuted.
+settings = sys.argv[2]
 df = pd.read_excel(filename, sheet_name=0)
-option['time'] = str(time.localtime())
-df_new = pd.DataFrame(option, index = [1])
-df_file = df.append(df_new, ignore_index=True, sort=False)
-df_file.to_excel(filename)
+var = df.iloc[int(settings)]
+var = [int(i) for i in var]
+
+layer_coef = var[0]
+NN_penalty = var[1]
+layer_multiplier = [var[2],var[3],var[4],var[5],var[6],var[7],var[8]]
+
 
 def get_distance(matrix, points, p1, p2):
+    '''
+    distance matrix helper functon, gets the distance between two points
+    '''
     ver = points.index(p1)
     hor = points.index(p2)
     return matrix[ver][hor]
 
-def cal_val(matrix, points, value_grid, tup_cur, tup_end, tup_start):
-    '''
-    Calculate the values for the Astar Algo
-    '''
-    # Get distance values
-    # dis2end = threedimdistance(tup_cur, tup_end)
-    dis2end = get_distance(matrix, points, tup_cur, tup_end)
-    # dis2start = threedimdistance(tup_start, tup_cur)
-    dis2start = get_distance(matrix, points, tup_start, tup_cur)
-
-    # Get coordinates
-    x,y,z = tup_cur[0],tup_cur[1],tup_cur[2]
-
-    # Adjust for value_grid
-    value = (dis2end + dis2start)*float(value_grid[x][y][z])
-    return value
 
 def sort_points(starts, ends):
     '''
@@ -64,15 +47,81 @@ def sort_points(starts, ends):
     # return the sorted points
     return points
 
+def sort_points2(starts, ends):
+    '''
+    A way of sorting the points.
+    Using the vertical, horizontal and the distance as a index of
+    complexity, starting with the easiest points first
+    '''
+    # Make two indentical list, sort one and use the other for indexing
+    def sorting(d):
+        s = d[0]
+        e = d[1]
+        v = abs(s[0]-s[1])
+        h = abs(e[0]-e[1])
+        d = v+h
+        return (v**2)*(h**2)*d
+
+    points = list(zip(starts, ends))
+    points.sort(key=sorting)
+    # points.reverse()
+
+    return points
+
+def sort_points3(starts, ends, count_dict):
+    '''
+    A way of sorting the points, by the amount of points they need to connect with
+    '''
+    # Make two indentical list, sort one and use the other for indexing
+    def sortingdict(d):
+        return d[1]
+
+    points = list(zip(count_dict.keys(), count_dict.values()))
+    points.sort(key=sortingdict)
+    points.reverse()
+
+    point_order = []
+    point_rand = list(zip(starts,ends))
+    point_rand += point_rand
+    all_points = starts+ends
+
+    for key, value in points:
+        for v in range(value):
+            i = all_points.index(key)
+            point_order.append(point_rand[i])
+            all_points[i] = 0
+
+    return point_order
+
 def sort_points_random(starts, ends):
+    '''
+    Randomly sorting points
+    '''
     points_unsorted = list(zip(starts,ends))
     random.shuffle(points_unsorted)
     return points_unsorted
 
 def first_value(size):
     '''
-    Very influencial defenition, creates the first instance of the value grid
-    At the moment the values are set to 0, testing should result in best values
+    Creates the first instance of the value grid
+    Values are set, so it avoids the center
+    '''
+    # triple list comperhansion
+    super_grid = [[[        1.00 + (abs(y-size[1]/2) + abs(x-size[1]/2)) * (1/size[1])
+                            for z in range(size[2])]
+                            for y in range(size[1])]
+                            for x in range(size[0])]
+
+    # Return a Numpy array (faster)
+    super_matrix = np.array(super_grid)
+
+    # layer bonus
+    super_matrix *= np.array(layer_multiplier)
+    return super_matrix
+
+def second_value(size):
+    '''
+    Removes the values, and just declares it one everywere.
     '''
     # triple list comperhansion
     super_grid = [[[        1.00
@@ -83,8 +132,6 @@ def first_value(size):
     # Return a Numpy array (faster)
     super_matrix = np.array(super_grid)
 
-    # layer bonus
-    super_matrix *= np.array(layer_multiplier)
     return super_matrix
 
 def update_layer(layer_info, value_grid):
@@ -119,10 +166,6 @@ def edit_grid(grid, points, value_grid):
                 x,y,z = N.location
                 value_grid[x][y][z] += NN_penalty ## changes to +
 
-            # # for every X points above the point
-            # x,y,z = p.location
-            # for i in range(2): # This hard coded!!!!!!!!!
-            #     value_grid[x][y][i] += upper_penalty*(3-(i+1))*(1/3)
 
     return value_grid
 

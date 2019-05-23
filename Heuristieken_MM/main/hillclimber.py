@@ -35,6 +35,7 @@ def hillimprove(max_tries, solved_sets):
 
         # Try to solve again
         new_all_sets, new_connected_sets, new_unconnected_sets = connect(broken_sets)
+        not_improved += 1
 
         # Check if solved:
         if len(new_unconnected_sets) == 0:
@@ -46,7 +47,6 @@ def hillimprove(max_tries, solved_sets):
 
             # If better
             if wire_count < best_so_far:
-                not_improved += 1
                 # not_improved = 0 # If this is turned on the algorithm stops if the solution has not been improved for 100 iterations
                 print(f"Found a BETTER solution after {hillimproves} hillimproves which takes {wire_count} instead of {best_so_far}")
                 best_so_far = wire_count
@@ -57,23 +57,31 @@ def hillimprove(max_tries, solved_sets):
 
 
             else:
-                not_improved += 1
 
                 for set in new_all_sets:
                     set.disconnect()
+
+                for set in solved_sets:
                     set.set_route(old_routes[set])
+
+                for set in solved_sets:
                     set.reconnect()
 
         # If no solution was found
         else:
-            not_improved += 1
             for set in new_all_sets:
                 set.disconnect()
+
+            for set in solved_sets:
                 set.set_route(old_routes[set])
+
+            for set in solved_sets:
                 set.reconnect()
 
+    print(f"hillimprove found a solution using {best_so_far} wires")
 
-def simulated_annealing(max_tries, solved_sets, allowance):
+
+def simulated_annealing(max_tries, solved_sets):
     not_improved = 0
     temp = 1
     T_min = 0.00001
@@ -87,9 +95,8 @@ def simulated_annealing(max_tries, solved_sets, allowance):
                 best_so_far += 1
 
     hillimproves = 0
-    while(not_improved < max_tries and temp > T_min):
+    while(not_improved < max_tries):
         hillimproves += 1
-        allowance -= 0.1
 
         # Save all OG routes
         if hillimproves == 1:
@@ -107,6 +114,7 @@ def simulated_annealing(max_tries, solved_sets, allowance):
 
         # Try to solve again
         new_all_sets, new_connected_sets, new_unconnected_sets = connect(broken_sets)
+        not_improved += 1
 
         # Check if solved:
         if len(new_unconnected_sets) == 0:
@@ -117,41 +125,48 @@ def simulated_annealing(max_tries, solved_sets, allowance):
                     if point.get_attribute() == "wire":
                         wire_count += 1
 
-            # Calculate SA chance
-            ap = acceptance_probability(best_so_far, wire_count, temp)
 
             # If better
             if wire_count < best_so_far:
-                not_improved = 0
                 best_so_far = wire_count
 
                 # Save old routes again
-                for set in new_all_sets:
+                for set in solved_sets:
                     old_routes[set] = set.get_route()
 
-            # If not better BUT continuing because of simulated annealing
-            elif ap > random.random():
-                not_improved = 0
-                best_so_far = wire_count
-
-                # Save old routes again
-                for set in new_all_sets:
-                    old_routes[set] = set.get_route()
-
-            # If worse and too bad to continue with for simulated annealing
+            # If new solution is not better
             else:
-                not_improved += 1
-                for set in new_all_sets:
-                    set.disconnect()
-                    set.set_route(old_routes[set])
-                    set.reconnect()
+                # Calculate SA chance
+                ap = acceptance_probability(best_so_far, wire_count, temp)
+
+                # If not better BUT continuing because of simulated annealing
+                if ap > random.random():
+                    best_so_far = wire_count
+
+                    # Save old routes again
+                    for set in solved_sets:
+                        old_routes[set] = set.get_route()
+
+                # If worse and too bad to continue with for simulated annealing
+                else:
+                    for set in new_all_sets:
+                        set.disconnect()
+
+                    for set in solved_sets:
+                        set.set_route(old_routes[set])
+
+                    for set in solved_sets:
+                        set.reconnect()
 
         # If no solution was found
         else:
-            not_improved += 1
             for set in new_all_sets:
                 set.disconnect()
+
+            for set in solved_sets:
                 set.set_route(old_routes[set])
+
+            for set in solved_sets:
                 set.reconnect()
 
         temp *= alpha

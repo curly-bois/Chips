@@ -34,7 +34,7 @@ class Point(object):
             self.check += 1
         else:
             self.check = 0
-            
+
         self.attribute = attribute
 
     def get_attribute(self):

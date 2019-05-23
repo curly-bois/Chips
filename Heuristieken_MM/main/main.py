@@ -5,6 +5,7 @@ from Data.make_plot import *
 from connect import *
 from dynamic import *
 from Preprocessing.sort_connections import *
+from collision import *
 from hillclimber import *
 import numpy as np
 import sys
@@ -25,7 +26,6 @@ netlistname = "netlist_1"
 grid = grid_1
 connections = get_connections(netlist_1)
 gridpoints = make_grid(grid)
-print(len(connections))
 
 while counter < 1:
     counter += 1
@@ -33,13 +33,28 @@ while counter < 1:
     to_be_connected = make_conlist(connections, matrix)
     to_be_connected = make_order(to_be_connected)
 
+    dynamic(matrix)
 
     # A algorithm
     all_sets, connected_sets, unconnected_sets = connect(to_be_connected)
+    print("")
+    print(f"Using A*, you managed to connect {len(connected_sets) / len(all_sets) * 100}% of the netlist :(")
+    make_plot(all_sets)
+    exit()
     print(len(all_sets))
     new_connections = []
 
     if len(unconnected_sets) == 0:
+
+        # Collision check
+        collisions = collision_check(all_sets)
+
+        print(f"AMOUNT OF COLLISIONS: {collisions}")
+
+
+
+
+
         # make_plot(connected_sets)
         #
         # Dynamic turns off heuristic values
@@ -48,43 +63,29 @@ while counter < 1:
         # simulated_annealing(100, all_sets, 30)
         # print("eerste try")
         # make_plot(connected_sets)
-        make_xlsx(all_sets,matrix,netlistname, "initial try")
+
+        dynamic(matrix)
+        simulated_annealing(900, all_sets)
+        # Collision check
+        collisions = collision_check(all_sets)
+
+        print(f"AMOUNT OF COLLISIONS: {collisions}")
+
+        make_xlsx(all_sets,matrix,netlistname, "hillclimb 900 evaluations + dynamic")
     else:
         print("niet eerste try")
         solved_sets = simulsolve(500, all_sets, connected_sets, unconnected_sets, matrix)
 
+        # Collision check
+        collisions = collision_check(all_sets)
 
-        print("*******")
-        print("*******")
-        print("*******")
-        print("*******")
-        print("*******")
-        print("*******")
-        print("*******")
-        print(f"END OF RANDOM SOLUTION, AMOUNT OF COLLISIONS: {collisions}")
-        print("*******")
-        print("*******")
-        print("*******")
-        print("*******")
-        print("*******")
-        print("*******")
-        print("*******")
-        print(len(solved_sets))
-        # make_plot(solved_sets)
-        print(len(solved_sets))
-        make_xlsx(all_sets,matrix,netlistname, "initial try")
-        # make_plot(connected_sets)
-        hillimprove(500, solved_sets)
-        make_xlsx(all_sets,matrix,netlistname, "with hillimprove not dynamic")
-        # dynamic(matrix)
-        # if solved_sets != None:
-        #     simulated_annealing(100, solved_sets, 30)
+        print(f"AMOUNT OF COLLISIONS: {collisions}")
 
-        collisions = 0
-        all_locations = []
-        for set in all_sets:
-            for routepoint in set.get_route():
-                if routepoint.get_location() in all_locations:
-                    collisions += 1
-                    all_locations.append(routepoint.get_location())
-        print(f"END OF PROGRAM, AMOUNT OF COLLISIONS: {collisions}")
+        dynamic(matrix)
+        simulated_annealing(900, all_sets)
+        # Collision check
+        collisions = collision_check(all_sets)
+
+        print(f"AMOUNT OF COLLISIONS: {collisions}")
+
+        make_xlsx(all_sets,matrix,netlistname, "hillclimb 900 evaluations + dynamic")

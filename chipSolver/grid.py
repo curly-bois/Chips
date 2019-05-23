@@ -30,7 +30,7 @@ class Grid(object):
         # Some deeper charataristics of the grid
         self.make_neighbours()
         self.set_points()
-        self.matrix = self.distance_matrix()
+        # self.matrix = self.distance_matrix()
 
         # Add some logic to the grid
         self.value_grid = first_value(size)
@@ -101,6 +101,9 @@ class Grid(object):
         Astar
         '''
         # Set key attributes and start point
+        closedl = []
+        openl = []
+
         self.grid[start].set_attribute('closed')
         self.grid[end].set_attribute('end')
         current_point  = self.grid[start]
@@ -110,6 +113,11 @@ class Grid(object):
         parent = {}
         tries = 0
 
+        def takeValue(elem):
+            return elem.value
+        def takeG(elem):
+            return elem.g
+
         # Continue until found
         while not found:
             # Check for each neighbour if end is there, or is free.
@@ -117,50 +125,46 @@ class Grid(object):
                 # when end is there: "You found the line"
                 if N.attribute == 'end':
                     parent[N.location] = current_point.location
-                    # print("Found in:", tries, f'start:{start}, end:{end}')
                     found = True
 
                 # When open is there: "Possible next move"
                 elif N.attribute == "free":
-                    N.set_value(cal_val(self.matrix, self.plane_points,
-                                        self.value_grid, N.location,
-                                        end, start))
-                    N.set_attribute('open')
+                    N.set_value(end, self.value_grid, current_point)
                     parent[N.location] = current_point.location
+                    N.set_attribute('open')
+                    openl.append(N)
+
 
             # Sereach all the open points for the lowest point,
             # this will be the next move
-            lowest = 999
-            for P in self.grid.values():
-                if P.attribute == 'open' and P.value < lowest:
-                    lowest = P.value
-                    lowest_point = P
 
+            openl.sort(key=takeValue)
+            lowest_point_list = [i for i in openl if i.value == openl[0].value]
+
+            lowest_point_list.sort(key=takeG)
             # When there are no open points, give error (impossiple area)
             try:
+                lowest_point = lowest_point_list[0]
                 lowest_point.set_attribute('closed')
+                openl.pop(0)
                 current_point = lowest_point
             except:
                 found = True
                 parent = {}
-                # print("Error")
 
-            # Some visual "Loading" and make it not endless
             tries += 1
-            # print(tries,end='\r')
             if tries > self.MAX_TRIES:
                 found = True
                 parent = {}
-                # It's looping further then nessecary
-                # print("Notfound")
 
         # Reset the 'open' and 'closed' attributes to free. (clear memory)
         for P in self.grid.values():
             if P.attribute == 'open' or P.attribute == 'closed' or P.attribute == 'end':
                 P.set_attribute('free')
+                P.g = 0
 
         # The parent contains the backtrace, which is needed to create the wire
-        return parent, tries
+        return parent
 
 
     def make_wire(self, start, end, parent):
@@ -171,7 +175,7 @@ class Grid(object):
         cur = self.grid[end].location
         wire = []
 
-        while parent[cur] != start:
+        while cur!= start:
             # Add the coordinates to the wire list and set attribute to wire
             wire.append(cur)
             self.grid[cur].set_attribute('wire')
@@ -179,9 +183,7 @@ class Grid(object):
 
         # If end is found, add the end (here: 'start' -> reversed).
         wire.append(cur)
-        wire.append(start)
-        self.grid[start].set_attribute('wire')
-
+        self.grid[cur].set_attribute('wire')
 
         # Return the wire
         return wire
@@ -194,10 +196,13 @@ class Grid(object):
         fig = plt.figure(figsize=(self.size[0],self.size[2]))
         ax = fig.add_subplot(111, projection='3d')
 
+        colors= ['b','g','r','c','m','y', 'k']
+
+
         # Extract data and plot small lines
-        for l in [i.route for i in wires]:
+        for i, l in enumerate([i.route for i in wires]):
             linex,liney, linez = zip(*l)
-            ax.plot(linex, liney,linez, linewidth=5, color='blue')
+            ax.plot(linex, liney,linez, linewidth=5, color=colors[i%len(colors)])
 
         # Plot the points
         px, py, pz = zip(*self.points)
@@ -242,12 +247,14 @@ class Grid(object):
         start, end = wire.start, wire.end
         for pos in wire.route:
             self.grid[pos].set_attribute('free')
-        number = wire.number
-        return start, end, number
+
+        return (start, end)
 
     def add_wire(self, wire):
         for pos in wire.route:
             self.grid[pos].set_attribute('wire')
+
+        return (wire.start, wire.end)
 
     def distance_matrix(self):
         points = []
@@ -264,6 +271,7 @@ class Grid(object):
                 line.append(round(threedimdistance(vertical, horizontal),1))
             matrix.append(line)
         return matrix
+
 
     ################################################## CLever ################
     def update_layer(self):

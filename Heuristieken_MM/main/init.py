@@ -46,8 +46,8 @@ def make_matrix(grid,netlist):
 
     for tup in grid:
         tuplist.append(tup)
-    x = max(tuplist, key=itemgetter(0))[0] + 1
-    y = max(tuplist, key=itemgetter(1))[1] + 1
+    x = max(tuplist, key=itemgetter(0))[0] + 2
+    y = max(tuplist, key=itemgetter(1))[1] + 2
 
 
     matrix = [[[0 for x in range(x)]
@@ -141,6 +141,7 @@ def make_order(sets):
     diadownlist = []
     diauplist = []
 
+
     for set in sets:
         if set.direction == "horizontal":
             horizontal[set] = set.distance
@@ -172,8 +173,7 @@ def make_order(sets):
         verlist.append(i[0])
 
 
-    complete = list(verlist+horlist+diauplist+diadownlist)
-
+    complete = list(diauplist+diadownlist+verlist+horlist)
 
     return complete
 

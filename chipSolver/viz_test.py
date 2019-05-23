@@ -11,7 +11,7 @@ import mpl_toolkits.mplot3d.axes3d as p3
 import matplotlib.animation as animation
 
 
-def plot_anam(rawdata, size, multi = False):
+def plot_anam(rawdata, size, multi = True):
 
     if multi == False:
         data = []
@@ -53,7 +53,7 @@ def plot_anam(rawdata, size, multi = False):
             # NOTE: there is no .set_data() for 3 dim data...
             line.set_data(data[0:2, :num])
             line.set_3d_properties(data[2, :num])
-            line.set_color('green')
+            # line.set_color('green')
         return lines
 
     # Attaching 3D axis to the figure
@@ -78,6 +78,6 @@ def plot_anam(rawdata, size, multi = False):
 
     # Creating the Animation object
     line_ani = animation.FuncAnimation(fig, update_lines, init_func=init, frames = max_len, fargs=(data, lines),
-                                           interval=200, blit=False)
+                                           interval=500, blit=False)
 
     plt.show()

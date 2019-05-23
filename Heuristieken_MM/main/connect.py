@@ -5,12 +5,13 @@ from Classes.set import Set
 from Preprocessing.sort_connections import *
 from init import *
 
-def connect(to_be_connected, connected = [],unconnected = []):
+def connect(to_be_connected):
     '''
     this is the A/A* algortithm which finds either the shortest route or the
     best route according to the given extra heuristics
     '''
 
+    all_sets = []
     connected_sets = []
     unconnected_sets = []
 
@@ -97,7 +98,6 @@ def connect(to_be_connected, connected = [],unconnected = []):
                     start.set_attribute("taken")
                     set.is_connected = True
                     connected_sets.append(set)
-                    connected.append(set)
 
                     # Retrace final step
                     going_back = parent[current]
@@ -129,4 +129,4 @@ def connect(to_be_connected, connected = [],unconnected = []):
                                                                     end.get_location())
 
 
-    return to_be_connected, connected, unconnected_sets
+    return to_be_connected, connected_sets, unconnected_sets

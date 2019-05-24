@@ -32,8 +32,6 @@ while counter < tries:
         pass
 
 
-
-
     # choosing the order type
     if order == 1:
         to_be_connected = dir_order(to_be_connected,"random")
@@ -41,8 +39,6 @@ while counter < tries:
         to_be_connected = appearence_order(to_be_connected)
     else:
         np.random.shuffle(to_be_connected)
-
-
 
     # make wires from gate to gate
     all_sets, connected_sets, unconnected_sets = connect(to_be_connected)

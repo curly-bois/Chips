@@ -1,5 +1,6 @@
 import numpy as np
 import itertools
+import operator
 from Classes.set import Set
 
 def dir_order(sets,mode):

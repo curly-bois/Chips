@@ -2,7 +2,7 @@ import pandas as pd
 from Classes.point import Point
 from Classes.set import Set
 
-def make_xlsx(all_sets,matrix,netlistname,method):
+def make_xlsx(all_sets,matrix,netlistname,collisions,method):
 
     order = []
     directions = []
@@ -44,6 +44,7 @@ def make_xlsx(all_sets,matrix,netlistname,method):
     data['lower bound'] = lower_bound
     data['amount of wires'] = wire_pieces
     data['unconnected'] = f"{int(len(unconnected_sets) / len(all_sets) * 100)}%"
+    data['collisions'] = collisions
     data['method'] = method
 
     output('test.xlsx', data)

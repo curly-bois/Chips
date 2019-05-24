@@ -7,11 +7,12 @@ from options.cli import *
 from Algorithms.connect import *
 from Algorithms.hillclimber import *
 from dynamic import *
+from collision import *
 import numpy as np
 import sys
 
 # run the choice menu
-A_star,order,iterative,options,tries, netlist, grid = menu()
+A_star, order, iterative, options, tries, netlist, grid, evalutions = menu()
 
 counter = 0
 
@@ -42,54 +43,21 @@ while counter < tries:
 
     # make wires from gate to gate
     all_sets, connected_sets, unconnected_sets = connect(to_be_connected)
+    solved_sets = simulsolve(500, all_sets, connected_sets, unconnected_sets, matrix)
 
     # choosing the iterative algorithm
     if iterative == 1:
-        solved_sets = simulsolve(500, all_sets, connected_sets, unconnected_sets, matrix)
+        hillimprove(100, all_sets)
     elif iterative == 2:
-        simulated_annealing(100, all_sets, 30)
+        simulated_annealing(100, all_sets)
     else:
         pass
+
+    # Check for collisions
+    collisions = collision_check(all_sets)
 
     # extra options
     if 1 in options:
         make_plot(all_sets)
     if 2 in options:
-        make_xlsx(all_sets,matrix,f"netlist_{netlist}", "initial try")
-
-# new_connections = []
-#
-# if len(unconnected_sets) == 0:
-#     # make_plot(connected_sets)
-#     #
-#     # Dynamic turns off heuristic values
-#     # dynamic(matrix)
-#     # hillimprove(100, all_sets)
-#     # simulated_annealing(100, all_sets, 30)
-#     # print("eerste try")
-#     # make_plot(connected_sets)
-#     make_xlsx(all_sets,matrix,netlistname, "initial try")
-# else:
-#     print("niet eerste try")
-#
-#
-#
-#     print(len(solved_sets))
-#     # make_plot(solved_sets)
-#     print(len(solved_sets))
-#     make_xlsx(all_sets,matrix,netlistname, "initial try")
-#     # make_plot(connected_sets)
-#     hillimprove(500, solved_sets)
-#     make_xlsx(all_sets,matrix,netlistname, "with hillimprove not dynamic")
-#     # dynamic(matrix)
-#     # if solved_sets != None:
-#     #     simulated_annealing(100, solved_sets, 30)
-#
-#     collisions = 0
-#     all_locations = []
-#     for set in all_sets:
-#         for routepoint in set.get_route():
-#             if routepoint.get_location() in all_locations:
-#                 collisions += 1
-#                 all_locations.append(routepoint.get_location())
-#     print(f"END OF PROGRAM, AMOUNT OF COLLISIONS: {collisions}")
+        make_xlsx(all_sets, matrix, f"netlist_{netlist}", collisions, "initial try")

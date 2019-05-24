@@ -1,8 +1,9 @@
-from Preprocessing.init import *
-from Algorithms.connect import connect
+import numpy as np
+from connect import connect
 import random
 import math
-import numpy as np
+from init import *
+
 
 def hillimprove(max_tries, solved_sets):
     not_improved = 0

@@ -2,7 +2,7 @@ import numpy
 
 class Point(object):
 
-    def __init__(self, location, attribute, neighbours, value, id=0, f=0,appearance=0,check=0):
+    def __init__(self, location, attribute, neighbours, value, id=0, f=0,appearance=0):
         self.location = location
         self.attribute = attribute
         self.neighbours = neighbours
@@ -11,9 +11,7 @@ class Point(object):
         self.id = id
         self.f = f
         self.appearance = appearance
-        self.check = check
         self.dynamic = False
-        self.check = 0
 
     def get_id(self):
         return self.id
@@ -46,14 +44,6 @@ class Point(object):
     # check how many times a point will get a 'wire' attribute to check for collisions
     def set_attribute(self, attribute):
         self.attribute = attribute
-
-        if self.attribute == "wire":
-            self.check +=1
-        else:
-            self.check = 0
-
-    def get_check(self):
-        return self.check
 
     def get_attribute(self):
         return self.attribute
@@ -127,7 +117,7 @@ class Point(object):
                 if self.location[1] > 3 and self.location[1] < 12:
                     h = h * 1
 
-        # no heuristics(this way it will be a normal a* algorithm)
+        # no heuristics (this way it will be a normal a* algorithm)
         else:
             h = self.f + manhattan_to_end
 

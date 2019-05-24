@@ -28,7 +28,7 @@ pip install -r requirements.txt
 
 ### Structuur (Structure)
 
-In de map MM staat een werkende versie van A-algoritme samengevoegd met andere heuristieken,deze staan beschreven in de readme van deze map.
+In de map Heuristieken_MM staat een werkende versie van A-algoritme samengevoegd met andere heuristieken en iteratieve algoritmes,deze staan beschreven in de readme van deze map.
 
 
 ## Auteurs (Authors)

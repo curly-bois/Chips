@@ -9,14 +9,6 @@ Print #1 and Print #2 are arrangements of gates on a base, and all it takes is t
 
 ## Aan de slag (Getting Started)
 
-### Vereisten (Prerequisites)
-
-Deze codebase is volledig geschreven in [Python3.6.3](https://www.python.org/downloads/). In requirements.txt staan alle benodigde packages om de code succesvol te draaien. Deze zijn gemakkelijk te installeren via pip dmv. de volgende instructie:
-
-```
-pip install -r requirements.txt
-```
-
 ### Structuur (Structure)
 
 alle scripts staan in de main folder. in de map Classes zitten alle scripts die classes aanmaken, de map options bevat scripts voor de te gebruiken input (de netlists en  de gridpoints).De map Preprocessing bevat scripts met functies die de volgorde van de netlist bepaald aan de hand van heuristieke waardes.

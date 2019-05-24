@@ -1,12 +1,12 @@
 from Classes.point import Point
-from init import *
 from Data.make_data import *
 from Data.make_plot import *
-from cli import menu
-from connect import *
-from dynamic import *
 from Preprocessing.sort import *
-from hillclimber import *
+from Preprocessing.init import *
+from options.cli import *
+from Algorithms.connect import *
+from Algorithms.hillclimber import *
+from dynamic import *
 import numpy as np
 import sys
 

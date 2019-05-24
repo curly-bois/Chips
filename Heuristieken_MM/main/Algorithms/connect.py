@@ -1,9 +1,7 @@
-import numpy as np
-from init import *
+from Preprocessing.init import *
 from Classes.point import Point
 from Classes.set import Set
-from Preprocessing.sort_connections import *
-from init import *
+import numpy as np
 
 def connect(to_be_connected):
     '''
@@ -27,7 +25,7 @@ def connect(to_be_connected):
             end.set_attribute("empty")
 
             # make the heuristic value for the start point 0
-            start.h = 0
+            start.f = 0
             found = False
 
             # make the openlist(non-visited places),closedlist(visited places)
@@ -42,8 +40,8 @@ def connect(to_be_connected):
             for neighbour in start.get_neighbours():
                 if neighbour.get_attribute() == "empty":
                     parent[neighbour] = start
-                    neighbour.h = start.h + 1
-                    openlist[neighbour] = neighbour.calculate_f(start.get_location(),
+                    neighbour.f = start.f + 1
+                    openlist[neighbour] = neighbour.calculate_h(start.get_location(),
                                                                 end.get_location())
 
             # append start to closed list for it is visited
@@ -72,21 +70,21 @@ def connect(to_be_connected):
                 current = min(openlist, key=openlist.get)
 
                 # get the point with the lowest F value
-                lowest_f = openlist[current]
+                lowest_h = openlist[current]
 
                 #  make list of the lowest f values
-                lowest_fs = []
+                lowest_hs = []
 
                 # make list of lowest f values
                 for point in openlist:
-                    if openlist[point] <= lowest_f:
-                        lowest_fs.append(point)
+                    if openlist[point] <= lowest_h:
+                        lowest_hs.append(point)
 
-                # If there are multiple points with the lowest f value, go to lowest h
-                if len(lowest_fs) > 1:
-                    h_vals = {}
-                    for point in lowest_fs:
-                        h_vals[point] = point.get_h()
+                # If there are multiple points with the lowest h value, go to lowest f
+                if len(lowest_hs) > 1:
+                    f_vals = {}
+                    for point in lowest_hs:
+                        f_vals[point] = point.get_f()
 
                 # delete the current postion from openlist
                 del openlist[current]
@@ -124,8 +122,8 @@ def connect(to_be_connected):
 
                     elif neighbour not in openlist:
                         parent[neighbour] = current
-                        neighbour.h = current.h + 1
-                        openlist[neighbour] = neighbour.calculate_f(start.get_location(),
+                        neighbour.f = current.f + 1
+                        openlist[neighbour] = neighbour.calculate_h(start.get_location(),
                                                                     end.get_location())
 
 

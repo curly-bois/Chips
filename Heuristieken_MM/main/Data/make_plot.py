@@ -1,7 +1,6 @@
 from Classes.point import Point
 from mpl_toolkits import mplot3d
 import matplotlib.pyplot as plt
-import matplotlib.animation as animation
 import numpy as np
 
 
@@ -11,6 +10,7 @@ def make_plot(all_sets):
     dot = []
     routes = []
 
+    # loop through all sets to get the start/endpoints and the points on the route
     for set in all_sets:
         dot.append(set.get_startpoint().get_location())
         dot.append(set.get_endpoint().get_location())
@@ -23,6 +23,7 @@ def make_plot(all_sets):
             routearr.append(set.get_endpoint().get_location())
             routes.append(routearr)
 
+    # plot the grid
     fig = plt.figure()
     ax = plt.axes(projection='3d')
     ax.set_zlim(0, 6)

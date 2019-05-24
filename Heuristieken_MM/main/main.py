@@ -1,74 +1,66 @@
 from Classes.point import Point
-from init import *
 from Data.make_data import *
 from Data.make_plot import *
-from connect import *
-from dynamic import *
-from Preprocessing.sort_connections import *
-from hillclimber import *
+from Preprocessing.sort import *
+from Preprocessing.init import *
+from options.cli import *
+from Algorithms.connect import *
+from Algorithms.hillclimber import *
+from Algorithms.dynamic import *
+from Algorithms.collision import *
 import numpy as np
 import sys
 
-# max_tries = int(input("How many times do you want to run the program?"))
-# netlist = input("Which netlist? choose 'netlist_1' until 'netlist_6'")
-# print(netlist)
-# input("Do you want to use an iterative algorithm that tries to find a random solution?")
-# input("If a solution was found, do you want to use an iterative algorithm to improve that solution?")
-# input("Choose between 'hill climber' or 'simulated annealing'")
-# input("Do you want to turn on dynamic heuristics?")
-
-
-
+# run the choice menu
+A_star, order, iterative, options, tries, netlist, grid, evaluations = menu()
 
 counter = 0
-netlistname = "netlist_1"
-grid = grid_1
-connections = get_connections(netlist_1)
-gridpoints = make_grid(grid)
 
-while counter < 1:
-    counter += 1
+while counter < tries:
+    counter +=1
+    # make the points and sets ready
+    connections = get_connections(netlist)
+    gridpoints = make_grid(grid)
     matrix = make_matrix(gridpoints,connections)
     to_be_connected = make_conlist(connections, matrix)
-    # to_be_connected = make_order(to_be_connected)
-    to_be_connected = new_order(to_be_connected)
 
-
-    # A algorithm
-    all_sets, connected_sets, unconnected_sets = connect(to_be_connected)
-    new_connections = []
-
-    if len(unconnected_sets) == 0:
-        # make_plot(connected_sets)
-        #
+    # choosing type of A-algorithm
+    if A_star == 1:
         # Dynamic turns off heuristic values
-        # dynamic(matrix)
-        # hillimprove(100, all_sets)
-        # simulated_annealing(100, all_sets, 30)
-        # print("eerste try")
-        # make_plot(connected_sets)
-        make_xlsx(all_sets,matrix,netlistname, "initial try")
+        dynamic(matrix)
+    elif A_star == 2:
+        # keep A_STAR heuristics on
+        pass
+
+
+    # choosing the order type
+    if order == 1:
+        to_be_connected = dir_order(to_be_connected,"random")
+    elif order == 2:
+        to_be_connected = appearence_order(to_be_connected)
     else:
-        print("niet eerste try")
+        np.random.shuffle(to_be_connected)
+
+    # make wires from gate to gate
+    all_sets, connected_sets, unconnected_sets = connect(to_be_connected)
+
+    # choosing the iterative algorithm
+    if iterative == 1:
         solved_sets = simulsolve(500, all_sets, connected_sets, unconnected_sets, matrix)
+        hillimprove(evaluations, all_sets)
+    elif iterative == 2:
+        solved_sets = simulsolve(500, all_sets, connected_sets, unconnected_sets, matrix)
+        simulated_annealing(evaluations, all_sets)
+    else:
+        pass
 
+    # Check for collisions
+    collisions = collision_check(all_sets)
 
-        print(len(solved_sets))
-        # make_plot(solved_sets)
-        print(len(solved_sets))
-        make_xlsx(all_sets,matrix,netlistname, "initial try")
-        # make_plot(connected_sets)
-        hillimprove(500, solved_sets)
-        make_xlsx(all_sets,matrix,netlistname, "with hillimprove not dynamic")
-        # dynamic(matrix)
-        # if solved_sets != None:
-        #     simulated_annealing(100, solved_sets, 30)
-
-        collisions = 0
-        all_locations = []
-        for set in all_sets:
-            for routepoint in set.get_route():
-                if routepoint.get_location() in all_locations:
-                    collisions += 1
-                    all_locations.append(routepoint.get_location())
-        print(f"END OF PROGRAM, AMOUNT OF COLLISIONS: {collisions}")
+    # extra options
+    if 1 in options:
+        make_plot(all_sets)
+    if 2 in options:
+        make_xlsx(all_sets, matrix, f"netlist_{netlist}", collisions, "initial try")
+    if 3 in options:
+        print_data(all_sets, matrix, f"netlist_{netlist}", collisions, "initial try")

@@ -1,3 +1,4 @@
-matplotlib
+datetime
+pandas
 numpy
-random
+matplotlib

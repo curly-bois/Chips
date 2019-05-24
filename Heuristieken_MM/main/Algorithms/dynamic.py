@@ -1,3 +1,4 @@
+#  this sets the heuristicts off 
 def dynamic(matrix):
     for three_dimensions in matrix:
         for two_dimensions in three_dimensions:

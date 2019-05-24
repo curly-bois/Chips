@@ -1,27 +1,19 @@
 # Chips & Circuits
-<img align="left" width="400" height="300" src="http://heuristieken.nl/wiki/images/7/77/Print1.gif">
 
-<img align="right" width="400" height="400" src="http://heuristieken.nl/wiki/images/1/1d/Print2.gif">
+![print_1](http://heuristieken.nl/wiki/images/7/77/Print1.gif)
+![print_2](http://heuristieken.nl/wiki/images/1/1d/Print2.gif)
 
 
-## The Assignment
+## De opdracht (the assignment)
 Print #1 and Print #2 are arrangements of gates on a base, and all it takes is to wire the appropriate gates together. There are three net lists (in txt-format) for each print. Each net list needs to be implemented. Nets can only follow the grid, only one wire per segment, and one step costs 1 unit length. Nets that are aligned among the same grid line are said to be in collision. If there is one collision in one arrangement, the circuit cannot be used. Nets can also go up and down to lower and higher layers, also at the cost of 1 per level. The assignment is to implement all nets in all netlists at minimum cost.
 
 ## Aan de slag (Getting Started)
 
-### Vereisten (Prerequisites)
-
-Deze codebase is volledig geschreven in [Python3.6.3](https://www.python.org/downloads/). In requirements.txt staan alle benodigde packages om de code succesvol te draaien. Deze zijn gemakkelijk te installeren via pip dmv. de volgende instructie:
-
-```
-pip install -r requirements.txt
-```
-
 ### Structuur (Structure)
 
-alle scripts staan in de main folder. in de map Classes zitten alle scripts die classes aanmaken, de map options bevat scripts voor de te gebruiken input (de netlists en  de gridpoints).
+alle scripts staan in de main folder. in de map Classes zitten alle scripts die classes aanmaken, de map options bevat scripts voor de te gebruiken input (de netlists en  de gridpoints).De map Preprocessing bevat scripts met functies die de volgorde van de netlist bepaald aan de hand van heuristieke waardes.
 
-De map data bevat alle code die waardes omzet naar data samen met de data zelf.
+De map data bevat alle code die waardes omzet naar data en visaliseert de data naar een 3-dimensionale grid met verbonden gates.
 
 
 ### Test (Testing)
@@ -31,6 +23,7 @@ Om de code te draaien met de standaardconfiguratie gebruik de instructie:
 ```
 python main.py
 ```
+Hierna zal een keuzemenu volgen voor het gebruik van algoritmes en het gebruiken van heuristieke waardes.
 
 ## Auteurs (Authors)
 

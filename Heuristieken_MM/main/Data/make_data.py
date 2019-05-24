@@ -4,12 +4,12 @@ from Classes.set import Set
 
 def make_xlsx(all_sets,matrix,netlistname,collisions,method):
 
-    wires = []
     order = []
     directions = []
     lower_bound = 0
     unconnected_sets = []
 
+    # get the wire pieces for the length
     wire_pieces = len(all_sets)
     for three_dimensions in matrix:
         for two_dimensions in three_dimensions:
@@ -19,13 +19,7 @@ def make_xlsx(all_sets,matrix,netlistname,collisions,method):
 
     # get the data from connected and unconnected sets
     for set in all_sets:
-        if set.is_it_connected():
-            route = set.get_route()
-            wires.append(set.get_endpoint())
-            for point in route:
-                wires.append(point)
-        # If unconnected
-        else:
+        if not set.is_it_connected():
             unconnected_sets.append(set)
         start = set.get_startpoint().get_id()
         end = set.get_endpoint().get_id()
@@ -53,7 +47,7 @@ def make_xlsx(all_sets,matrix,netlistname,collisions,method):
     data['collisions'] = collisions
     data['method'] = method
 
-    output('dir_order_no_heuristics.xlsx', data)
+    output('test.xlsx', data)
 
 
 def output(filename, data):

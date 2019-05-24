@@ -1,6 +1,6 @@
 
 def menu():
-    # make all the menus
+
     A_star = {1: "normal A*-algorithm",
               2: "optimal routing (A-algorithm)",
               3: "quit"
@@ -20,12 +20,10 @@ def menu():
 
     optiondict = {1: "visualisation on a 3d grid",
                2: "save the end result in an excel file",
-               3: "print the results in the command line",
-               4: "done selecting",
-               5: "quit"
+               3: "done selecting",
+               4: "quit"
                }
 
-    # get the awnsers and save them
     print("select your way of pathfinding")
     for k, v in A_star.items():
         print(f"({k})--{v}")
@@ -57,7 +55,8 @@ def menu():
     if iterative[answer] != "none":
         iterchoice = answer
         print("How many evaluations do you want this iterative algorithm to run?")
-        evaluations = input("> ")
+        answer = input("> ")
+        evaluations = int(answer)
     else:
         iterchoice = 0
         evaluations = 0
@@ -80,7 +79,7 @@ def menu():
         options.append(answer)
         del optiondict[answer]
 
-    print("select the netlist you want to use:")
+    print("select the netlist you want to use (1 until 6):")
 
     netlist = int(input(">"))
 
@@ -96,5 +95,4 @@ def menu():
 
     tries = int(input(">"))
 
-    # return all the choices
     return astarchoice, orderchoice, iterchoice, options, tries, netlist, grid, evaluations

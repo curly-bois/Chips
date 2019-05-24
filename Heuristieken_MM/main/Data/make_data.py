@@ -91,6 +91,6 @@ def print_data(all_sets,matrix,netlistname,collisions,method):
     upper_bound = (length * width * height)
 
     print(f"{netlistname} has been run with {int(len(unconnected_sets) / len(all_sets) * 100)}% unconnected sets")
-    print(f"the lower bound was {lower_bound} and the upper bound was {upper_bound} amount of wire pieces")
+    print(f"the lower bound is {lower_bound} and the upper bound is {upper_bound} wire pieces")
     print(f"{wire_pieces} wire pieces where used to connect the gates")
     print(f"there where {collisions} collisions")

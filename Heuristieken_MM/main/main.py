@@ -43,12 +43,14 @@ while counter < tries:
 
     # make wires from gate to gate
     all_sets, connected_sets, unconnected_sets = connect(to_be_connected)
-    solved_sets = simulsolve(500, all_sets, connected_sets, unconnected_sets, matrix)
+
 
     # choosing the iterative algorithm
     if iterative == 1:
+        solved_sets = simulsolve(500, all_sets, connected_sets, unconnected_sets, matrix)
         hillimprove(100, all_sets)
     elif iterative == 2:
+        solved_sets = simulsolve(500, all_sets, connected_sets, unconnected_sets, matrix)
         simulated_annealing(100, all_sets)
     else:
         pass

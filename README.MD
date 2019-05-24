@@ -8,8 +8,15 @@
 Print #1 and Print #2 are arrangements of gates on a base, and all it takes is to wire the appropriate gates together. There are three net lists (in txt-format) for each print. Each net list needs to be implemented. Nets can only follow the grid, only one wire per segment, and one step costs 1 unit length. Nets that are aligned among the same grid line are said to be in collision. If there is one collision in one arrangement, the circuit cannot be used. Nets can also go up and down to lower and higher layers, also at the cost of 1 per level. The assignment is to implement all nets in all netlists at minimum cost.
 
 ## Formules
-#Lower bound
+Deze formules laten zien wat het aantal mogelijke configuraties van het verbinden van de netlist zijn en wat het geschatte minima en maxima is van een score.
+
+De score wordt door ons bepaald door de lengte van het aantal wires.
+# Lower bound
 ![lower](images/lower.PNG)
+# Upper bound
+![lower](images/upper.PNG)
+# state space
+![lower](images/state.PNG)
 
 
 ## Aan de slag (Getting Started)

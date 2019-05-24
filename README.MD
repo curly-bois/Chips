@@ -6,6 +6,16 @@ Print #1 and Print #2 are arrangements of gates on a base, and all it takes is t
 
 ## Aan de slag (Getting Started)
 
+### Chipsolver
+*  ```"pip install -r requirements2.txt"```
+* Open the folder chipSolver
+* Edit options file to desired settings and set "new"(use new generations) and "plot"(plot the wire config) in the main script
+* Run main.py as followed: "python main.py [netlist number (int)] [options nummer (int)] [Repetions of entire experiment (int)] [Name method (str)]"
+EXAMPLE: ```"python main.py 1 22 5 hill"```
+* Wait until done...
+* In the generated figs folder there are now images of your progress
+* If there were more than 1 repetion, the best is plotted and the average progress is documentated
+
 ### Vereisten (Prerequisites)
 
 Deze codebase is volledig geschreven in [Python3.6.3](https://www.python.org/downloads/). In requirements.txt staan alle benodigde packages om de code succesvol te draaien. Deze zijn gemakkelijk te installeren via pip dmv. de volgende instructie:

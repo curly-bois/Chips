@@ -1,7 +1,5 @@
 import matplotlib.pyplot as plt
 import pandas as pd
-import numpy as np
-import matplotlib.pyplot as plt
 from matplotlib import colors
 import numpy as np
 from mpl_toolkits.mplot3d import Axes3D

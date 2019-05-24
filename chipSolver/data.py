@@ -85,10 +85,10 @@ def get_data(net_number = 4):
     }
 
     if net_number in [4,5,6]:
-        SIZE = (17,17,7)
+        SIZE = (18,17,7)
         points = points
     elif net_number in [1,2,3]:
-        SIZE = (17,12,7)
+        SIZE = (18,13,7)
         points =points1
 
     netlist = net_dict[net_number]

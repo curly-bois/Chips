@@ -1,6 +1,6 @@
-
-# checks if there are more than one of the same coordinate
 def collision_check(all_sets):
+
+    # checks if there are multiple lines at the same coordinate
     all_coordinates = []
     collisions = 0
     for set in all_sets:

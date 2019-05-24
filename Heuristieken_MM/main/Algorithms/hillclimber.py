@@ -1,11 +1,12 @@
-from Preprocessing.init import *
+import numpy as np
 from Algorithms.connect import connect
 import random
 import math
-import numpy as np
+from Preprocessing.init import *
 
-# this is the hillclimber
+
 def hillimprove(max_tries, solved_sets):
+    current_try = 0
 
     # Get the current best score
     best_so_far = len(solved_sets)
@@ -14,15 +15,10 @@ def hillimprove(max_tries, solved_sets):
             if point.get_attribute() == "wire":
                 best_so_far += 1
 
-    not_improved = 0
-    hillimproves = 0
-
-    while(not_improved < max_tries):
-        hillimproves += 1
+    while(current_try < max_tries):
 
         # Save all OG routes
-        if hillimproves == 1:
-
+        if current_try == 0:
             old_routes = {}
             for set in solved_sets:
                 old_routes[set] = set.get_route()
@@ -36,7 +32,7 @@ def hillimprove(max_tries, solved_sets):
 
         # Try to solve again
         new_all_sets, new_connected_sets, new_unconnected_sets = connect(broken_sets)
-        not_improved += 1
+        current_try += 1
 
         # Check if solved:
         if len(new_unconnected_sets) == 0:
@@ -46,7 +42,7 @@ def hillimprove(max_tries, solved_sets):
                     if point.get_attribute() == "wire":
                         wire_count += 1
 
-            # If better
+            # If better, go on with this state
             if wire_count < best_so_far:
                 best_so_far = wire_count
 
@@ -54,32 +50,27 @@ def hillimprove(max_tries, solved_sets):
                 for set in solved_sets:
                     old_routes[set] = set.get_route()
 
-            # if it is not better : go  back to the old setting
+            # If the solution is equal or worse, go back to the previous state
             else:
                 for set in new_all_sets:
                     set.disconnect()
-
                 for set in solved_sets:
                     set.set_route(old_routes[set])
-
                 for set in solved_sets:
                     set.reconnect()
 
-        # If no solution was found
+        # If no solution was found, go back to the previous state
         else:
             for set in new_all_sets:
                 set.disconnect()
-
             for set in solved_sets:
                 set.set_route(old_routes[set])
-
             for set in solved_sets:
                 set.reconnect()
 
 
-# simulated annealing
 def simulated_annealing(max_tries, solved_sets):
-    not_improved = 0
+    current_try = 0
     temp = 1
     T_min = 0.00001
     alpha = 0.99
@@ -91,13 +82,10 @@ def simulated_annealing(max_tries, solved_sets):
             if point.get_attribute() == "wire":
                 best_so_far += 1
 
-    hillimproves = 0
-    while(not_improved < max_tries):
-        hillimproves += 1
+    while(current_try < max_tries):
 
         # Save all OG routes
-        if hillimproves == 1:
-
+        if current_try == 0:
             old_routes = {}
             for set in solved_sets:
                 old_routes[set] = set.get_route()
@@ -111,7 +99,7 @@ def simulated_annealing(max_tries, solved_sets):
 
         # Try to solve again
         new_all_sets, new_connected_sets, new_unconnected_sets = connect(broken_sets)
-        not_improved += 1
+        current_try += 1
 
         # Check if solved:
         if len(new_unconnected_sets) == 0:
@@ -121,7 +109,6 @@ def simulated_annealing(max_tries, solved_sets):
                 for point in set.get_route():
                     if point.get_attribute() == "wire":
                         wire_count += 1
-
 
             # If better
             if wire_count < best_so_far:
@@ -133,6 +120,7 @@ def simulated_annealing(max_tries, solved_sets):
 
             # If new solution is not better
             else:
+
                 # Calculate SA chance
                 ap = acceptance_probability(best_so_far, wire_count, temp)
 
@@ -148,10 +136,8 @@ def simulated_annealing(max_tries, solved_sets):
                 else:
                     for set in new_all_sets:
                         set.disconnect()
-
                     for set in solved_sets:
                         set.set_route(old_routes[set])
-
                     for set in solved_sets:
                         set.reconnect()
 
@@ -159,33 +145,29 @@ def simulated_annealing(max_tries, solved_sets):
         else:
             for set in new_all_sets:
                 set.disconnect()
-
             for set in solved_sets:
                 set.set_route(old_routes[set])
-
             for set in solved_sets:
                 set.reconnect()
 
+        # Update the temperature
         temp *= alpha
-    print(f"best solution: {wire_count}")
     return None
 
-# this function solves the netlist before using either SA or hillclimber
+
 def simulsolve(max_tries, all_sets, connected_sets, unconnected_sets, matrix):
-    not_improved = 0
-    temp = 1
-    T_min = 0.00001
-    alpha = 0.99
+    current_try = 0
     to_break = 1
     break_check = 0
     best_so_far = len(unconnected_sets)
     start_score = len(unconnected_sets)
-    hillimproves = 0
-    while(not_improved < max_tries):
-        if break_check == 100 and not (to_break > 1):
+
+    while(current_try < max_tries):
+
+        # Break one more wire if after 100 tries no better solution was found
+        if break_check == 100 and not (to_break > 3):
             break_check = 0
             to_break += 1
-        hillimproves += 1
 
         # Create new list for new tries
         new_tries = []
@@ -199,7 +181,7 @@ def simulsolve(max_tries, all_sets, connected_sets, unconnected_sets, matrix):
                 connected_sets.append(set)
 
         # Save all OG routes in first iteration
-        if hillimproves == 1:
+        if current_try == 0:
             old_routes = {}
             for set in all_sets:
                 old_routes[set] = set.get_route()
@@ -216,20 +198,8 @@ def simulsolve(max_tries, all_sets, connected_sets, unconnected_sets, matrix):
         np.random.shuffle(new_tries)
         new_all_sets, new_connected_sets, new_unconnected_sets = connect(new_tries)
 
-        # Check if solved:
+        # Return all sets when solved
         if len(new_unconnected_sets) == 0:
-            wire_pieces = 0
-            for three_dimensions in matrix:
-                for two_dimensions in three_dimensions:
-                    for point in two_dimensions:
-                        if point.get_attribute() == "wire":
-                            wire_pieces += 1
-            print(f"simulsolve found a solution using {wire_pieces + len(all_sets)} wires")
-            route_length = 0
-            for set in all_sets:
-                for route in set.get_route():
-                    route_length += 1
-            print(f"simulsolve found a solution (route) using {route_length + len(all_sets)} wires")
             return all_sets
 
         # If not yet solved check if this is a better solution that we will accept
@@ -238,15 +208,14 @@ def simulsolve(max_tries, all_sets, connected_sets, unconnected_sets, matrix):
             if set.is_it_connected() == False:
                 new_score += 1
 
-        # If better
+        # If better or equal
         if best_so_far >= new_score:
             if best_so_far == new_score:
                 break_check += 1
             else:
-                print(f"Left unconnected: {new_score}")
                 break_check = 0
                 to_break = 1
-                not_improved = 0
+                current_try = 0
 
             # Update the best score so far
             best_so_far = new_score
@@ -255,29 +224,25 @@ def simulsolve(max_tries, all_sets, connected_sets, unconnected_sets, matrix):
             for set in all_sets:
                 old_routes[set] = set.get_route()
 
+        # If not better, go back to previous state
         else:
-            not_improved += 1
-
+            current_try += 1
             for set in new_all_sets:
                 set.disconnect()
-
             for set in all_sets:
                 set.set_route(old_routes[set])
-
             for set in initially_unconnected_sets:
                 set.disconnect()
-
             for set in connected_sets:
                 set.set_route(old_routes[set])
                 set.reconnect()
 
-        temp *= alpha
-
     # Returns none when no solution has been found
-    print(f"simulsolve did not find a solution after {hillimproves} simulsolves, the amount of sets connected at the start was {start_score} and now it is {best_so_far}")
     return None
 
-def acceptance_probability(old_cost, new_cost, temp):
-    ap = math.exp((old_cost-new_cost) / temp)
 
+def acceptance_probability(old_cost, new_cost, temp):
+
+    # Calculates the acceptance probability
+    ap = math.exp((old_cost-new_cost) / temp)
     return ap

@@ -12,7 +12,7 @@ import numpy as np
 import sys
 
 # run the choice menu
-A_star, order, iterative, options, tries, netlist, grid, evalutions = menu()
+A_star, order, iterative, options, tries, netlist, grid, evaluations = menu()
 
 counter = 0
 
@@ -44,11 +44,10 @@ while counter < tries:
     # make wires from gate to gate
     all_sets, connected_sets, unconnected_sets = connect(to_be_connected)
 
-
     # choosing the iterative algorithm
     if iterative == 1:
         solved_sets = simulsolve(500, all_sets, connected_sets, unconnected_sets, matrix)
-        hillimprove(evalutions, all_sets)
+        hillimprove(evaluations, all_sets)
     elif iterative == 2:
         solved_sets = simulsolve(500, all_sets, connected_sets, unconnected_sets, matrix)
         simulated_annealing(evaluations, all_sets)

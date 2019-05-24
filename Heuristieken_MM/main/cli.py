@@ -1,49 +1,94 @@
 
-preprocessing = False
-choices = []
-heuristics = {1: ["normal A*-algorithm", 1],
-              2: ["optimal routing (A-algorithm)", 1],
-              3: ["order gates by direction", 2],
-              4: ["order gates by amount of appearences", 2],
-              5: ["order gates by random", 2],
-              6: ["hill climber",3],
-              7: ["simulated annealing",3],
-              8: ["visualisation on a 3d grid"],
-              9: ["save the end result in an excel file"],
-              10: ["done selecting"],
-              11: ["quit"]
+def menu():
+
+    A_star = {1: "normal A*-algorithm",
+              2: "optimal routing (A-algorithm)",
+              3: "quit"
              }
-while True:
 
+    order = {1: "order gates by direction",
+             2: "order gates by amount of appearences",
+             3: "order gates by random",
+             4: "quit"
+            }
 
-    print("Please select the number for the heuristics/algorithms/options you want to use for preprocessing:")
-    print()
+    iterative = { 1: "hill climber",
+                  2: "simulated annealing",
+                  3: "none",
+                  4: "quit"
+                 }
 
-    for k, v in heuristics.items():
-        print(f"({k})--{v[0]}")
+    optiondict = {1: "visualisation on a 3d grid",
+               2: "save the end result in an excel file",
+               3: "done selecting",
+               4: "quit"
+               }
+
+    print("select your way of pathfinding")
+    for k, v in A_star.items():
+        print(f"({k})--{v}")
 
     awnser = input("> ")
-
     awnser = int(awnser)
-
-    if awnser == 11:
+    if A_star[awnser] == "quit":
         exit()
-    elif awnser == 10:
-        break
-    elif awnser in heuristics:
-        choices.append(awnser)
+    astarchoice = awnser
 
-    delete = []
-    for choice in heuristics:
-        try:
-            if heuristics[choice][1] == heuristics[awnser][1]:
-                delete.append(choice)
-        except:
-            pass
-    del heuristics[awnser]
-    for i in delete:
-        del heuristics[i]
+    print("select the order you want to make")
+    for k, v in order.items():
+        print(f"({k})--{v}")
 
-    if len(heuristics) <= 2:
-        break
-print(choices)
+    awnser = input("> ")
+    awnser = int(awnser)
+    if order[awnser] == "quit":
+        exit()
+    orderchoice = awnser
+
+    print("select the iterative algorithm you want to use")
+    for k, v in iterative.items():
+        print(f"({k})--{v}")
+
+    awnser = input("> ")
+    awnser = int(awnser)
+    if iterative[awnser] == "quit":
+        exit()
+    if iterative[awnser] != "none":
+        iterchoice = awnser
+    else:
+        iterchoice = 0
+
+    print("select other options")
+    options = []
+    while True:
+        if len(optiondict) <= 2:
+            break
+
+        for k, v in optiondict.items():
+            print(f"({k})--{v}")
+
+        awnser = input("> ")
+        awnser = int(awnser)
+        if optiondict[awnser] == "done selecting":
+            break
+        if optiondict[awnser] == "quit":
+            exit()
+        options.append(awnser)
+        del optiondict[awnser]
+
+    print("select the netlist you want to use:")
+
+    netlist = int(input(">"))
+
+    if netlist <= 3:
+        grid = 1
+    elif netlist <=6:
+        grid = 2
+    else:
+        print("netlist number must be inbetween 1 and 6")
+        exit()
+
+    print("select the amount of times you want to try it")
+
+    tries = int(input(">"))
+
+    return astarchoice, orderchoice,iterchoice, options,tries, netlist, grid

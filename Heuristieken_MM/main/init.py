@@ -130,7 +130,7 @@ def make_conlist(connections, matrix):
 
     return setlist
 
-def make_order(sets):
+def dir_order(sets):
 
     horizontal = {}
     vertical = {}
@@ -172,12 +172,11 @@ def make_order(sets):
     for i in temp:
         verlist.append(i[0])
 
-
     complete = list(diauplist+diadownlist+verlist+horlist)
 
     return complete
 
-def new_order(to_be_connected):
+def appearence_order(to_be_connected):
     order = {}
     orderlist = []
 
@@ -185,7 +184,7 @@ def new_order(to_be_connected):
         if set.get_startpoint().get_appearence() > 3 < set.get_endpoint().get_appearence() :
             order[set] = set.get_startpoint().get_appearence() + set.get_endpoint().get_appearence() + 3
         else:
-            order[set] = set.get_startpoint().get_appearence() + set.get_endpoint().get_appearence() + 3
+            order[set] = set.get_startpoint().get_appearence() + set.get_endpoint().get_appearence() 
 
     temp = sorted(order.items(), key=operator.itemgetter(1))
     temp = reversed(temp)

@@ -35,7 +35,7 @@ def make_xlsx(all_sets,matrix,netlistname,method):
         end = set.get_endpoint().get_id()
         order.append((start,end))
         lower_bound += set.get_distance()
-        # directions.append(set.get_direction())
+        directions.append(set.get_direction())
 
     #  get the upper bound
     height = len(matrix)
@@ -61,7 +61,7 @@ def make_xlsx(all_sets,matrix,netlistname,method):
     data['unconnected'] = f"{int(len(unconnected_sets) / len(all_sets) * 100)}%"
     data['method'] = method
 
-    output('test.xlsx', data)
+    output('A_star_random_dir.xlsx', data)
 
 
 def output(filename, data):

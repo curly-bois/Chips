@@ -6,8 +6,8 @@ from Preprocessing.init import *
 from options.cli import *
 from Algorithms.connect import *
 from Algorithms.hillclimber import *
-from dynamic import *
-from collision import *
+from Algorithms.dynamic import *
+from Algorithms.collision import *
 import numpy as np
 import sys
 

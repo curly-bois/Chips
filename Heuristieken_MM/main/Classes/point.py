@@ -61,14 +61,6 @@ class Point(object):
     def get_f(self):
         return self.f
 
-    # def calculate_h(self, end_location):
-    #     manhattan_to_end = 0
-    #     difference_from_end = numpy.subtract(self.location, end_location)
-    #     for dimensional_difference in difference_from_end:
-    #         manhattan_to_end += abs(dimensional_difference)
-    #
-    #     return manhattan_to_end
-
     def calculate_h(self, start_location, end_location):
 
         manhattan_from_start = 0

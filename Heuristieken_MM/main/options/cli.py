@@ -21,8 +21,8 @@ def menu():
     optiondict = {1: "visualisation on a 3d grid",
                2: "save the end result in an excel file",
                3: "print the results",
-               3: "done selecting",
-               4: "quit"
+               4: "done selecting",
+               5: "quit"
                }
 
     print("select your way of pathfinding")

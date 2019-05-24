@@ -104,6 +104,7 @@ def plant_prop(generation, options, SIZE, all_points, tpnum):
     MAX = int(tpnum)
 
     data = []
+    old_gen = []
     for iter in range(loops):
         # Print current loop
         loading(iter, loops)
@@ -119,6 +120,9 @@ def plant_prop(generation, options, SIZE, all_points, tpnum):
             gen.snotc(new_not_con)
             gen.swires(new_wires)
 
+        # Add previous generation
+        generation = generation + old_gen
+
         # Sort on score
         generation.sort(key=sortbothvalue, reverse=True)
         s1 = generation[0].score1()
@@ -126,6 +130,7 @@ def plant_prop(generation, options, SIZE, all_points, tpnum):
 
         # Save data and show current
         data.append((s2,s1))
+        # print((s2,s1))
 
         # Choose new gens
         generation.sort(key=sortbothvalue, reverse=True)
@@ -151,7 +156,7 @@ def plant_prop(generation, options, SIZE, all_points, tpnum):
                                        all_points)
             new_gen += generation1 # push list to list
 
-        del generation
+        old_gen = generation
         generation = new_gen
 
     return generation[0], data

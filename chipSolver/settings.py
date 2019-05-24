@@ -86,12 +86,20 @@ def sort_points3(starts, ends, count_dict):
     all_points = starts+ends
 
     for key, value in points:
-        for v in range(value):
-            i = all_points.index(key)
-            point_order.append(point_rand[i])
-            all_points[i] = 0
+        try:
+            for v in range(value):
+                i = all_points.index(key)
+                point_order.append(point_rand[i])
+                all_points[i] = 0
+        except:
+            pass
 
-    return point_order
+    def inOrder(nums): ## better than set
+        k = max(nums)
+        indices = [nums.index(n) for n in range(1,k+1)]
+        return [n for i,n in sorted(zip(indices,range(1,k+1)))]
+
+    return set(point_order)
 
 def sort_points_random(starts, ends):
     '''

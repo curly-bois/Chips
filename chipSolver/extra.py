@@ -40,6 +40,9 @@ def make_fig(data, netlist_number, test, Wires):
     # plot double axis plot
     fig, ax1 = plt.subplots()
     ax1.plot(y, w, color='b')
+    # Create equal high plots for comperhansion results ## temporary
+    if netlist_number == 4:
+        ax1.set_ylim([700, 1200])
     ax1.set_xlabel('Iterations')
     ax1.set_ylabel('Total length', color='b')
     ax1.tick_params('y', colors='b')
@@ -49,6 +52,7 @@ def make_fig(data, netlist_number, test, Wires):
     ax2.tick_params('y', colors='r')
     ax2.set_title("The "+str(test)+" algorithm")
     fig.tight_layout()
+
 
     # Save the figure
     plt.savefig(f'generated_figs\\fig_of_{netlist_number}_{test}_{st}.png')
@@ -173,7 +177,7 @@ def swap_wires(wires, not_connected, mainGrid, swaps):
     swaps wires based on simply improvement, greedy
     '''
     # get wire lenght and not connected count
-    # len_list1 = sum([i.length for i in wires]) ##
+    len_list1 = sum([i.length for i in wires]) ##
     len1 = len(not_connected)
 
     # fresh variables
@@ -189,19 +193,16 @@ def swap_wires(wires, not_connected, mainGrid, swaps):
     # Try to connect the wires removed and the pairs not connected
     wires2, connected, not_connected = get_wires(mainGrid, not_connected)
     len2 = len(not_connected)
-    # len_list2 = sum([i.length for i in wires2 + wires]) ##
+    len_list2 = sum([i.length for i in wires2 + wires]) ##
 
     # Check for inprovement in lenght if all wires are connected
-    # if len1 == len2 and len_list2 < len_list1: ##
-    #     wires3 = wires2 + wires ##
-    #     return mainGrid, wires3, not_connected ##
+    if len1 == len2 and len_list2 < len_list1: ##
+        wires3 = wires2 + wires ##
+        return mainGrid, wires3, not_connected ##
     # Check for inprovement in wires connected
-    # elif len1 > len2: ##
-    #     wires3 = wires2 + wires ##
-    #     return mainGrid, wires3, not_connected ##
-    if len1 > len2:
-        wires3 = wires2 + wires
-        return mainGrid, wires3, not_connected
+    elif len1 > len2: ##
+        wires3 = wires2 + wires ##
+        return mainGrid, wires3, not_connected ##
     # else, reverse everything
     else:
         # Remove the new wires

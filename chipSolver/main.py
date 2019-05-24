@@ -29,7 +29,10 @@ new = True
 def init(GENS, netlist_number):
     # prepare the data
     ends, starts, tpnum, net_number, SIZE, count_dict = get_data(netlist_number)
-    points_to_connect = sort_points_random(starts, ends) #, count_dict)
+
+    # Random or Sorted
+    # points_to_connect = sort_points_random(starts, ends)
+    points_to_connect = sort_points3(starts, ends, count_dict)
 
     # create Instances
     generation = [Instance(Grid(SIZE, starts + ends)) for i in range(GENS)]
@@ -61,7 +64,7 @@ if __name__ == '__main__':
     # Avalible methods
     methods = {
                 'plantsima':plant_prop_sima,
-                'platn':plant_prop,
+                'plant':plant_prop,
                 'local':local_sima,
                 'hill':hill_climber,
                 'sima':sim_annealing
@@ -85,6 +88,7 @@ if __name__ == '__main__':
 
     if not test in methods:
         print("please select one of these methods:\n", str(methods.keys()))
+        sys.exit()
 
     avg_data = []
     all_wires = []

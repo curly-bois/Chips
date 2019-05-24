@@ -205,6 +205,7 @@ class Grid(object):
         # Plot the points
         px, py, pz = zip(*self.points)
         ax.scatter(px, py, pz, linewidth=10, color='red')
+        ax.set_zlim(0,7)
 
         # draw gridlines
         plt.xticks(range(self.size[0]))

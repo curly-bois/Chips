@@ -12,6 +12,7 @@ class Set(object):
         self.calc_distance()
         self.calc_direction()
 
+    # disconnects a route from a set
     def disconnect(self):
         self.is_connected = False
         self.startpoint.set_attribute("gate")
@@ -19,7 +20,8 @@ class Set(object):
         for point in self.route:
             point.set_attribute("empty")
         self.route = []
-
+        
+    # reconnects a route from a set
     def reconnect(self):
         self.is_connected = True
         self.startpoint.set_attribute("taken")
@@ -28,8 +30,8 @@ class Set(object):
             point.set_attribute("wire")
 
 
+    # calulates the manhattan distance between 2 gates
     def calc_distance(self):
-
         difference = abs(np.subtract(self.startpoint.location,
                                      self.endpoint.location))
 
@@ -38,6 +40,7 @@ class Set(object):
 
         self.distance = xdistance + ydistance
 
+    # calculates the direction that 2 points make
     def calc_direction(self):
         difference = np.subtract(self.startpoint.location,
                                      self.endpoint.location)

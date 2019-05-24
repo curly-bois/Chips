@@ -15,8 +15,6 @@ def make_grid(grid):
 
     # get gates on the grid from options/grids
     points = get_grid(grid)
-
-
     grid = {}
 
     # give the gate the appointing number
@@ -28,7 +26,7 @@ def make_grid(grid):
 
     return grid
 
-
+# this functions gets all the connections of the netlist and makes it usable
 def get_connections(list):
 
     # get the netlist of gates to connect.
@@ -41,7 +39,7 @@ def get_connections(list):
 
     return connections
 
-
+# this function makes the matrix and Initializes the point objects in the point class
 def make_matrix(grid,netlist):
 
     # define the height of the matrix
@@ -116,21 +114,20 @@ def make_matrix(grid,netlist):
 
     return matrix
 
-
+# this function makes a list of sets that have to be connected
 def make_conlist(connections, matrix):
     setlist = []
-    locations = []
     coordinates = {}
 
+    # loop through the matrix and put all the points with gates in a dict
     for i in range(len(matrix)):
         for j in range(len(matrix[i])):
             for k in range(len(matrix[i][j])):
                 if matrix[i][j][k].id > 0:
                     coordinates[matrix[i][j][k].id] = matrix[i][j][k]
 
+    # add all the sets that have to be connected to the setlist
     for connection in connections:
-        locations.append(
-            (coordinates[connection[0]], coordinates[connection[1]]))
         setlist.append(Set(coordinates[connection[0]], coordinates[connection[1]]))
 
     return setlist

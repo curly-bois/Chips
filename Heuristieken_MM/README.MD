@@ -8,7 +8,6 @@ alle scripts staan in de main folder. in de map Classes zitten alle scripts die 
 
 De map data bevat alle code die waardes omzet naar data en visaliseert de data naar een 3-dimensionale grid met verbonden gates.
 
-
 ### Test (Testing)
 
 Om de code te draaien met de standaardconfiguratie gebruik de instructie:
@@ -17,6 +16,8 @@ Om de code te draaien met de standaardconfiguratie gebruik de instructie:
 python main.py
 ```
 Hierna zal een keuzemenu volgen voor het gebruik van algoritmes en het gebruiken van heuristieke waardes.
+
+Voor het opslaan van resultaten is er een test Excel file aangemaakt (test.xlsx). hierin kunnen de opgeslagen waardes kunnen worden bekeken.
 
 ## Auteurs (Authors)
 

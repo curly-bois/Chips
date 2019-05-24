@@ -4,8 +4,8 @@ import random
 import math
 import numpy as np
 
+# this is the hillclimber
 def hillimprove(max_tries, solved_sets):
-
 
     # Get the current best score
     best_so_far = len(solved_sets)
@@ -54,7 +54,7 @@ def hillimprove(max_tries, solved_sets):
                 for set in solved_sets:
                     old_routes[set] = set.get_route()
 
-
+            # if it is not better : go  back to the old setting
             else:
                 for set in new_all_sets:
                     set.disconnect()
@@ -76,9 +76,8 @@ def hillimprove(max_tries, solved_sets):
             for set in solved_sets:
                 set.reconnect()
 
-    print(f"hillimprove found a solution using {best_so_far} wires")
 
-
+# simulated annealing
 def simulated_annealing(max_tries, solved_sets):
     not_improved = 0
     temp = 1
@@ -171,7 +170,7 @@ def simulated_annealing(max_tries, solved_sets):
     print(f"best solution: {wire_count}")
     return None
 
-
+# this function solves the netlist before using either SA or hillclimber
 def simulsolve(max_tries, all_sets, connected_sets, unconnected_sets, matrix):
     not_improved = 0
     temp = 1
@@ -280,5 +279,5 @@ def simulsolve(max_tries, all_sets, connected_sets, unconnected_sets, matrix):
 
 def acceptance_probability(old_cost, new_cost, temp):
     ap = math.exp((old_cost-new_cost) / temp)
-    # ??? overflow math range error
+
     return ap

@@ -48,10 +48,10 @@ while counter < tries:
     # choosing the iterative algorithm
     if iterative == 1:
         solved_sets = simulsolve(500, all_sets, connected_sets, unconnected_sets, matrix)
-        hillimprove(100, all_sets)
+        hillimprove(evalutions, all_sets)
     elif iterative == 2:
         solved_sets = simulsolve(500, all_sets, connected_sets, unconnected_sets, matrix)
-        simulated_annealing(100, all_sets)
+        simulated_annealing(evaluations, all_sets)
     else:
         pass
 
@@ -63,3 +63,5 @@ while counter < tries:
         make_plot(all_sets)
     if 2 in options:
         make_xlsx(all_sets, matrix, f"netlist_{netlist}", collisions, "initial try")
+    if 3 in options:
+        print_data(all_sets, matrix, f"netlist_{netlist}", collisions, "initial try")

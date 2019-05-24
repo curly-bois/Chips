@@ -1,6 +1,6 @@
 
 def menu():
-
+    # make all the menus
     A_star = {1: "normal A*-algorithm",
               2: "optimal routing (A-algorithm)",
               3: "quit"
@@ -20,10 +20,12 @@ def menu():
 
     optiondict = {1: "visualisation on a 3d grid",
                2: "save the end result in an excel file",
-               3: "done selecting",
-               4: "quit"
+               3: "print the results in the command line",
+               4: "done selecting",
+               5: "quit"
                }
 
+    # get the awnsers and save them
     print("select your way of pathfinding")
     for k, v in A_star.items():
         print(f"({k})--{v}")
@@ -94,4 +96,5 @@ def menu():
 
     tries = int(input(">"))
 
+    # return all the choices
     return astarchoice, orderchoice, iterchoice, options, tries, netlist, grid, evaluations

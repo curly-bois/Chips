@@ -22,9 +22,9 @@ import sys
 
 
 counter = 0
-netlistname = "netlist_1"
-grid = grid_1
-connections = get_connections(netlist_1)
+netlistname = "netlist_6"
+grid = grid_2
+connections = get_connections(netlist_6)
 gridpoints = make_grid(grid)
 
 while counter < 1:
@@ -33,7 +33,7 @@ while counter < 1:
     to_be_connected = make_conlist(connections, matrix)
     to_be_connected = make_order(to_be_connected)
 
-    dynamic(matrix)
+    # dynamic(matrix)
 
     # A algorithm
     all_sets, connected_sets, unconnected_sets = connect(to_be_connected)

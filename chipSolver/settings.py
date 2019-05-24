@@ -11,7 +11,7 @@ filename = r"data\options.xlsx"
 settings = sys.argv[2]
 df = pd.read_excel(filename, sheet_name=0)
 var = df.iloc[int(settings)]
-var = [int(i) for i in var]
+var = [int(i) for i in var[:9]]
 
 layer_coef = var[0]
 NN_penalty = var[1]

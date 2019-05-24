@@ -17,7 +17,6 @@ import time
 import pickle
 import os
 import sys
-import copy
 
 
 # Data file location for deposit of data
@@ -26,7 +25,6 @@ data_file = r"data\new.xlsx"
 filename = r"data\options.xlsx"
 # Make new wires or get old ones
 new = True
-plot = False
 
 def init(GENS, netlist_number):
     # prepare the data
@@ -52,7 +50,6 @@ def init(GENS, netlist_number):
 
         # Add wire paths to the name, if wire name contains wire
         wire_paths = [data_path+"\\"+i for i in wire_names if 'wire' in i]
-        wire_paths = [r"C:\Users\s147057\Documents\GitHub\Chips\chipSolver\data\pre_made_wires\6\wires_6_1154.p"]
         for i, gen in enumerate(generation):
             # Load for every wire and reset the grid
             gen = load_gen(gen, name = wire_paths[i], excel_data =  [((1, 3, 0), (9, 10, 0))])
@@ -80,6 +77,7 @@ if __name__ == '__main__':
 
         # Read the options file
         options = get_options(settings)
+        plot = bool(options['plot'])
     except:
         # PRint usage and exit when not used correct
         print('usage: python main.py #netlist_number #option #loops test_method')

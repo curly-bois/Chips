@@ -35,7 +35,7 @@ def sim_annealing(generation, options, SIZE, all_points, tpnum):
     data = []
     for i in range(loops):
         # Print current loop
-        loading(i, loops, len(Wires))
+        loading(i, loops)
 
         # swap x wires, accept better results or worse on probability
         mainGrid, Wires, not_connected = swap_wires_prop(Wires,
@@ -75,7 +75,7 @@ def hill_climber(generation, options, SIZE, all_points, tpnum):
     data = []
     for i in range(loops):
         # Print current loop
-        loading(i, loops, len(Wires))
+        loading(i, loops)
 
         # swap x wires, accept only better results
         mainGrid, Wires, not_connected = swap_wires(Wires,
@@ -105,6 +105,8 @@ def plant_prop(generation, options, SIZE, all_points, tpnum):
 
     data = []
     for iter in range(loops):
+        # Print current loop
+        loading(iter, loops)
         # Make new childs/ runners
         for i, gen in enumerate(generation):
             random.shuffle(gen.wires)
@@ -124,7 +126,6 @@ def plant_prop(generation, options, SIZE, all_points, tpnum):
 
         # Save data and show current
         data.append((s2,s1))
-        print(f'{iter}. Current best:' ,s1 ,'len:' ,s2, end='\r')
 
         # Choose new gens
         generation.sort(key=sortbothvalue, reverse=True)
@@ -164,23 +165,22 @@ def plant_prop_sima(generation, options, SIZE, all_points, tpnum):
 
     loops = int(options['swaploops'])
     swaps = int(options['swaps'])
-    iterations = int(options['generations'])
-    fifty_mark = float(options['half_prop'])
+    iterations = int(loops/4)
     GENS = len(generation)
 
-    delta_t = fifty_mark**(1/(loops/2))
+    delta_t = 0.01**(1/(loops))
     swap_list = [ i+1 * swaps for i in range(len(generation))]
     temp_list = [ (i*(1/len(generation)))+0.1 for i in range(len(generation))]
 
     data = []
 
     for iter in range(iterations): #50
+        # PRint loops
+        loading(iter, loops)
 
         scrore_board = [i.score1() for i in generation]
         scrore_board.sort()
         scrore_board.reverse()
-        print(f'{iter}. Current scores:', scrore_board)
-
 
         for i, gen in enumerate(generation):
             SWAPS = swap_list[scrore_board.index(gen.score1())]
@@ -232,7 +232,7 @@ def local_sima(generation, options, SIZE, all_points, tpnum):
     # Get variables
     loops = int(options['swaploops'])
     swaps = int(options['swaps'])
-    fifty_mark = float(options['half_prop'])
+    iterations = int(loops/4)
     delta_t = 0.01**(1/(loops))
 
     # Make the division of temp and swaps
@@ -241,13 +241,12 @@ def local_sima(generation, options, SIZE, all_points, tpnum):
     temp_list = [ (i*(1/gen_len))+0.1 for i in range(gen_len)]
 
     data = []
-    for iter in range(int(loops/4)): #Random part of the loops
+    for iter in range(iterations): #Random part of the loops
+        loading(iter, iterations)
 
         scrore_board = [i.score1() for i in generation]
         scrore_board.sort()
         scrore_board.reverse()
-        print(f'{iter}. Current scores:', scrore_board)
-
 
         for i, gen in enumerate(generation):
 

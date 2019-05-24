@@ -251,8 +251,8 @@ def load_gen(gen, name, excel_data):
     gen.swires(new_wire)
     return gen
 
-def loading(i, total, score):
-    print(f"{round(i/total*100)}% score: {score}", end='\r')
+def loading(i, total):
+    print(f"{round(i/total*100)}%", end='\r')
 
 
 def swap_wires_prop(wires, not_connected, mainGrid, swaps, t):

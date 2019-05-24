@@ -45,6 +45,8 @@ pip install -r requirements.txt
 
 In de map Heuristieken_MM staat een werkende versie van A-algoritme samengevoegd met andere heuristieken en iteratieve algoritmes,deze staan beschreven in de readme van deze map.
 
+In de map Chipsolver pakt het script zowel length als connecties in een algoritme aan. Hill climber, Simulated annealing, variant op local search en Plant propagation.
+
 
 ## Auteurs (Authors)
 

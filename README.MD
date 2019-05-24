@@ -9,7 +9,7 @@ Print #1 and Print #2 are arrangements of gates on a base, and all it takes is t
 
 ## Formules
 #Lower bound
-![lower](images/lower)
+![lower](images/lower.PNG)
 
 
 ## Aan de slag (Getting Started)

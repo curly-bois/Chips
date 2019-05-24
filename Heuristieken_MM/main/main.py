@@ -5,7 +5,7 @@ from Data.make_plot import *
 from cli import menu
 from connect import *
 from dynamic import *
-from Preprocessing.sort_connections import *
+from Preprocessing.sort import *
 from hillclimber import *
 import numpy as np
 import sys
@@ -25,22 +25,26 @@ while counter < tries:
 
     # choosing type of A-algorithm
     if A_star == 1:
-        pass
-        # SET A-star HEURISTCS OFF
+        # Dynamic turns off heuristic values
+        dynamic(matrix)
     elif A_star == 2:
+        # keep A_STAR heuristics on
         pass
-        # SET A_STAR HEURISTCS on
+
 
 
 
     # choosing the order type
     if order == 1:
-        to_be_connected = dir_order(to_be_connected)
+        to_be_connected = dir_order(to_be_connected,"random")
     elif order == 2:
         to_be_connected = appearence_order(to_be_connected)
     else:
         np.random.shuffle(to_be_connected)
 
+
+
+    # make wires from gate to gate
     all_sets, connected_sets, unconnected_sets = connect(to_be_connected)
 
     # choosing the iterative algorithm

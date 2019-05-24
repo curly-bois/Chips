@@ -1,3 +1,8 @@
 matplotlib
 numpy
 random
+math
+pandas
+mpl_toolkits
+matplotlib.pyplot
+itertools

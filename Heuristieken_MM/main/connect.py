@@ -2,7 +2,6 @@ import numpy as np
 from init import *
 from Classes.point import Point
 from Classes.set import Set
-from Preprocessing.sort_connections import *
 from init import *
 
 def connect(to_be_connected):

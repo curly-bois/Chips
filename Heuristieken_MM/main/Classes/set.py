@@ -1,6 +1,5 @@
 import numpy as np
 
-
 class Set(object):
 
     def __init__(self, startpoint, endpoint, is_connected=False,was_connected=False):

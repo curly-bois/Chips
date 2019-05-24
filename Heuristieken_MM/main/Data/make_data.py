@@ -61,7 +61,7 @@ def make_xlsx(all_sets,matrix,netlistname,method):
     data['unconnected'] = f"{int(len(unconnected_sets) / len(all_sets) * 100)}%"
     data['method'] = method
 
-    output('A_star_random_dir.xlsx', data)
+    output('dir_order_no_heuristics.xlsx', data)
 
 
 def output(filename, data):

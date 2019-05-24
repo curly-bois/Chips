@@ -1,6 +1,5 @@
 import numpy
 
-
 class Point(object):
 
     def __init__(self, location, attribute, neighbours, value, id=0, h=0,appearance=0,check=0):

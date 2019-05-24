@@ -27,15 +27,12 @@ def make_xlsx(all_sets,matrix,netlistname,method):
         # If unconnected
         else:
             unconnected_sets.append(set)
-
-
-    # get the data that has to do someting with all the sets
-    for set in all_sets:
         start = set.get_startpoint().get_id()
         end = set.get_endpoint().get_id()
         order.append((start,end))
         lower_bound += set.get_distance()
-        # directions.append(set.get_direction())
+        directions.append(set.get_direction())
+
 
     #  get the upper bound
     height = len(matrix)
@@ -44,12 +41,6 @@ def make_xlsx(all_sets,matrix,netlistname,method):
 
     upper_bound = (length * width * height)
 
-    # print(f"order = {order}")
-    # print(f"directions of order = {directions}")
-    # print(f"upper bound = {count}")
-    # print(f"lower bound = {lower_bound}")
-    # print(f"amount of wires = {len(wires)}")
-    # print(f"unconnected = {int(len(unconnected_sets) / len(all_sets) * 100)}")
 
     # colums in the xlsx file
     data = {'netlist':netlistname}
@@ -61,7 +52,7 @@ def make_xlsx(all_sets,matrix,netlistname,method):
     data['unconnected'] = f"{int(len(unconnected_sets) / len(all_sets) * 100)}%"
     data['method'] = method
 
-    output('test.xlsx', data)
+    output('dir_order_no_heuristics.xlsx', data)
 
 
 def output(filename, data):

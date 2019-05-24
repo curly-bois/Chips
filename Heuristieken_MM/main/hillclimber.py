@@ -2,6 +2,7 @@ import numpy as np
 from connect import connect
 import random
 import math
+from init import *
 
 
 def hillimprove(max_tries, solved_sets):

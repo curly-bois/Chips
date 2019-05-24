@@ -1,7 +1,6 @@
 from Classes.point import Point
 from mpl_toolkits import mplot3d
 import matplotlib.pyplot as plt
-import matplotlib.animation as animation
 import numpy as np
 
 

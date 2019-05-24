@@ -7,7 +7,7 @@ class Instance( ):
         self.not_connected = []
         self.add_wires()
         self.t = 1
-        self.swap = 10
+        self.swap = 5
 
     def start(self, vars):
         self.wires = vars[0]

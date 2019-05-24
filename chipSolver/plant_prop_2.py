@@ -6,7 +6,7 @@ from extra import *
 from settings import *
 from data import get_data
 from instance import Instance
-from heuristics import  plant_prop, plant_prop_lite, sim_annealing, hill_climber
+from heuristics import  *
 
 
 import random
@@ -63,40 +63,53 @@ if __name__ == '__main__':
 
     points_to_connect = sort_points2(starts, ends) #, count_dict)
 
-    GENS = 10
+    GENS = 30
     generation = [Instance(Grid(SIZE, all_points)) for i in range(GENS)]
 
-    for gen in generation:
+    saved_wires = [
+                    "wires_4_0_sima_139.p",
+                    "wires_4_1_sima_358.p",
+                    "wires_4_2_sima_21.p",
+                    "wires_4_3_sima_246.p",
+                    "wires_4_4_sima_303.p",
+                    "wires_4_5_sima_252.p",
+                    "wires_4_6_sima_62.p",
+                    "wires_4_7_sima_78.p",
+                    "wires_4_8_sima_24.p",
+                    "wires_4_9_sima_292.p",
+                    "wires_4_10_sima_39.p",
+                    "wires_4_11_sima_203.p",
+                    "wires_4_12_sima_51.p",
+                    "wires_4_13_sima_320.p",
+                    "wires_4_14_sima_16.p",
+                    "wires_4_15_sima_29.p",
+                    "wires_4_16_sima_260.p",
+                    "wires_4_17_sima_141.p",
+                    "wires_4_18_sima_306.p",
+                    "wires_4_19_sima_92.p",
+                    "wires_4_20_sima_130.p",
+                    "wires_4_21_sima_33.p",
+                    "wires_4_22_sima_467.p",
+                    "wires_4_23_sima_76.p",
+                    "wires_4_24_sima_41.p",
+                    "wires_4_25_sima_610.p",
+                    "wires_4_26_sima_98.p",
+                    "wires_4_27_sima_189.p",
+                    "wires_4_28_sima_346.p",
+                    "wires_4_29_sima_166.p",
+    ]
+
+    for i, gen in enumerate(generation):
+        # gen = load_gen(gen, name = saved_wires[i], excel_data =  [])
         random.shuffle(points_to_connect)
         Wires, connected, not_connected = get_wires(gen.main,
                                                     points_to_connect)
         # A star algo
         gen.start((Wires, not_connected))
-        # Reset value grid
-        gen, data = sim_annealing(gen, options)
         gen.main.value_grid = second_value(SIZE)
 
-
-    loops = 10
-    MAX = int(tpnum/2)
-
-    def sortbothvalue(g):
-        num = g.score1()
-        dec = int((2000 - g.score2())*0.5)
-        return float(f'{num}.{dec}')
-
-
-    def cal_fitness(ma, mi, g_class):
-        f = ((ma-sortbothvalue(g_class))/(ma-mi))
-        f = 1 - f
-        return 0.5*(numpy.tanh((4*f)-2)+1)
-
-    def repo_s(score):
-        return int(numpy.ceil(5*score*random.random()))
-
-    def swap_s(score, MAX):
-        d = ((1-score)*random.random()*MAX)
-        return int(numpy.ceil(d))
+    loops = 30
+    MAX = int(tpnum)
 
     data = []
     for iter in range(loops):
@@ -107,14 +120,12 @@ if __name__ == '__main__':
         print(f'{iter}. Current best:' ,s1 ,'len:' ,s2)
         for i, gen in enumerate(generation):
             random.shuffle(gen.wires)
+            random.shuffle(gen.not_connected)
             gen.main, new_wires , new_not_con = swap_wires_plant(gen.gwires(),
                                                         gen.gnotc(),
                                                         gen.main,
                                                         gen.swap)
 
-            # Shuffle wires
-            new_wires = shuffle(new_wires)
-            new_not_con = shuffle(new_not_con)
             gen.snotc(new_not_con)
             gen.swires(new_wires)
 
@@ -156,7 +167,7 @@ if __name__ == '__main__':
     # Time!
     print(f'We found this sollution in: {cal_time}')
 
-    X.main.plot_wire(X.wires)
-    import pickle
-    pickle.dump( data, open( "data.p", "wb" ) )
-    pickle.dump( X.wires, open( "wires.p", "wb" ) )
+    # X.main.plot_wire(X.wires)
+    # import pickle
+    # pickle.dump( data, open( "data.p", "wb" ) )
+    # pickle.dump( X.wires, open( "wires.p", "wb" ) )

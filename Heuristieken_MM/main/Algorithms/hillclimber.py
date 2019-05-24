@@ -5,7 +5,7 @@ import math
 import numpy as np
 
 def hillimprove(max_tries, solved_sets):
-    not_improved = 0
+
 
     # Get the current best score
     best_so_far = len(solved_sets)
@@ -14,7 +14,9 @@ def hillimprove(max_tries, solved_sets):
             if point.get_attribute() == "wire":
                 best_so_far += 1
 
+    not_improved = 0
     hillimproves = 0
+
     while(not_improved < max_tries):
         hillimproves += 1
 
@@ -22,7 +24,6 @@ def hillimprove(max_tries, solved_sets):
         if hillimproves == 1:
 
             old_routes = {}
-            print("FIRST HILLSOLVE REMEMBERING ROUTES")
             for set in solved_sets:
                 old_routes[set] = set.get_route()
 
@@ -47,8 +48,6 @@ def hillimprove(max_tries, solved_sets):
 
             # If better
             if wire_count < best_so_far:
-                # not_improved = 0 # If this is turned on the algorithm stops if the solution has not been improved for 100 iterations
-                print(f"Found a BETTER solution after {hillimproves} hillimproves which takes {wire_count} instead of {best_so_far}")
                 best_so_far = wire_count
 
                 # Save old routes again
@@ -57,7 +56,6 @@ def hillimprove(max_tries, solved_sets):
 
 
             else:
-
                 for set in new_all_sets:
                     set.disconnect()
 

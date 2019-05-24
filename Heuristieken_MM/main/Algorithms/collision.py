@@ -1,3 +1,5 @@
+
+# checks if there are more than one of the same coordinate
 def collision_check(all_sets):
     all_coordinates = []
     collisions = 0

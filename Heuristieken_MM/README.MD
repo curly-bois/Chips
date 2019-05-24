@@ -1,7 +1,7 @@
 # Chips & Circuits
-<img align="left" width="450" height="300" src="http://heuristieken.nl/wiki/images/7/77/Print1.gif">
+<img align="left" width="430" height="300" src="http://heuristieken.nl/wiki/images/7/77/Print1.gif">
 
-<img align="right" width="450" height="400" src="http://heuristieken.nl/wiki/images/1/1d/Print2.gif">
+<img align="right" width="430" height="400" src="http://heuristieken.nl/wiki/images/1/1d/Print2.gif">
 
 
 

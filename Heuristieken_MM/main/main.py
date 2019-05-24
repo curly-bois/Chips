@@ -53,8 +53,11 @@ while counter < tries:
     else:
         pass
 
+    # Check for collisions
+    collisions = collision_check(all_sets)
+
     # extra options
     if 1 in options:
         make_plot(all_sets)
     if 2 in options:
-        make_xlsx(all_sets,matrix,f"netlist_{netlist}", "initial try")
+        make_xlsx(all_sets, matrix, f"netlist_{netlist}", collisions, "initial try")

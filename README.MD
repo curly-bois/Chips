@@ -5,6 +5,7 @@
 
 
 ## De opdracht (the assignment)
+## zoals beschreven op: http://heuristieken.nl/wiki/index.php?title=Chips_%26_Circuits
 Print #1 and Print #2 are arrangements of gates on a base, and all it takes is to wire the appropriate gates together. There are three net lists (in txt-format) for each print. Each net list needs to be implemented. Nets can only follow the grid, only one wire per segment, and one step costs 1 unit length. Nets that are aligned among the same grid line are said to be in collision. If there is one collision in one arrangement, the circuit cannot be used. Nets can also go up and down to lower and higher layers, also at the cost of 1 per level. The assignment is to implement all nets in all netlists at minimum cost.
 
 ### Formules

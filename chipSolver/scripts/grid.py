@@ -5,10 +5,10 @@ import numpy as np
 from mpl_toolkits.mplot3d import Axes3D
 import matplotlib.animation as animation
 
-from point import Point
-from wire import Wire
-from extra import *
-from settings import *
+from scripts.point import Point
+from scripts.extra import *
+from scripts.wire import Wire
+from scripts.settings import *
 
 
 class Grid(object):

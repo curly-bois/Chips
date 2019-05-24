@@ -1,11 +1,11 @@
-from point import Point
-from grid import Grid
-from wire import Wire
+from scripts.point import Point
+from scripts.grid import Grid
+from scripts.wire import Wire
 
-from extra import *
-from settings import *
-from data import get_data
-from instance import Instance
+from scripts.extra import *
+from scripts.settings import *
+from scripts.data import get_data
+from scripts.instance import Instance
 
 import random
 import time

@@ -71,6 +71,7 @@ def sort_points2(starts, ends):
 def sort_points3(starts, ends, count_dict):
     '''
     A way of sorting the points, by the amount of points they need to connect with
+    So most connected points first.
     '''
     # Make two indentical list, sort one and use the other for indexing
     def sortingdict(d):
@@ -94,12 +95,18 @@ def sort_points3(starts, ends, count_dict):
         except:
             pass
 
-    def inOrder(nums): ## better than set
-        k = max(nums)
-        indices = [nums.index(n) for n in range(1,k+1)]
-        return [n for i,n in sorted(zip(indices,range(1,k+1)))]
+    def inOrder(list_of_T):
+        '''
+        Does the same as 'set()' but keeps order.
+        '''
+        new_list = []
+        for i in list_of_T:
+            if not i in new_list:
+                new_list.append(i)
+        return new_list
 
-    return set(point_order)
+    return inOrder(point_order)
+
 
 def sort_points_random(starts, ends):
     '''

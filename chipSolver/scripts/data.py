@@ -1,4 +1,4 @@
-import extra
+from scripts import extra
 import sys
 
 def get_data(net_number = 4):

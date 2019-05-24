@@ -1,15 +1,15 @@
 # Classes
-from point import Point
-from grid import Grid
-from wire import Wire
+# from scripts point import Point
+from scripts.point import Point
+from scripts.grid import Grid
+from scripts.wire import Wire
 
 # Own modules
-from extra import *
-from settings import *
-from data import get_data
-from instance import Instance
-from heuristics import  *
-from settings import second_value
+from scripts.extra import *
+from scripts.settings import *
+from scripts.data import get_data
+from scripts.instance import Instance
+from scripts.heuristics import  *
 
 # External modules
 import random

@@ -1,8 +1,8 @@
-from point import Point
-from wire import Wire
-from instance import Instance
-import grid
-from settings import second_value
+from scripts.point import Point
+from scripts.wire import Wire
+from scripts.instance import Instance
+from scripts import grid
+from scripts.settings import second_value
 import matplotlib.pyplot as plt
 
 import random
@@ -193,14 +193,16 @@ def swap_wires(wires, not_connected, mainGrid, swaps):
     # Try to connect the wires removed and the pairs not connected
     wires2, connected, not_connected = get_wires(mainGrid, not_connected)
     len2 = len(not_connected)
+
     len_list2 = sum([i.length for i in wires2 + wires]) ##
 
-    # Check for inprovement in lenght if all wires are connected
-    if len1 == len2 and len_list2 < len_list1: ##
+    # Check for inprovement in wires connected
+    if len1 > len2: ##
         wires3 = wires2 + wires ##
         return mainGrid, wires3, not_connected ##
-    # Check for inprovement in wires connected
-    elif len1 > len2: ##
+
+    # Check for inprovement in lenght if all wires are connected
+    elif len1 == len2 and len_list2 < len_list1: ##
         wires3 = wires2 + wires ##
         return mainGrid, wires3, not_connected ##
     # else, reverse everything
